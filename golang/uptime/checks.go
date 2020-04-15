@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -101,7 +102,7 @@ func (s *CheckService) ListAll(ctx context.Context, opt *CheckListOptions) ([]*C
 
 	for clResp.Next != "" {
 		opt.Page++
-		clResp, _, err := s.listChecks(ctx, u, opt)
+		clResp, _, err = s.listChecks(ctx, u, opt)
 		if err != nil {
 			return nil, err
 		}
@@ -200,6 +201,62 @@ func (s *CheckService) Delete(ctx context.Context, pk int) (*http.Response, erro
 		return nil, err
 	}
 	return s.client.Do(ctx, req, nil)
+}
+
+// CheckStatsOptions specifies the parameters to the CheckService.Stats method.
+type CheckStatsOptions struct {
+	StartDate              string
+	EndDate                string
+	Location               string
+	LocationsResponseTimes bool
+	IncludeAlerts          bool
+	Download               bool
+	PDF                    bool
+}
+
+// CheckStatsResponse represents the API's response to a Stats query.
+type CheckStatsResponse struct {
+	StartDate  string           `json:"start_date"`
+	EndDate    string           `json:"end_date"`
+	Statistics []*CheckStats    `json:"statistics"`
+	Totals     CheckStatsTotals `json:"totals"`
+}
+
+// CheckStats represents the check statistics for a given day.
+type CheckStats struct {
+	Date         string `json:"date"`
+	Outages      int    `json:"outages"`
+	DowntimeSecs int    `json:"downtime_secs"`
+}
+
+// CheckStatsTotals represents the 'totals' section of check statistics in Uptime.com.
+type CheckStatsTotals struct {
+	Outages      int   `json:"outages,omitempty"`
+	DowntimeSecs int64 `json:"downtime_secs,omitempty"`
+}
+
+// Stats gets statistics on the specified check.
+func (s *CheckService) Stats(ctx context.Context, pk int, opt *CheckStatsOptions) (*CheckStatsResponse, *http.Response, error) {
+	u := fmt.Sprintf("checks/%v/stats/?start_date=%s&end_date=%s&location=%s&locations_response_times=%t&include_alerts=%t&download=%t&pdf=%t",
+		pk,
+		opt.StartDate,
+		opt.EndDate,
+		url.QueryEscape(opt.Location),
+		opt.LocationsResponseTimes,
+		opt.IncludeAlerts,
+		opt.Download,
+		opt.PDF)
+	req, err := s.client.NewRequest("GET", u, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	c := &CheckStatsResponse{}
+	resp, err := s.client.Do(ctx, req, c)
+	if err != nil {
+		return nil, resp, err
+	}
+	return c, resp, nil
 }
 
 // When creating a new Whois check through the UI, Uptime.com automatically generates

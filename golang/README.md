@@ -36,13 +36,29 @@ c := &uptime.Check {
     Address:       "https://uptime.com",
     Interval:      1,
     Threshold:     15,
-    Locations:     []string{"US-East", "GBR", "AUT"},
+    Locations:     []string{"US East", "GBR", "AUT"},
     ContactGroups: []string{"Default"},
     Tags:          []string{"testing"},
 }
 
 ctx := context.Background()
 newCheck, response, err := client.Checks.Create(ctx, c)
+```
+
+### Get downtime statistics for a check
+```go
+pk := 478926
+opt := &uptime.CheckStatsOptions{
+	StartDate:              "2020-01-01T00:00:00Z",
+	EndDate:                "2020-01-02T00:00:00Z",
+	Location:               "US East",
+	LocationsResponseTimes: true,
+	IncludeAlerts:          true,
+	Download:               false,
+	PDF:                    false,
+}
+stats, response, err := client.Checks.Stats(context.Background(), pk, opt)
+fmt.Printf("Check %d statistics: %d outage(s), %ds total downtime\n", pk, stats.Totals.Outages, stats.Totals.DowntimeSecs)
 ```
 
 ### Get a list of Outages
