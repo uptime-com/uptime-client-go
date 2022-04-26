@@ -1,6 +1,10 @@
 # rest-api-clients
 
-Clients to access the Uptime.com REST API in various languages
+Clients to access the Uptime.com REST API in various languages.
+
+## Contributing
+
+Contributions are welcome! Please feel free to fork and submit a pull request with any improvements.
 
 ## Go
 

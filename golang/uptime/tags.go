@@ -115,7 +115,7 @@ func (s *TagService) Update(ctx context.Context, tag *Tag) (*Tag, *http.Response
 }
 
 // Delete removes an Uptime.com tag.
-func (s * TagService) Delete(ctx context.Context, pk int) (*http.Response, error) {
+func (s *TagService) Delete(ctx context.Context, pk int) (*http.Response, error) {
 	u := fmt.Sprintf("check-tags/%v", pk)
 	req, err := s.client.NewRequest("DELETE", u, nil)
 	if err != nil {

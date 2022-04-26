@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/domainr/whois"
-	whoisparser "github.com/likexian/whois-parser-go"
+	whoisparser "github.com/likexian/whois-parser"
 )
 
 type CheckService service

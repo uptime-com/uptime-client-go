@@ -4,9 +4,18 @@
 * Checks
 * Tags
 * Outages
+* Integrations
 
 ## Installation
-`go get -u github.com/uptime-com/rest-api-clients/golang/uptime`
+```bash
+go get -u github.com/uptime-com/rest-api-clients/golang/uptime
+```
+
+## Run Tests
+
+```bash
+go test -v ./uptime
+```
 
 ## Documentation
 To view godocs locally, run `godoc`. Open http://localhost:6060 in a web browser and navigate to the go-uptime package under Third party.
@@ -80,4 +89,10 @@ resp, err := client.Tags.Delete(ctx, tagId)
 ```
 
 ## Credits
+Contributions are welcome! Please feel free to fork and submit a pull request with any improvements.
+
 go-uptime was originally created by [Kyle Gentle](https://github.com/kylegentle), with support from Elias Laham and the Dev Team at Uptime.com.
+
+### Contributors
+- [Kyle Gentle](https://github.com/kylegentle)
+- [Liam Kinne](https://github.com/liamkinne)

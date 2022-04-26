@@ -35,7 +35,7 @@ func TestTagCreate(t *testing.T) {
 	defer teardown()
 
 	input := &Tag{
-		Tag: "test tag",
+		Tag:      "test tag",
 		ColorHex: "#000000",
 	}
 
@@ -61,7 +61,6 @@ func TestTagCreate(t *testing.T) {
 		t.Errorf("Tags.Create returned %+v, want %+v", tag, want)
 	}
 }
-
 
 func TestTagGet(t *testing.T) {
 	client, mux, _, teardown := setup()
@@ -90,8 +89,8 @@ func TestTagUpdate(t *testing.T) {
 	defer teardown()
 
 	input := &Tag{
-		PK: 1,
-		Tag: "test tag",
+		PK:       1,
+		Tag:      "test tag",
 		ColorHex: "#000000",
 	}
 

@@ -23,17 +23,17 @@ const (
 
 // Config represents the configuration for an Client.com client
 type Config struct {
-	BaseURL    string
-	HTTPClient *http.Client
-	Token      string
-	UserAgent  string
+	BaseURL          string
+	HTTPClient       *http.Client
+	Token            string
+	UserAgent        string
 	RateMilliseconds int
 }
 
 // Client manages communication with the Uptime.com API.
 type Client struct {
-	client *http.Client // HTTP client used to communicate with the API.
-	common service
+	client  *http.Client // HTTP client used to communicate with the API.
+	common  service
 	limiter <-chan time.Time
 
 	// Base URL for API requests. BaseURL should always be specified
@@ -42,9 +42,10 @@ type Client struct {
 	UserAgent string
 	Config    *Config
 
-	Checks  *CheckService
-	Outages *OutageService
-	Tags    *TagService
+	Checks       *CheckService
+	Outages      *OutageService
+	Tags         *TagService
+	Integrations *IntegrationService
 }
 
 type service struct {
@@ -113,6 +114,7 @@ func NewClient(config *Config) (*Client, error) {
 	c.Outages = (*OutageService)(&c.common)
 	c.Checks = (*CheckService)(&c.common)
 	c.Tags = (*TagService)(&c.common)
+	c.Integrations = (*IntegrationService)(&c.common)
 
 	return c, nil
 }
@@ -161,7 +163,7 @@ func (c *Client) Do(ctx context.Context, req *http.Request, v interface{}) (*htt
 	req = req.WithContext(ctx)
 
 	// Observe rate limit
-	<- c.limiter
+	<-c.limiter
 
 	resp, err := c.client.Do(req)
 	if err != nil {
