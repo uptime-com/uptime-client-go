@@ -10,7 +10,7 @@ import (
 )
 
 func TestTagList(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	mux.HandleFunc("/check-tags", func(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +31,7 @@ func TestTagList(t *testing.T) {
 }
 
 func TestTagCreate(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	input := &Tag{
@@ -63,7 +63,7 @@ func TestTagCreate(t *testing.T) {
 }
 
 func TestTagGet(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	mux.HandleFunc("/check-tags/1", func(w http.ResponseWriter, r *http.Request) {
@@ -85,7 +85,7 @@ func TestTagGet(t *testing.T) {
 }
 
 func TestTagUpdate(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	input := &Tag{
@@ -117,7 +117,7 @@ func TestTagUpdate(t *testing.T) {
 }
 
 func TestTagDelete(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	mux.HandleFunc("/check-tags/1", func(w http.ResponseWriter, r *http.Request) {

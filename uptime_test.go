@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-func setup() (client *Client, mux *http.ServeMux, serverURL string, teardown func()) {
+func testSetup() (client *Client, mux *http.ServeMux, serverURL string, teardown func()) {
 	mux = http.NewServeMux()
 	server := httptest.NewServer(mux)
 	client, _ = NewClient(&Config{BaseURL: server.URL, Token: "test-token", RateMilliseconds: 20})

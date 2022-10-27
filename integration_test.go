@@ -10,7 +10,7 @@ import (
 )
 
 func TestIntegrationList(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	mux.HandleFunc("/integrations", func(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +31,7 @@ func TestIntegrationList(t *testing.T) {
 }
 
 func TestIntegrationCreate(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	input := &Integration{
@@ -66,7 +66,7 @@ func TestIntegrationCreate(t *testing.T) {
 }
 
 func TestIntegrationGet(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	mux.HandleFunc("/integrations/1", func(w http.ResponseWriter, r *http.Request) {
@@ -88,7 +88,7 @@ func TestIntegrationGet(t *testing.T) {
 }
 
 func TestIntegrationUpdate(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	input := &Integration{
@@ -120,7 +120,7 @@ func TestIntegrationUpdate(t *testing.T) {
 }
 
 func TestIntegrationDelete(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	mux.HandleFunc("/integrations/1", func(w http.ResponseWriter, r *http.Request) {

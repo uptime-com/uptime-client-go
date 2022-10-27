@@ -15,7 +15,7 @@ import (
 )
 
 func TestCheckList(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	mux.HandleFunc("/checks", func(w http.ResponseWriter, r *http.Request) {
@@ -36,7 +36,7 @@ func TestCheckList(t *testing.T) {
 }
 
 func TestCheckCreate(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	input := &Check{
@@ -70,7 +70,7 @@ func TestCheckCreate(t *testing.T) {
 }
 
 func TestCheckGet(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	mux.HandleFunc("/checks/1", func(w http.ResponseWriter, r *http.Request) {
@@ -92,7 +92,7 @@ func TestCheckGet(t *testing.T) {
 }
 
 func TestCheckUpdate(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	input := &Check{
@@ -124,7 +124,7 @@ func TestCheckUpdate(t *testing.T) {
 }
 
 func TestCheckDelete(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	mux.HandleFunc("/checks/1", func(w http.ResponseWriter, r *http.Request) {
@@ -138,7 +138,7 @@ func TestCheckDelete(t *testing.T) {
 }
 
 func TestCheckStats(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 	pk := 1
 	opt := &CheckStatsOptions{

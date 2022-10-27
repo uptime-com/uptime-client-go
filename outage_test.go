@@ -9,7 +9,7 @@ import (
 )
 
 func TestOutageList(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	mux.HandleFunc("/outages", func(w http.ResponseWriter, r *http.Request) {
@@ -30,7 +30,7 @@ func TestOutageList(t *testing.T) {
 }
 
 func TestOutageGet(t *testing.T) {
-	client, mux, _, teardown := setup()
+	client, mux, _, teardown := testSetup()
 	defer teardown()
 
 	mux.HandleFunc("/outages/1", func(w http.ResponseWriter, r *http.Request) {

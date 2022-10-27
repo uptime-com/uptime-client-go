@@ -3,7 +3,6 @@ package uptime
 import (
 	"context"
 	"fmt"
-
 	"net/http"
 	"net/url"
 	"strings"
