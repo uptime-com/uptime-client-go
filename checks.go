@@ -6,10 +6,6 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
-
-	"github.com/domainr/whois"
-	whoisparser "github.com/likexian/whois-parser"
 )
 
 type CheckService service
@@ -132,15 +128,6 @@ func (s *CheckService) Create(ctx context.Context, check *Check) (*Check, *http.
 	suffix := strings.ToLower(strings.Replace(check.CheckType, "_", "-", -1))
 	u := fmt.Sprintf("checks/add-%v", suffix)
 
-	// Get a Whois expected string if we don't have one.
-	if check.CheckType == "WHOIS" && check.ExpectString == "" {
-		s, err := uptimeWhoisCheckExpectString(check.Address)
-		if err != nil {
-			return nil, nil, err
-		}
-		check.ExpectString = s
-	}
-
 	req, err := s.client.NewRequest("POST", u, check)
 	if err != nil {
 		return nil, nil, err
@@ -256,36 +243,4 @@ func (s *CheckService) Stats(ctx context.Context, pk int, opt *CheckStatsOptions
 		return nil, resp, err
 	}
 	return c, resp, nil
-}
-
-// When creating a new Whois check through the UI, Uptime.com automatically generates
-// a custom-formatted string describing elements to verify in a Whois response. This
-// function replicates that behavior.
-func uptimeWhoisCheckExpectString(domain string) (string, error) {
-	req, err := whois.NewRequest(domain)
-	if err != nil {
-		return "", fmt.Errorf("Error constructing request for %v: %v", domain, err)
-	}
-
-	resp, err := whois.DefaultClient.Fetch(req)
-	if err != nil {
-		return "", fmt.Errorf("Error getting whois for %v: %v", domain, err)
-	}
-
-	result, err := whoisparser.Parse(resp.String())
-	if err != nil {
-		return "", fmt.Errorf("Error parsing raw Whois from %s: %v", domain, err)
-	}
-
-	expiry := uptimeWhoisTimeStr(result.Domain.ExpirationDate)
-	nameServers := result.Domain.NameServers
-	name := strings.ToLower(result.Registrar.Name)
-	whoisInfo := fmt.Sprintf("expires: %s\nnameservers: %s\nregistrar: %s", expiry, nameServers, name)
-
-	return whoisInfo, nil
-}
-
-func uptimeWhoisTimeStr(ts string) string {
-	t, _ := time.Parse(time.RFC3339, ts)
-	return t.Format("2006-01-02")
 }
