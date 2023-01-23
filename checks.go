@@ -52,6 +52,9 @@ type Check struct {
 
 	// For SSL checks
 	Protocol string `json:"msp_protocol,omitempty"`
+
+	// For Heartbeat checks
+	HeartbeatURL string `json:"heartbeat_url,omitempty"`
 }
 
 type CheckListResponse struct {
