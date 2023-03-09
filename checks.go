@@ -21,16 +21,18 @@ type Check struct {
 	Port      int    `json:"msp_port,omitempty"`
 	IPVersion string `json:"msp_use_ip_version,omitempty"`
 
-	Interval    int      `json:"msp_interval,omitempty"`
-	Locations   []string `json:"locations,omitempty"`
-	Sensitivity int      `json:"msp_sensitivity,omitempty"`
-	Threshold   int      `json:"msp_threshold,omitempty"`
-
-	Headers      string `json:"msp_headers,omitempty"`
-	Username     string `json:"msp_username,omitempty"`
-	Password     string `json:"msp_password,omitempty"`
-	SendString   string `json:"msp_send_string,omitempty"`
-	ExpectString string `json:"msp_expect_string,omitempty"`
+	Interval        int      `json:"msp_interval,omitempty"`
+	Locations       []string `json:"locations,omitempty"`
+	Sensitivity     int      `json:"msp_sensitivity,omitempty"`
+	Threshold       int      `json:"msp_threshold,omitempty"`
+	NumRetries      int      `json:"msp_num_retries,omitempty"`
+	UptimeSLA       int      `json:"msp_uptime_sla,omitempty"`
+	ResponseTimeSLA int      `json:"msp_response_time_sla,omitempty"`
+	Headers         string   `json:"msp_headers,omitempty"`
+	Username        string   `json:"msp_username,omitempty"`
+	Password        string   `json:"msp_password,omitempty"`
+	SendString      string   `json:"msp_send_string,omitempty"`
+	ExpectString    string   `json:"msp_expect_string,omitempty"`
 
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	Tags          []string `json:"tags,omitempty"`
