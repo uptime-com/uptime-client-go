@@ -24,6 +24,7 @@ type Check struct {
 	Interval    int      `json:"msp_interval,omitempty"`
 	Locations   []string `json:"locations,omitempty"`
 	Sensitivity int      `json:"msp_sensitivity,omitempty"`
+	NumRetries  int      `json:"msp_num_retries,omitempty"`
 	Threshold   int      `json:"msp_threshold,omitempty"`
 
 	Headers      string `json:"msp_headers,omitempty"`
