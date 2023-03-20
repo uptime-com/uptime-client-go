@@ -30,6 +30,10 @@ func (f *flagSetMock) StringSliceVarP(ptr *[]string, name, shorthand string, val
 	f.Called(ptr, name, shorthand, value, usage)
 }
 
+func (f *flagSetMock) Float64VarP(ptr *float64, name, shorthand string, value float64, usage string) {
+	f.Called(ptr, name, shorthand, value, usage)
+}
+
 func TestBind(t *testing.T) {
 	t.Run("basic", func(t *testing.T) {
 		t.Run("string", func(t *testing.T) {
@@ -68,9 +72,22 @@ func TestBind(t *testing.T) {
 			require.NoError(t, err)
 			fs.AssertExpectations(t)
 		})
+		t.Run("float64", func(t *testing.T) {
+			fs := flagSetMock{}
+			fs.On("Float64VarP", mock.Anything, "float", "f", 3.14, "Lenin lives!").Return().Once()
+			obj := struct {
+				Float64 float64 `flag:"float" short:"f" usage:"Lenin lives!"`
+			}{
+				Float64: 3.14,
+			}
+			err := Bind(&fs, &obj)
+			require.NoError(t, err)
+			fs.AssertExpectations(t)
+		})
 	})
 	t.Run("skip", func(t *testing.T) {
 		fs := flagSetMock{}
+		fs.On("StringVarP", mock.Anything, "str", "s", "default", "Lenin lives!").Return().Once()
 		obj := struct {
 			Bool bool   `flag:"bool" short:"b" usage:"Lenin lives!" skip:"-"`
 			Str  string `flag:"str" short:"s" usage:"Lenin lives!"`
