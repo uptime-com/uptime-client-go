@@ -1,4 +1,4 @@
-!.goreleaser.yaml
-!.gitignore
 .*
 dist/
+!.goreleaser.yaml
+!.gitignore

@@ -1,0 +1,38 @@
+project_name: uptime-client-go
+before:
+  hooks:
+    - go mod tidy
+builds:
+  - id:     upctl
+    binary: upctl
+    main:   ./cmd/upctl
+    goos:
+      - darwin
+      - linux
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos:   windows
+        goarch: arm64
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    ldflags:
+      - '-s -w -X main.version={{.Version}} -X main.commit={{.Commit}}'
+    hooks:
+      post:
+        - upx -9 {{ .Path }}
+
+archives:
+  - id:                upctl
+    format:            tar.xz
+    wrap_in_directory: true
+
+checksum:
+  name_template: 'checksums.txt'
+
+snapshot:
+  name_template: "{{ incpatch .Version }}-pre"
