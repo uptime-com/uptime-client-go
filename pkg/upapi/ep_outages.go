@@ -1,18 +1,10 @@
-package uptime
+package upapi
 
 import (
 	"context"
-	"fmt"
 	"net"
-	"net/http"
 	"time"
 )
-
-// OutageService handles communication with the outage related
-// methods of the Uptime.com API.
-//
-// Uptime.com API docs: https://uptime.com/api/v1/docs/#!/outages/
-type OutageService service
 
 // Outage represents an outage reported by Uptime.com.
 type Outage struct {
@@ -48,10 +40,20 @@ type Alert struct {
 // OutageListResponse represents a page of Outage results returned by
 // the Uptime.com API.
 type OutageListResponse struct {
-	Count    int       `json:"count,omitempty"`
-	Next     string    `json:"next,omitempty"`
-	Previous string    `json:"previous,omitempty"`
-	Results  []*Outage `json:"results,omitempty"`
+	Count    int      `json:"count,omitempty"`
+	Next     string   `json:"next,omitempty"`
+	Previous string   `json:"previous,omitempty"`
+	Results  []Outage `json:"results,omitempty"`
+}
+
+func (o OutageListResponse) List() []Outage {
+	return o.Results
+}
+
+type OutageResponse Outage
+
+func (o OutageResponse) Item() *Outage {
+	return (*Outage)(&o)
 }
 
 // OutageListOptions specifies the optional parameters to the OutagesService.List
@@ -64,44 +66,20 @@ type OutageListOptions struct {
 	CheckMonitoringServiceType string `url:"check_monitoring_service_type,omitempty"`
 }
 
-// List all outages on the account.
-func (s *OutageService) List(ctx context.Context, opt *OutageListOptions) ([]*Outage, *http.Response, error) {
-	u := "outages"
-	return s.listOutages(ctx, u, opt)
+type OutagesEndpoint interface {
+	List(context.Context, OutageListOptions) ([]Outage, error)
+	Get(context.Context, PrimaryKey) (*Outage, error)
 }
 
-func (s *OutageService) listOutages(ctx context.Context, url string, opt *OutageListOptions) ([]*Outage, *http.Response, error) {
-	u, err := addOptions(url, opt)
-	if err != nil {
-		return nil, nil, err
+func NewOutagesEndpoint(cbd CBD) OutagesEndpoint {
+	const endpoint = "outages"
+	return &outagesEndpointImpl{
+		EndpointLister: NewEndpointLister[OutageListResponse, Outage, OutageListOptions](cbd, endpoint),
+		EndpointGetter: NewEndpointGetter[PrimaryKey, OutageResponse, Outage](cbd, endpoint),
 	}
-
-	req, err := s.client.NewRequest("GET", u, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var outages OutageListResponse
-	resp, err := s.client.Do(ctx, req, &outages)
-	if err != nil {
-		return nil, resp, err
-	}
-
-	return outages.Results, resp, nil
 }
 
-// Get a single outage.
-func (s *OutageService) Get(ctx context.Context, pk string) (*Outage, *http.Response, error) {
-	u := fmt.Sprintf("outages/%v", pk)
-	req, err := s.client.NewRequest("GET", u, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	var o *Outage
-	resp, err := s.client.Do(ctx, req, &o)
-	if err != nil {
-		return nil, resp, err
-	}
-	return o, resp, nil
+type outagesEndpointImpl struct {
+	EndpointLister[OutageListResponse, Outage, OutageListOptions]
+	EndpointGetter[PrimaryKey, OutageResponse, Outage]
 }
