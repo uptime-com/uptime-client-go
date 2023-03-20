@@ -1,4 +1,4 @@
-# go-uptime
+# uptime-client-go
 
 A Go client library for Uptime.com
 
@@ -8,11 +8,23 @@ A Go client library for Uptime.com
 * Tags
 * Outages
 * Integrations
+* Probe servers
+* Contact groups (partial)
 
 ## Installation
 
+### Command line tool (`upctl`)
+
+Downdload the latest release from the [releases page](./releases) or install from sources:
+
 ```bash
-go get -u github.com/uptime-com/uptime-client-go
+go install github.com/uptime-com/uptime-client-go/v2/cmd/upctl@latest
+```
+
+### Library
+
+```bash
+go get -u github.com/uptime-com/uptime-client-go/v2@latest
 ```
 
 ## Run Tests
@@ -36,10 +48,9 @@ Please see the [examples](./examples) directory for usage examples.
 
 Contributions are welcome! Please feel free to fork and submit a pull request with any improvements.
 
-go-uptime was originally created by [Kyle Gentle](https://github.com/kylegentle), with support from Elias Laham and the
+Original version was created by [Kyle Gentle](https://github.com/kylegentle), with support from Elias Laham and the
 Dev Team at Uptime.com.
 
 ### Contributors
 
-- [Kyle Gentle](https://github.com/kylegentle)
-- [Liam Kinne](https://github.com/liamkinne)
+See [contributors page](./graphs/contributors).
