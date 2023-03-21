@@ -1,4 +1,4 @@
-project_name: uptime-client-go
+project_name: upctl
 before:
   hooks:
     - go mod tidy
@@ -28,11 +28,11 @@ builds:
 
 archives:
   - id:                upctl
-    format:            tar.xz
+    format:            tar.gz
     wrap_in_directory: true
 
 checksum:
-  name_template: 'checksums.txt'
+  algorithm: sha256
 
 signs:
   - artifacts: checksum
@@ -53,4 +53,3 @@ changelog:
 
 release:
   prerelease: auto
-
