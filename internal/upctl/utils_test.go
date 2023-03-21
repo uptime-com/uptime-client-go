@@ -3,7 +3,6 @@ package upctl
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
@@ -142,44 +141,5 @@ func TestBind(t *testing.T) {
 			require.NoError(t, err)
 			fs.AssertExpectations(t)
 		})
-	})
-}
-
-func TestShallowCopy(t *testing.T) {
-	t.Run("scalar", func(t *testing.T) {
-		type test struct {
-			A string
-			B string
-		}
-		a := test{A: "foo"}
-		b := test{A: "bar", B: "baz"}
-		err := ShallowCopy(&b, &a)
-		require.NoError(t, err)
-		assert.Equal(t, "foo", b.A)
-		assert.Equal(t, "baz", b.B)
-	})
-	t.Run("pointer", func(t *testing.T) {
-		type test struct {
-			A *string
-			B *string
-		}
-		a := test{A: ptr("foo")}
-		b := test{A: ptr("bar"), B: ptr("baz")}
-		err := ShallowCopy(&b, &a)
-		require.NoError(t, err)
-		assert.Equal(t, "foo", *b.A)
-		assert.Equal(t, "baz", *b.B)
-	})
-	t.Run("slice", func(t *testing.T) {
-		type test struct {
-			A []string
-			B []string
-		}
-		a := test{A: []string{"foo"}}
-		b := test{A: []string{"bar"}, B: []string{"baz"}}
-		err := ShallowCopy(&b, &a)
-		require.NoError(t, err)
-		assert.Equal(t, []string{"foo"}, b.A)
-		assert.Equal(t, []string{"baz"}, b.B)
 	})
 }

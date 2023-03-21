@@ -96,23 +96,3 @@ func parsePK(s string) (int, error) {
 	}
 	return pk, nil
 }
-
-func ShallowCopy[T any](dst, src T) error {
-	dv := reflect.ValueOf(dst)
-	for dv.Kind() == reflect.Ptr {
-		dv = dv.Elem()
-	}
-	sv := reflect.ValueOf(src)
-	for sv.Kind() == reflect.Ptr {
-		sv = sv.Elem()
-	}
-	t := dv.Type()
-	for i := 0; i < t.NumField(); i++ {
-		tf := t.Field(i)
-		if sv.FieldByName(tf.Name).IsZero() {
-			continue
-		}
-		dv.FieldByName(tf.Name).Set(sv.FieldByName(tf.Name))
-	}
-	return nil
-}
