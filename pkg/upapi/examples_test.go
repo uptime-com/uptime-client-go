@@ -15,10 +15,9 @@ func ExampleAPI_Checks_create() {
 		log.Fatalln("api client initialization failed:", err)
 	}
 
-	check, err := api.Checks().Create(context.Background(), upapi.Check{
-		Name:      "example",
-		CheckType: "HTTP",
-		Address:   "https://example.com",
+	check, err := api.Checks().CreateHTTP(context.Background(), upapi.CheckHTTP{
+		Name:    "example",
+		Address: "https://example.com",
 		Locations: []string{
 			"US East",
 			"US West",
