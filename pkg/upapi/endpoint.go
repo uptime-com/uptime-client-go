@@ -144,7 +144,7 @@ type endpointUpdaterImpl[RequestType PrimaryKeyGetter, ResponseType ItemGetter[I
 }
 
 func (p *endpointUpdaterImpl[RequestType, ResponseType, ItemType]) Update(ctx context.Context, arg RequestType) (*ItemType, error) {
-	rq, err := p.BuildRequest(ctx, http.MethodPut, fmt.Sprintf("%s/%d/", p.endpoint, arg.PrimaryKey()), nil, arg)
+	rq, err := p.BuildRequest(ctx, http.MethodPatch, fmt.Sprintf("%s/%d/", p.endpoint, arg.PrimaryKey()), nil, arg)
 	if err != nil {
 		return nil, err
 	}

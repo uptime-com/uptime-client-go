@@ -133,7 +133,7 @@ func TestEndpointUpdater(t *testing.T) {
 
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
-		require.Equal(t, http.MethodPut, r.Method)
+		require.Equal(t, http.MethodPatch, r.Method)
 		require.Equal(t, "/api/v1/items/1/", r.URL.Path)
 		buf := bytes.NewBuffer(nil)
 		_, err := buf.ReadFrom(r.Body)

@@ -77,7 +77,7 @@ var (
 	contactsUpdateFlags = upapi.Contact{}
 	contactsUpdateCmd   = &cobra.Command{
 		Use:   "update <pk>",
-		Short: "Update existing check",
+		Short: "Update existing contact",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return output(contactsUpdate(cmd.Context(), args[0]))
@@ -98,14 +98,7 @@ func contactsUpdate(ctx context.Context, pkStr string) (*upapi.Contact, error) {
 	if err != nil {
 		return nil, err
 	}
-	contact, err := api.Contacts().Get(ctx, upapi.PrimaryKey(pk))
-	if err != nil {
-		return nil, err
-	}
-	err = ShallowCopy(&contactsUpdateFlags, contact)
-	if err != nil {
-		return nil, err
-	}
+	contactsUpdateFlags.PK = pk
 	return api.Contacts().Update(ctx, contactsUpdateFlags)
 }
 
