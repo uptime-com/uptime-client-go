@@ -50,86 +50,113 @@ func integrationsList(ctx context.Context) ([]upapi.Integration, error) {
 }
 
 var (
-	integrationsCreateFlags = upapi.Integration{}
-	integrationsCreateCmd   = &cobra.Command{
-		Use:     "create <type>",
+	integrationsCreateCmd = &cobra.Command{
+		Use:     "create",
 		Aliases: []string{"add"},
-		Short:   "Create a new check",
-		Args:    cobra.ExactArgs(1),
-		ValidArgs: []string{
-			"cachet",
-			"webhook",
-			"datadog",
-			"geckoboard",
-			"jiraservicedesk",
-			"klipfolio",
-			"librato",
-			"microsoft_teams",
-			"opsgenie",
-			"pagerduty",
-			"pushbullet",
-			"pushover",
-			"slack",
-			"victorops",
-			"status",
-			"statuspage",
-			"twitter",
-			"wavefront",
-			"zapier",
-		},
-		RunE: func(cmd *cobra.Command, args []string) error {
-			integrationsCreateFlags.Module = args[0]
-			return output(integrationsCreate(cmd.Context()))
-		},
+		Short:   "Create a new integration",
+		Args:    cobra.NoArgs,
 	}
 )
 
-func init() {
-	err := Bind(integrationsCreateCmd.Flags(), &integrationsCreateFlags)
+func integrationsCreateSubcommand(name string, flags any, fn func(context.Context) (*upapi.Integration, error)) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   name,
+		Short: "Create a new " + name + " integration",
+		Args:  cobra.NoArgs,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return output(fn(cmd.Context()))
+		},
+	}
+	err := Bind(cmd.Flags(), flags)
 	if err != nil {
 		panic(err)
 	}
-	integrationsCmd.AddCommand(integrationsCreateCmd)
-}
-
-func integrationsCreate(ctx context.Context) (*upapi.Integration, error) {
-	return api.Integrations().Create(ctx, integrationsCreateFlags)
+	return cmd
 }
 
 var (
-	integrationsUpdateFlags = upapi.Integration{}
-	integrationsUpdateCmd   = &cobra.Command{
-		Use:   "update <pk>",
-		Short: "Update existing check",
-		Args:  cobra.ExactArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return output(integrationsUpdate(cmd.Context(), args[0]))
-		},
-	}
+	integrationsCreateCachetFlags          upapi.IntegrationCachet
+	integrationsCreateDatadogFlags         upapi.IntegrationDatadog
+	integrationsCreateGeckoboardFlags      upapi.IntegrationGeckoboard
+	integrationsCreateJiraServicedeskFlags upapi.IntegrationJiraServicedesk
+	integrationsCreateKlipfolioFlags       upapi.IntegrationKlipfolio
+	integrationsCreateLibratoFlags         upapi.IntegrationLibrato
+	integrationsCreateMicrosoftTeamsFlags  upapi.IntegrationMicrosoftTeams
+	integrationsCreateOpsgenieFlags        upapi.IntegrationOpsgenie
+	integrationsCreatePagerdutyFlags       upapi.IntegrationPagerduty
+	integrationsCreatePushbulletFlags      upapi.IntegrationPushbullet
+	integrationsCreatePushoverFlags        upapi.IntegrationPushover
+	integrationsCreateSlackFlags           upapi.IntegrationSlack
+	integrationsCreateStatusFlags          upapi.IntegrationStatus
+	integrationsCreateStatuspageFlags      upapi.IntegrationStatuspage
+	integrationsCreateTwitterFlags         upapi.IntegrationTwitter
+	integrationsCreateVictoropsFlags       upapi.IntegrationVictorops
+	integrationsCreateWavefrontFlags       upapi.IntegrationWavefront
+	integrationsCreateWebhookFlags         upapi.IntegrationWebhook
+	integrationsCreateZapierFlags          upapi.IntegrationZapier
 )
 
 func init() {
-	err := Bind(integrationsUpdateCmd.Flags(), &integrationsUpdateFlags)
-	if err != nil {
-		panic(err)
-	}
-	integrationsCmd.AddCommand(integrationsUpdateCmd)
-}
-
-func integrationsUpdate(ctx context.Context, pkStr string) (*upapi.Integration, error) {
-	pk, err := parsePK(pkStr)
-	if err != nil {
-		return nil, err
-	}
-	integration, err := api.Integrations().Get(ctx, upapi.PrimaryKey(pk))
-	if err != nil {
-		return nil, err
-	}
-	err = ShallowCopy(&integrationsUpdateFlags, integration)
-	if err != nil {
-		return nil, err
-	}
-	return api.Integrations().Update(ctx, integrationsUpdateFlags)
+	integrationsCreateCmd.AddCommand(
+		integrationsCreateSubcommand("cachet", &integrationsCreateCachetFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateCachet(ctx, integrationsCreateCachetFlags)
+		}),
+		integrationsCreateSubcommand("datadog", &integrationsCreateDatadogFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateDatadog(ctx, integrationsCreateDatadogFlags)
+		}),
+		integrationsCreateSubcommand("geckoboard", &integrationsCreateGeckoboardFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateGeckoboard(ctx, integrationsCreateGeckoboardFlags)
+		}),
+		integrationsCreateSubcommand("jira-servicedesk", &integrationsCreateJiraServicedeskFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateJiraServicedesk(ctx, integrationsCreateJiraServicedeskFlags)
+		}),
+		integrationsCreateSubcommand("klipfolio", &integrationsCreateKlipfolioFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateKlipfolio(ctx, integrationsCreateKlipfolioFlags)
+		}),
+		integrationsCreateSubcommand("librato", &integrationsCreateLibratoFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateLibrato(ctx, integrationsCreateLibratoFlags)
+		}),
+		integrationsCreateSubcommand("microsoft-teams", &integrationsCreateMicrosoftTeamsFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateMicrosoftTeams(ctx, integrationsCreateMicrosoftTeamsFlags)
+		}),
+		integrationsCreateSubcommand("opsgenie", &integrationsCreateOpsgenieFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateOpsgenie(ctx, integrationsCreateOpsgenieFlags)
+		}),
+		integrationsCreateSubcommand("pagerduty", &integrationsCreatePagerdutyFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreatePagerduty(ctx, integrationsCreatePagerdutyFlags)
+		}),
+		integrationsCreateSubcommand("pushbullet", &integrationsCreatePushbulletFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreatePushbullet(ctx, integrationsCreatePushbulletFlags)
+		}),
+		integrationsCreateSubcommand("pushover", &integrationsCreatePushoverFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreatePushover(ctx, integrationsCreatePushoverFlags)
+		}),
+		integrationsCreateSubcommand("slack", &integrationsCreateSlackFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateSlack(ctx, integrationsCreateSlackFlags)
+		}),
+		integrationsCreateSubcommand("status", &integrationsCreateStatusFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateStatus(ctx, integrationsCreateStatusFlags)
+		}),
+		integrationsCreateSubcommand("statuspage", &integrationsCreateStatuspageFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateStatuspage(ctx, integrationsCreateStatuspageFlags)
+		}),
+		integrationsCreateSubcommand("twitter", &integrationsCreateTwitterFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateTwitter(ctx, integrationsCreateTwitterFlags)
+		}),
+		integrationsCreateSubcommand("victorops", &integrationsCreateVictoropsFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateVictorops(ctx, integrationsCreateVictoropsFlags)
+		}),
+		integrationsCreateSubcommand("wavefront", &integrationsCreateWavefrontFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateWavefront(ctx, integrationsCreateWavefrontFlags)
+		}),
+		integrationsCreateSubcommand("webhook", &integrationsCreateWebhookFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateWebhook(ctx, integrationsCreateWebhookFlags)
+		}),
+		integrationsCreateSubcommand("zapier", &integrationsCreateZapierFlags, func(ctx context.Context) (*upapi.Integration, error) {
+			return api.Integrations().CreateZapier(ctx, integrationsCreateZapierFlags)
+		}),
+	)
+	integrationsCmd.AddCommand(integrationsCreateCmd)
 }
 
 var (
@@ -137,7 +164,7 @@ var (
 		Use:     "delete",
 		Aliases: []string{"del", "rm"},
 		Short:   "Delete a tag",
-		Args:    cobra.NoArgs,
+		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return output(integrationsDelete(cmd.Context(), args[0]))
 		},
@@ -148,14 +175,14 @@ func init() {
 	integrationsCmd.AddCommand(integrationsDeleteCmd)
 }
 
-func integrationsDelete(ctx context.Context, pkstr string) (*upapi.Tag, error) {
+func integrationsDelete(ctx context.Context, pkstr string) (*upapi.Integration, error) {
 	pk, err := parsePK(pkstr)
 	if err != nil {
 		return nil, err
 	}
-	tag, err := api.Tags().Get(ctx, upapi.PrimaryKey(pk))
+	integration, err := api.Integrations().Get(ctx, upapi.PrimaryKey(pk))
 	if err != nil {
 		return nil, err
 	}
-	return tag, api.Tags().Delete(ctx, upapi.PrimaryKey(pk))
+	return integration, api.Integrations().Delete(ctx, upapi.PrimaryKey(pk))
 }
