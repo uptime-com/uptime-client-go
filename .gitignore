@@ -1,4 +1,5 @@
 .*
 dist/
+!.github/
 !.goreleaser.yaml
 !.gitignore
