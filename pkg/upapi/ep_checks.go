@@ -183,6 +183,7 @@ func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 		},
 		checksEndpointHTTPImpl: checksEndpointHTTPImpl{
 			EndpointCreator: NewEndpointCreator[CheckHTTP, CheckResponse, Check](cbd, endpoint+"/add-http"),
+			EndpointUpdater: NewEndpointUpdater[CheckHTTP, CheckResponse, Check](cbd, endpoint),
 		},
 		checksEndpointICMPImpl: checksEndpointICMPImpl{
 			EndpointCreator: NewEndpointCreator[CheckICMP, CheckResponse, Check](cbd, endpoint+"/add-icmp"),
