@@ -34,5 +34,23 @@ archives:
 checksum:
   name_template: 'checksums.txt'
 
+signs:
+  - artifacts: checksum
+    args:
+      - "--batch"
+      - "--local-user"
+      - "{{ .Env.GPG_FINGERPRINT }}"
+      - "--output"
+      - "${signature}"
+      - "--detach-sign"
+      - "${artifact}"
+
 snapshot:
-  name_template: "{{ incpatch .Version }}-pre"
+  name_template: "{{ incminor .Version }}-pre-{{ .ShortCommit }}"
+
+changelog:
+  skip: true
+
+release:
+  prerelease: auto
+
