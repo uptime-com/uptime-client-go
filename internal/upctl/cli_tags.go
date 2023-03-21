@@ -2,7 +2,6 @@ package upctl
 
 import (
 	"context"
-	"errors"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -81,17 +80,14 @@ func tagsCreate(ctx context.Context) (*upapi.Tag, error) {
 }
 
 var (
-	tagsUpdateFlags = struct {
-		PK  int
-		Tag upapi.Tag
-	}{}
-	tagsUpdateCmd = &cobra.Command{
-		Use:     "update",
-		Aliases: []string{"set"},
+	tagsUpdateFlags upapi.Tag
+	tagsUpdateCmd   = &cobra.Command{
+		Use:     "update <pk>",
+		Aliases: []string{"up"},
 		Short:   "Update a tag",
-		Args:    cobra.NoArgs,
+		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return output(tagsUpdate(cmd.Context()))
+			return output(tagsUpdate(cmd.Context(), args[0]))
 		},
 	}
 )
@@ -104,12 +100,13 @@ func init() {
 	tagsCmd.AddCommand(tagsUpdateCmd)
 }
 
-func tagsUpdate(ctx context.Context) (*upapi.Tag, error) {
-	if tagsUpdateFlags.PK == 0 {
-		return nil, errors.New("please provide tag primary key")
+func tagsUpdate(ctx context.Context, pkstr string) (*upapi.Tag, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
 	}
-	tagsUpdateFlags.Tag.PK = tagsUpdateFlags.PK
-	return api.Tags().Update(ctx, tagsUpdateFlags.Tag)
+	tagsUpdateFlags.PK = pk
+	return api.Tags().Update(ctx, tagsUpdateFlags)
 }
 
 var (
