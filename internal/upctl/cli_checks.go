@@ -2,6 +2,7 @@ package upctl
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/spf13/cobra"
 
@@ -166,11 +167,151 @@ func init() {
 	checksCmd.AddCommand(checksCreateCmd)
 }
 
+func checksUpdateSubcommand(name string, flags any, fn func(context.Context, int) (*upapi.Check, error)) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   name + " { pk }",
+		Short: "Update " + name + " check",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			pk, err := strconv.Atoi(args[0])
+			if err != nil {
+				return err
+			}
+			return output(fn(cmd.Context(), pk))
+		},
+	}
+	err := Bind(cmd.Flags(), flags)
+	if err != nil {
+		panic(err)
+	}
+	return cmd
+}
+
+var (
+	checksUpdateCmd = &cobra.Command{
+		Use:     "update",
+		Aliases: []string{"up"},
+		Short:   "Update a check",
+	}
+
+	updateCreateAPIFlags         upapi.CheckAPI
+	updateCreateBlacklistFlags   upapi.CheckBlacklist
+	updateCreateDNSFlags         upapi.CheckDNS
+	updateCreateGroupFlags       upapi.CheckGroup
+	updateCreateHeartbeatFlags   upapi.CheckHeartbeat
+	updateCreateHTTPFlags        upapi.CheckHTTP
+	updateCreateICMPFlags        upapi.CheckICMP
+	updateCreateIMAPFlags        upapi.CheckIMAP
+	updateCreateMalwareFlags     upapi.CheckMalware
+	updateCreateNTPFlags         upapi.CheckNTP
+	updateCreatePOPFlags         upapi.CheckPOP
+	updateCreateRUMFlags         upapi.CheckRUM
+	updateCreateRUM2Flags        upapi.CheckRUM2
+	updateCreateSMTPFlags        upapi.CheckSMTP
+	updateCreateSSHFlags         upapi.CheckSSH
+	updateCreateSSLCertFlags     upapi.CheckSSLCert
+	updateCreateTCPFlags         upapi.CheckTCP
+	updateCreateTransactionFlags upapi.CheckTransaction
+	updateCreateUDPFlags         upapi.CheckUDP
+	updateCreateWebhookFlags     upapi.CheckWebhook
+	updateCreateWHOISFlags       upapi.CheckWHOIS
+)
+
+func init() {
+	checksUpdateCmd.AddCommand(
+		checksUpdateSubcommand("api", &updateCreateAPIFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateAPIFlags.PK = pk
+			return api.Checks().UpdateAPI(ctx, updateCreateAPIFlags)
+		}),
+		checksUpdateSubcommand("blacklist", &updateCreateBlacklistFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateBlacklistFlags.PK = pk
+			return api.Checks().UpdateBlacklist(ctx, updateCreateBlacklistFlags)
+		}),
+		checksUpdateSubcommand("dns", &updateCreateDNSFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateDNSFlags.PK = pk
+			return api.Checks().UpdateDNS(ctx, updateCreateDNSFlags)
+		}),
+		checksUpdateSubcommand("group", &updateCreateGroupFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateGroupFlags.PK = pk
+			return api.Checks().UpdateGroup(ctx, updateCreateGroupFlags)
+		}),
+		checksUpdateSubcommand("heartbeat", &updateCreateHeartbeatFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateHeartbeatFlags.PK = pk
+			return api.Checks().UpdateHeartbeat(ctx, updateCreateHeartbeatFlags)
+		}),
+		checksUpdateSubcommand("http", &updateCreateHTTPFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateHTTPFlags.PK = pk
+			return api.Checks().UpdateHTTP(ctx, updateCreateHTTPFlags)
+		}),
+		checksUpdateSubcommand("icmp", &updateCreateICMPFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateICMPFlags.PK = pk
+			return api.Checks().UpdateICMP(ctx, updateCreateICMPFlags)
+		}),
+		checksUpdateSubcommand("imap", &updateCreateIMAPFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateIMAPFlags.PK = pk
+			return api.Checks().UpdateIMAP(ctx, updateCreateIMAPFlags)
+		}),
+		checksUpdateSubcommand("malware", &updateCreateMalwareFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateMalwareFlags.PK = pk
+			return api.Checks().UpdateMalware(ctx, updateCreateMalwareFlags)
+		}),
+		checksUpdateSubcommand("ntp", &updateCreateNTPFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateNTPFlags.PK = pk
+			return api.Checks().UpdateNTP(ctx, updateCreateNTPFlags)
+		}),
+		checksUpdateSubcommand("pop", &updateCreatePOPFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreatePOPFlags.PK = pk
+			return api.Checks().UpdatePOP(ctx, updateCreatePOPFlags)
+		}),
+		checksUpdateSubcommand("rum", &updateCreateRUMFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateRUMFlags.PK = pk
+			return api.Checks().UpdateRUM(ctx, updateCreateRUMFlags)
+		}),
+		checksUpdateSubcommand("rum2", &updateCreateRUM2Flags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateRUM2Flags.PK = pk
+			return api.Checks().UpdateRUM2(ctx, updateCreateRUM2Flags)
+		}),
+		checksUpdateSubcommand("smtp", &updateCreateSMTPFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateSMTPFlags.PK = pk
+			return api.Checks().UpdateSMTP(ctx, updateCreateSMTPFlags)
+		}),
+		checksUpdateSubcommand("ssh", &updateCreateSSHFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateSSHFlags.PK = pk
+			return api.Checks().UpdateSSH(ctx, updateCreateSSHFlags)
+		}),
+		checksUpdateSubcommand("sslcert", &updateCreateSSLCertFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateSSLCertFlags.PK = pk
+			return api.Checks().UpdateSSLCert(ctx, updateCreateSSLCertFlags)
+		}),
+		checksUpdateSubcommand("tcp", &updateCreateTCPFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateTCPFlags.PK = pk
+			return api.Checks().UpdateTCP(ctx, updateCreateTCPFlags)
+		}),
+		checksUpdateSubcommand("transaction", &updateCreateTransactionFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateTransactionFlags.PK = pk
+			return api.Checks().UpdateTransaction(ctx, updateCreateTransactionFlags)
+		}),
+		checksUpdateSubcommand("udp", &updateCreateUDPFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateUDPFlags.PK = pk
+			return api.Checks().UpdateUDP(ctx, updateCreateUDPFlags)
+		}),
+		checksUpdateSubcommand("webhook", &updateCreateWebhookFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateWebhookFlags.PK = pk
+			return api.Checks().UpdateWebhook(ctx, updateCreateWebhookFlags)
+		}),
+		checksUpdateSubcommand("whois", &updateCreateWHOISFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			updateCreateWHOISFlags.PK = pk
+			return api.Checks().UpdateWHOIS(ctx, updateCreateWHOISFlags)
+		}),
+	)
+	checksCmd.AddCommand(checksUpdateCmd)
+}
+
 var (
 	checksDeleteCmd = &cobra.Command{
 		Use:     "delete",
 		Aliases: []string{"del", "rm"},
-		Short:   "Delete a tag",
+		Short:   "Delete a check",
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return output(checksDelete(cmd.Context(), args[0]))
