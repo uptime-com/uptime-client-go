@@ -2,6 +2,8 @@ package upapi
 
 import (
 	"context"
+	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/shopspring/decimal"
@@ -89,10 +91,46 @@ func (r CheckResponse) Item() *Check {
 	return &r.Results
 }
 
+// CheckStatsOptions specifies the parameters to /api/v1/checks/{pk}/stats/ endpoint
+type CheckStatsOptions struct {
+	StartDate              string `url:"start_date,omitempty"`
+	EndDate                string `url:"end_date,omitempty"`
+	Location               string `url:"location,omitempty"`
+	LocationsResponseTimes bool   `url:"locations_response_times,omitempty"`
+	IncludeAlerts          bool   `url:"include_alerts,omitempty"`
+	Download               bool   `url:"download,omitempty"`
+	PDF                    bool   `url:"pdf,omitempty"`
+}
+
+// CheckStatsResponse represents the API response to a Stats query
+type CheckStatsResponse struct {
+	StartDate string `json:"start_date"`
+	EndDate   string `json:"end_date"`
+	Totals    struct {
+		Outages      int   `json:"outages,omitempty"`
+		DowntimeSecs int64 `json:"downtime_secs,omitempty"`
+	} `json:"totals"`
+	Statistics []CheckStats `json:"statistics"`
+}
+
+func (c CheckStatsResponse) List() []CheckStats {
+	return c.Statistics
+}
+
+type CheckStats struct {
+	Date                   string   `json:"date"`
+	Outages                int      `json:"outages"`
+	DowntimeSecs           int      `json:"downtime_secs"`
+	Uptime                 *float64 `json:"uptime,omitempty"`
+	ResponseTime           *float64 `json:"response_time,omitempty"`
+	ResponseTimeDatapoints [][]any  `json:"response_time_datapoints,omitempty"`
+}
+
 type ChecksEndpoint interface {
 	List(context.Context, CheckListOptions) ([]Check, error)
 	Get(context.Context, PrimaryKey) (*Check, error)
 	Delete(context.Context, PrimaryKey) error
+	Stats(context.Context, PrimaryKey, CheckStatsOptions) ([]CheckStats, error)
 
 	CreateAPI(ctx context.Context, check CheckAPI) (*Check, error)
 	UpdateAPI(ctx context.Context, check CheckAPI) (*Check, error)
@@ -241,6 +279,9 @@ func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 			EndpointCreator: NewEndpointCreator[CheckWHOIS, CheckResponse, Check](cbd, endpoint+"/add-whois"),
 			EndpointUpdater: NewEndpointUpdater[CheckWHOIS, CheckResponse, Check](cbd, endpoint),
 		},
+		checksStatsEndpointImpl: checksStatsEndpointImpl{
+			endpoint: NewEndpointLister[CheckStatsResponse, CheckStats, CheckStatsOptions](&checksStatsEndpointCBD{cbd}, endpoint+"/%d/stats"),
+		},
 		EndpointLister:  NewEndpointLister[CheckListResponse, Check, CheckListOptions](cbd, endpoint),
 		EndpointGetter:  NewEndpointGetter[PrimaryKey, CheckResponse, Check](cbd, endpoint),
 		EndpointDeleter: NewEndpointDeleter[PrimaryKey](cbd, endpoint),
@@ -269,10 +310,32 @@ type checksEndpointImpl struct {
 	checksEndpointUDPImpl
 	checksEndpointWebhookImpl
 	checksEndpointWHOISImpl
+	checksStatsEndpointImpl
 	EndpointLister[CheckListResponse, Check, CheckListOptions]
 	EndpointGetter[PrimaryKey, CheckResponse, Check]
 	EndpointUpdater[Check, CheckResponse, Check]
 	EndpointDeleter[PrimaryKey]
+}
+
+type checksStatsCtxKey struct{}
+
+type checksStatsEndpointImpl struct {
+	endpoint EndpointLister[CheckStatsResponse, CheckStats, CheckStatsOptions]
+}
+
+func (c *checksEndpointImpl) Stats(ctx context.Context, pk PrimaryKey, opts CheckStatsOptions) ([]CheckStats, error) {
+	ctx = context.WithValue(ctx, checksStatsCtxKey{}, pk)
+	return c.endpoint.List(ctx, opts)
+}
+
+type checksStatsEndpointCBD struct {
+	CBD
+}
+
+func (c checksStatsEndpointCBD) BuildRequest(ctx context.Context, method string, endpoint string, args any, data any) (*http.Request, error) {
+	pk := ctx.Value(checksStatsCtxKey{}).(PrimaryKey)
+	endpoint = fmt.Sprintf(endpoint, pk.PrimaryKey())
+	return c.CBD.BuildRequest(ctx, method, endpoint, args, data)
 }
 
 type CheckAPI struct {
@@ -1032,75 +1095,3 @@ func (c checksEndpointWHOISImpl) CreateWHOIS(ctx context.Context, check CheckWHO
 func (c checksEndpointWHOISImpl) UpdateWHOIS(ctx context.Context, check CheckWHOIS) (*Check, error) {
 	return c.Update(ctx, check)
 }
-
-//type checksCreateClient struct {
-//	CBD
-//}
-//
-//func (c *checksCreateClient) BuildRequest(ctx context.Context, method string, endpoint string, args any, body any) (*http.Request, error) {
-//	if method != http.MethodPost {
-//		panic("only POST requests allowed here; this is always a programming error")
-//	}
-//	data, ok := body.(Check)
-//	if !ok {
-//		panic("only uptime.Check objects allowed here; this is always a programming error")
-//	}
-//	endpoint = fmt.Sprintf("%sadd-%s/", endpoint, strings.ToLower(data.CheckType))
-//	return c.CBD.BuildRequest(ctx, method, endpoint, args, body)
-//}
-
-//// CheckStatsOptions specifies the parameters to the CheckService.Stats method.
-//type CheckStatsOptions struct {
-//	StartDate              string
-//	EndDate                string
-//	Location               string
-//	LocationsResponseTimes bool
-//	IncludeAlerts          bool
-//	Download               bool
-//	PDF                    bool
-//}
-//
-//// CheckStatsResponse represents the API's response to a Stats query.
-//type CheckStatsResponse struct {
-//	StartDate  string           `json:"start_date"`
-//	EndDate    string           `json:"end_date"`
-//	Statistics []*CheckStats    `json:"statistics"`
-//	Totals     CheckStatsTotals `json:"totals"`
-//}
-//
-//// CheckStats represents the check statistics for a given day.
-//type CheckStats struct {
-//	Date         string `json:"date"`
-//	Outages      int    `json:"outages"`
-//	DowntimeSecs int    `json:"downtime_secs"`
-//}
-//
-//// CheckStatsTotals represents the 'totals' section of check statistics in Uptime.com.
-//type CheckStatsTotals struct {
-//	Outages      int   `json:"outages,omitempty"`
-//	DowntimeSecs int64 `json:"downtime_secs,omitempty"`
-//}
-//
-//// Stats gets statistics on the specified check.
-//func (s *CheckService) Stats(ctx context.Context, pk int, opt *CheckStatsOptions) (*CheckStatsResponse, *http.Response, error) {
-//	u := fmt.Sprintf("checks/%v/stats/?start_date=%s&end_date=%s&location=%s&locations_response_times=%t&include_alerts=%t&download=%t&pdf=%t",
-//		pk,
-//		opt.StartDate,
-//		opt.EndDate,
-//		url.QueryEscape(opt.Location),
-//		opt.LocationsResponseTimes,
-//		opt.IncludeAlerts,
-//		opt.Download,
-//		opt.PDF)
-//	req, err := s.client.NewRequest("GET", u, nil)
-//	if err != nil {
-//		return nil, nil, err
-//	}
-//
-//	c := &CheckStatsResponse{}
-//	resp, err := s.client.Do(ctx, req, c)
-//	if err != nil {
-//		return nil, resp, err
-//	}
-//	return c, resp, nil
-//}
