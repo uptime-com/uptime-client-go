@@ -2,6 +2,7 @@ project_name: upctl
 before:
   hooks:
     - go mod tidy
+
 builds:
   - id:     upctl
     binary: upctl
@@ -20,16 +21,26 @@ builds:
       - CGO_ENABLED=0
     flags:
       - -trimpath
-    ldflags:
-      - '-s -w -X main.version={{.Version}} -X main.commit={{.Commit}}'
-    hooks:
-      post:
-        - upx -9 {{ .Path }}
+    ldflags: [ "-s", "-w", "-X", "main.version={{ .Version }}", "-X", "main.commit={{ .Commit }}" ]
 
 archives:
   - id:                upctl
     format:            tar.gz
     wrap_in_directory: true
+
+kos:
+  - id:         upctl
+    build:      upctl
+    repository: uptimecom/upctl
+    bare:       true
+    platforms:
+      - linux/amd64
+      - linux/arm64
+    tags:
+      - "latest"
+      - "{{ .Version }}"
+      - "{{ .Major }}.{{ .Minor }}"
+      - "{{ .Major }}"
 
 checksum:
   algorithm: sha256
