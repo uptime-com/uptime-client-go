@@ -26,7 +26,7 @@ go install github.com/uptime-com/uptime-client-go/v2/cmd/upctl@latest
 Obtain API token from [Uptime.com](https://uptime.com/api/tokens) and set it as an environment variable:
 
 ```bash
-export UPTIME_TOKEN=your-api-token
+export UPCTL_TOKEN=your-api-token
 ```
 
 ### Library
