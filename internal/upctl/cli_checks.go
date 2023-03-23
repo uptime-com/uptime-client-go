@@ -312,7 +312,7 @@ var (
 		Use:     "delete",
 		Aliases: []string{"del", "rm"},
 		Short:   "Delete a check",
-		Args:    cobra.NoArgs,
+		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return output(checksDelete(cmd.Context(), args[0]))
 		},
@@ -323,14 +323,14 @@ func init() {
 	checksCmd.AddCommand(checksDeleteCmd)
 }
 
-func checksDelete(ctx context.Context, pkstr string) (*upapi.Tag, error) {
+func checksDelete(ctx context.Context, pkstr string) (*upapi.Check, error) {
 	pk, err := parsePK(pkstr)
 	if err != nil {
 		return nil, err
 	}
-	tag, err := api.Tags().Get(ctx, upapi.PrimaryKey(pk))
+	obj, err := api.Checks().Get(ctx, upapi.PrimaryKey(pk))
 	if err != nil {
 		return nil, err
 	}
-	return tag, api.Tags().Delete(ctx, upapi.PrimaryKey(pk))
+	return obj, api.Checks().Delete(ctx, upapi.PrimaryKey(pk))
 }
