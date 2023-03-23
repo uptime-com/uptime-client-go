@@ -11,6 +11,8 @@ import (
 	"github.com/uptime-com/uptime-client-go/v2/pkg/upapi"
 )
 
+var errNoToken = errors.New("token is required")
+
 // cmd represents the base command when called without any subcommands
 var (
 	api upapi.API
@@ -31,6 +33,10 @@ var (
 		Long:          "", // TODO: add long description
 		SilenceErrors: true,
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) (err error) {
+			token := viper.GetString("token")
+			if token == "" {
+				return errNoToken
+			}
 			opts := []upapi.Option{
 				upapi.WithToken(viper.GetString("token")),
 			}
@@ -62,14 +68,24 @@ func init() {
 	}
 }
 
+const obtainTokenMessage = `PLease obtain token from https://uptime.com/api/tokens and set it with:
+
+	export UPCTL_TOKEN=<token>
+
+`
+
 func Execute(version string) {
 	cmd.Version = version
 	err := cmd.Execute()
 	if err != nil {
 		var uperr = new(upapi.Error)
-		if errors.As(err, &uperr) {
+		switch {
+		case errors.Is(err, errNoToken):
+			_, _ = fmt.Fprintf(cmd.OutOrStderr(), "\nError: %v\n\n", err)
+			_, _ = fmt.Fprintf(cmd.OutOrStderr(), obtainTokenMessage)
+		case errors.As(err, &uperr):
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), "\nError: %v\n\n", uperr)
-		} else {
+		default:
 			_, _ = fmt.Fprintf(cmd.OutOrStderr(), "\nError: %v\n\n", err)
 		}
 		os.Exit(1)
