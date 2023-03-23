@@ -334,3 +334,31 @@ func checksDelete(ctx context.Context, pkstr string) (*upapi.Check, error) {
 	}
 	return obj, api.Checks().Delete(ctx, upapi.PrimaryKey(pk))
 }
+
+var (
+	checksStatsFlags = upapi.CheckStatsOptions{}
+	checksStatsCmd   = &cobra.Command{
+		Use:   "stats",
+		Short: "Get check statistics",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return output(checksStats(cmd.Context(), args[0]))
+		},
+	}
+)
+
+func init() {
+	err := Bind(checksStatsCmd.Flags(), &checksStatsFlags)
+	if err != nil {
+		panic(err)
+	}
+	checksCmd.AddCommand(checksStatsCmd)
+}
+
+func checksStats(ctx context.Context, pkstr string) ([]upapi.CheckStats, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
+	}
+	return api.Checks().Stats(ctx, upapi.PrimaryKey(pk), checksStatsFlags)
+}
