@@ -83,7 +83,7 @@ type CheckListOptions struct {
 	Search                string   `url:"search,omitempty"`
 	Ordering              string   `url:"ordering,omitempty"`
 	MonitoringServiceType string   `url:"monitoring_service_type,omitempty"`
-	IsPaused              bool     `url:"is_paused,omitempty"`
+	IsPaused              bool     `url:"is_paused"`
 	StateIsUp             bool     `url:"state_is_up,omitempty"`
 	Tag                   []string `url:"tag,omitempty"`
 }
@@ -349,7 +349,7 @@ type CheckAPI struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval,omitempty"`
 	Threshold              int              `json:"msp_threshold,omitempty"`
 	Script                 string           `json:"msp_script,omitempty"`
@@ -359,7 +359,7 @@ type CheckAPI struct {
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointAPIImpl struct {
@@ -381,7 +381,7 @@ type CheckBlacklist struct {
 	Locations             []string         `json:"locations,omitempty"`
 	Tags                  []string         `json:"tags,omitempty"`
 	MonitoringServiceType string           `json:"monitoring_service_type,omitempty"`
-	IsPaused              bool             `json:"is_paused,omitempty"`
+	IsPaused              bool             `json:"is_paused"`
 	Address               string           `json:"msp_address,omitempty"`
 	NumRetries            int              `json:"msp_num_retries,omitempty"`
 	UptimeSLA             *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
@@ -406,7 +406,7 @@ type CheckDNS struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address,omitempty"`
 	DnsServer              string           `json:"msp_dns_server,omitempty"`
@@ -418,7 +418,7 @@ type CheckDNS struct {
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointDNSImpl struct {
@@ -439,11 +439,11 @@ type CheckGroup struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 	Config                 struct {
 		CheckServices               []string `json:"group_check_services,omitempty"`
 		CheckTags                   []string `json:"group_check_tags,omitempty"`
@@ -474,12 +474,12 @@ type CheckHeartbeat struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	CheckType              string           `json:"check_type,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 	HeartbeatURL           string           `json:"heartbeat_url,omitempty"`
 }
 
@@ -501,7 +501,7 @@ type CheckHTTP struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address,omitempty"`
 	Port                   int              `json:"msp_port,omitempty"`
@@ -522,7 +522,7 @@ type CheckHTTP struct {
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointHTTPImpl struct {
@@ -543,7 +543,7 @@ type CheckICMP struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address,omitempty"`
 	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
@@ -552,7 +552,7 @@ type CheckICMP struct {
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointICMPImpl struct {
@@ -573,7 +573,7 @@ type CheckIMAP struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address,omitempty"`
 	Port                   int              `json:"msp_port,omitempty"`
@@ -585,7 +585,7 @@ type CheckIMAP struct {
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointIMAPImpl struct {
@@ -607,7 +607,7 @@ type CheckMalware struct {
 	Locations     []string         `json:"locations,omitempty"`
 	Tags          []string         `json:"tags,omitempty"`
 	CheckType     string           `json:"check_type,omitempty"`
-	IsPaused      bool             `json:"is_paused,omitempty"`
+	IsPaused      bool             `json:"is_paused"`
 	Address       string           `json:"msp_address,omitempty"`
 	NumRetries    int              `json:"msp_num_retries,omitempty"`
 	UptimeSLA     *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
@@ -632,7 +632,7 @@ type CheckNTP struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval"`
 	Address                string           `json:"msp_address,omitempty"`
 	Port                   int              `json:"msp_port,omitempty"`
@@ -643,7 +643,7 @@ type CheckNTP struct {
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointNTPImpl struct {
@@ -664,7 +664,7 @@ type CheckPOP struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address,omitempty"`
 	Port                   int              `json:"msp_port,omitempty"`
@@ -676,7 +676,7 @@ type CheckPOP struct {
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointPOPImpl struct {
@@ -697,12 +697,12 @@ type CheckRUM struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Address                string           `json:"msp_address,omitempty"`
 	Threshold              int              `json:"msp_threshold,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointRUMImpl struct {
@@ -723,11 +723,11 @@ type CheckRUM2 struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Address                string           `json:"msp_address,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointRUM2Impl struct {
@@ -748,7 +748,7 @@ type CheckSMTP struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval"`
 	Address                string           `json:"msp_address"`
 	Port                   int              `json:"msp_port,omitempty"`
@@ -762,7 +762,7 @@ type CheckSMTP struct {
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointSMTPImpl struct {
@@ -783,7 +783,7 @@ type CheckSSH struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address,omitempty"`
 	Port                   int              `json:"msp_port,omitempty"`
@@ -793,7 +793,7 @@ type CheckSSH struct {
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointSSHImpl struct {
@@ -814,7 +814,7 @@ type CheckSSLCert struct {
 	ContactGroups []string         `json:"contact_groups,omitempty"`
 	Locations     []string         `json:"locations,omitempty"`
 	Tags          []string         `json:"tags,omitempty"`
-	IsPaused      bool             `json:"is_paused,omitempty"`
+	IsPaused      bool             `json:"is_paused"`
 	Protocol      string           `json:"msp_protocol,omitempty"`
 	Address       string           `json:"msp_address"`
 	Port          int              `json:"msp_port,omitempty"`
@@ -853,7 +853,7 @@ type CheckTCP struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address,omitempty"`
 	Port                   int              `json:"msp_port,omitempty"`
@@ -865,7 +865,7 @@ type CheckTCP struct {
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointTCPImpl struct {
@@ -886,7 +886,7 @@ type CheckTransaction struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval,omitempty"`
 	Threshold              int              `json:"msp_threshold,omitempty"`
 	Script                 string           `json:"msp_script,omitempty"`
@@ -895,7 +895,7 @@ type CheckTransaction struct {
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointTransactionImpl struct {
@@ -916,7 +916,7 @@ type CheckUDP struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address,omitempty"`
 	Port                   int              `json:"msp_port,omitempty"`
@@ -928,7 +928,7 @@ type CheckUDP struct {
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 }
 
 type checksEndpointUDPImpl struct {
@@ -949,11 +949,11 @@ type CheckWebhook struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
-	IsPaused               bool             `json:"is_paused,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
 	WebhookUrl             string           `json:"webhook_url,omitempty"`
 }
 
@@ -975,7 +975,7 @@ type CheckWHOIS struct {
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	Locations     []string `json:"locations,omitempty"`
 	Tags          []string `json:"tags,omitempty"`
-	IsPaused      bool     `json:"is_paused,omitempty"`
+	IsPaused      bool     `json:"is_paused"`
 	Address       string   `json:"msp_address,omitempty"`
 	ExpectString  string   `json:"msp_expect_string,omitempty"`
 	Threshold     int      `json:"msp_threshold,omitempty"`

@@ -362,7 +362,7 @@ type IntegrationOpsgenie struct {
 	APIKey        string   `json:"api_key,omitempty"`
 	Teams         string   `json:"teams,omitempty"`
 	Tags          string   `json:"tags,omitempty"`
-	Autoresolve   bool     `json:"autoresolve,omitempty"`
+	Autoresolve   bool     `json:"autoresolve"`
 }
 
 type integrationsEndpointOpsgenieImpl struct {
@@ -382,7 +382,7 @@ type IntegrationPagerduty struct {
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	ServiceKey    string   `json:"service_key,omitempty"`
-	Autoresolve   bool     `json:"autoresolve,omitempty"`
+	Autoresolve   bool     `json:"autoresolve"`
 }
 
 type integrationsEndpointPagerdutyImpl struct {
@@ -568,7 +568,7 @@ type IntegrationWebhook struct {
 	ContactGroups    []string `json:"contact_groups,omitempty"`
 	PostbackUrl      string   `json:"postback_url,omitempty"`
 	Headers          string   `json:"headers,omitempty"`
-	UseLegacyPayload bool     `json:"use_legacy_payload,omitempty"`
+	UseLegacyPayload bool     `json:"use_legacy_payload"`
 }
 
 type integrationsEndpointWebhookImpl struct {
