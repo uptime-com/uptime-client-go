@@ -19,15 +19,11 @@ type testItem struct {
 	Baz bool   `json:"baz"`
 }
 
-func (i testItem) PrimaryKey() PrimaryKey {
-	return 1
-}
-
 type testItemResponse struct {
-	Results *testItem `json:"results"`
+	Results testItem `json:"results"`
 }
 
-func (r testItemResponse) Item() *testItem {
+func (r testItemResponse) Item() testItem {
 	return r.Results
 }
 
@@ -134,7 +130,7 @@ func TestEndpointUpdater(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 		require.Equal(t, http.MethodPatch, r.Method)
-		require.Equal(t, "/api/v1/items/1/", r.URL.Path)
+		require.Equal(t, "/api/v1/items/100500/", r.URL.Path)
 		buf := bytes.NewBuffer(nil)
 		_, err := buf.ReadFrom(r.Body)
 		require.NoError(t, err)
@@ -147,7 +143,7 @@ func TestEndpointUpdater(t *testing.T) {
 
 	ep := NewEndpointUpdater[testItem, testItemResponse, testItem](c, "items")
 
-	obj, err := ep.Update(ctx, testItem{"foo", 1, true})
+	obj, err := ep.Update(ctx, PrimaryKey(100500), testItem{"foo", 1, true})
 	require.NoError(t, err)
 	require.Equal(t, &testItem{"foo", 1, true}, obj)
 }

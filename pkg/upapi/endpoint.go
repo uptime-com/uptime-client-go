@@ -6,11 +6,11 @@ import (
 	"net/http"
 )
 
-type ItemGetter[Item any] interface {
-	Item() *Item
+type Itemable[Item any] interface {
+	Item() Item
 }
 
-type ListGetter[Item any] interface {
+type Listable[Item any] interface {
 	List() []Item
 }
 
@@ -25,15 +25,15 @@ func (p PrimaryKey) PrimaryKey() PrimaryKey {
 }
 
 // EndpointGetter is a generic interface for getting a single item from an endpoint.
-type EndpointGetter[ResponseType ItemGetter[Item], Item any] interface {
-	Get(ctx context.Context, pk PrimaryKeyable) (*Item, error)
+type EndpointGetter[ResponseType Itemable[ItemType], ItemType any] interface {
+	Get(ctx context.Context, pk PrimaryKeyable) (*ItemType, error)
 }
 
-func NewEndpointGetter[ResponseType ItemGetter[ItemType], ItemType any](cbd CBD, endpoint string) EndpointGetter[ResponseType, ItemType] {
+func NewEndpointGetter[ResponseType Itemable[ItemType], ItemType any](cbd CBD, endpoint string) EndpointGetter[ResponseType, ItemType] {
 	return &endpointGetterImpl[ResponseType, ItemType]{cbd, endpoint}
 }
 
-type endpointGetterImpl[ResponseType ItemGetter[ItemType], ItemType any] struct {
+type endpointGetterImpl[ResponseType Itemable[ItemType], ItemType any] struct {
 	CBD
 	endpoint string
 }
@@ -56,19 +56,20 @@ func (p *endpointGetterImpl[ResponseType, ItemType]) Get(ctx context.Context, pk
 	if err != nil {
 		return nil, err
 	}
-	return data.Item(), nil
+	item := data.Item()
+	return &item, nil
 }
 
 // EndpointLister is a generic interface for listing items from an endpoint.
-type EndpointLister[ResponseType ListGetter[ItemType], ItemType any, OptionsType any] interface {
+type EndpointLister[ResponseType Listable[ItemType], ItemType any, OptionsType any] interface {
 	List(ctx context.Context, opts OptionsType) ([]ItemType, error)
 }
 
-func NewEndpointLister[ResponseType ListGetter[ItemType], ItemType any, OptionsType any](cbd CBD, endpoint string) EndpointLister[ListGetter[ItemType], ItemType, OptionsType] {
+func NewEndpointLister[ResponseType Listable[ItemType], ItemType any, OptionsType any](cbd CBD, endpoint string) EndpointLister[Listable[ItemType], ItemType, OptionsType] {
 	return &endpointListerImpl[ResponseType, ItemType, OptionsType]{cbd, endpoint}
 }
 
-type endpointListerImpl[ResponseType ListGetter[ItemType], ItemType any, OptionsType any] struct {
+type endpointListerImpl[ResponseType Listable[ItemType], ItemType any, OptionsType any] struct {
 	CBD
 	endpoint string
 }
@@ -95,15 +96,15 @@ func (p *endpointListerImpl[ResponseType, ItemType, OptionsType]) List(ctx conte
 }
 
 // EndpointCreator is a generic interface for creating an item from an endpoint.
-type EndpointCreator[RequestType any, ResponseType ItemGetter[ItemType], ItemType any] interface {
+type EndpointCreator[RequestType any, ResponseType Itemable[ItemType], ItemType any] interface {
 	Create(ctx context.Context, arg RequestType) (*ItemType, error)
 }
 
-func NewEndpointCreator[RequestType any, ResponseType ItemGetter[ItemType], ItemType any](cbd CBD, endpoint string) EndpointCreator[RequestType, ResponseType, ItemType] {
+func NewEndpointCreator[RequestType any, ResponseType Itemable[ItemType], ItemType any](cbd CBD, endpoint string) EndpointCreator[RequestType, ResponseType, ItemType] {
 	return &endpointCreatorImpl[RequestType, ResponseType, ItemType]{cbd, endpoint}
 }
 
-type endpointCreatorImpl[RequestType any, ResponseType ItemGetter[ItemType], ItemType any] struct {
+type endpointCreatorImpl[RequestType any, ResponseType Itemable[ItemType], ItemType any] struct {
 	CBD
 	endpoint string
 }
@@ -126,25 +127,26 @@ func (p *endpointCreatorImpl[RequestType, ResponseType, ItemType]) Create(ctx co
 	if err != nil {
 		return nil, err
 	}
-	return data.Item(), nil
+	item := data.Item()
+	return &item, nil
 }
 
 // EndpointUpdater is a generic interface for updating an item from an endpoint.
-type EndpointUpdater[RequestType PrimaryKeyable, ResponseType ItemGetter[ItemType], ItemType any] interface {
-	Update(ctx context.Context, arg RequestType) (*ItemType, error)
+type EndpointUpdater[ArgumentType any, ResultType Itemable[ItemType], ItemType any] interface {
+	Update(ctx context.Context, pk PrimaryKeyable, arg ArgumentType) (*ItemType, error)
 }
 
-func NewEndpointUpdater[RequestType PrimaryKeyable, ResponseType ItemGetter[ItemType], ItemType any](cbd CBD, endpoint string) EndpointUpdater[RequestType, ResponseType, ItemType] {
+func NewEndpointUpdater[RequestType any, ResponseType Itemable[ItemType], ItemType any](cbd CBD, endpoint string) EndpointUpdater[RequestType, ResponseType, ItemType] {
 	return &endpointUpdaterImpl[RequestType, ResponseType, ItemType]{cbd, endpoint}
 }
 
-type endpointUpdaterImpl[RequestType PrimaryKeyable, ResponseType ItemGetter[ItemType], ItemType any] struct {
+type endpointUpdaterImpl[RequestType any, ResponseType Itemable[ItemType], ItemType any] struct {
 	CBD
 	endpoint string
 }
 
-func (p *endpointUpdaterImpl[RequestType, ResponseType, ItemType]) Update(ctx context.Context, arg RequestType) (*ItemType, error) {
-	rq, err := p.BuildRequest(ctx, http.MethodPatch, fmt.Sprintf("%s/%d/", p.endpoint, arg.PrimaryKey()), nil, arg)
+func (p *endpointUpdaterImpl[RequestType, ResponseType, ItemType]) Update(ctx context.Context, pk PrimaryKeyable, arg RequestType) (*ItemType, error) {
+	rq, err := p.BuildRequest(ctx, http.MethodPatch, fmt.Sprintf("%s/%d/", p.endpoint, pk.PrimaryKey()), nil, arg)
 	if err != nil {
 		return nil, err
 	}
@@ -161,7 +163,8 @@ func (p *endpointUpdaterImpl[RequestType, ResponseType, ItemType]) Update(ctx co
 	if err != nil {
 		return nil, err
 	}
-	return data.Item(), nil
+	item := data.Item()
+	return &item, nil
 }
 
 // EndpointDeleter is a generic interface for deleting an item from an endpoint.

@@ -52,8 +52,8 @@ func (o OutageListResponse) List() []Outage {
 
 type OutageResponse Outage
 
-func (o OutageResponse) Item() *Outage {
-	return (*Outage)(&o)
+func (o OutageResponse) Item() Outage {
+	return Outage(o)
 }
 
 // OutageListOptions specifies the optional parameters to the OutagesService.List

@@ -35,14 +35,14 @@ func (r ContactListResponse) List() []Contact {
 
 type ContactResponse Contact
 
-func (r ContactResponse) Item() *Contact {
-	return (*Contact)(&r)
+func (r ContactResponse) Item() Contact {
+	return Contact(r)
 }
 
 type ContactsEndpoint interface {
 	List(context.Context, ContactListOptions) ([]Contact, error)
 	Create(context.Context, Contact) (*Contact, error)
-	Update(context.Context, Contact) (*Contact, error)
+	Update(context.Context, PrimaryKeyable, Contact) (*Contact, error)
 	Get(context.Context, PrimaryKeyable) (*Contact, error)
 	Delete(context.Context, PrimaryKeyable) error
 }

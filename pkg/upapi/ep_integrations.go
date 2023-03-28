@@ -42,8 +42,8 @@ type IntegrationResponse struct {
 	Results Integration `json:"results,omitempty"`
 }
 
-func (r IntegrationResponse) Item() *Integration {
-	return &r.Results
+func (r IntegrationResponse) Item() Integration {
+	return r.Results
 }
 
 type IntegrationsEndpoint interface {
@@ -51,43 +51,43 @@ type IntegrationsEndpoint interface {
 	Get(context.Context, PrimaryKeyable) (*Integration, error)
 	Delete(context.Context, PrimaryKeyable) error
 	CreateCachet(context.Context, IntegrationCachet) (*Integration, error)
-	UpdateCachet(context.Context, IntegrationCachet) (*Integration, error)
+	UpdateCachet(context.Context, PrimaryKeyable, IntegrationCachet) (*Integration, error)
 	CreateDatadog(context.Context, IntegrationDatadog) (*Integration, error)
-	UpdateDatadog(context.Context, IntegrationDatadog) (*Integration, error)
+	UpdateDatadog(context.Context, PrimaryKeyable, IntegrationDatadog) (*Integration, error)
 	CreateGeckoboard(context.Context, IntegrationGeckoboard) (*Integration, error)
-	UpdateGeckoboard(context.Context, IntegrationGeckoboard) (*Integration, error)
+	UpdateGeckoboard(context.Context, PrimaryKeyable, IntegrationGeckoboard) (*Integration, error)
 	CreateJiraServicedesk(context.Context, IntegrationJiraServicedesk) (*Integration, error)
-	UpdateJiraServiceDesk(context.Context, IntegrationJiraServicedesk) (*Integration, error)
+	UpdateJiraServiceDesk(context.Context, PrimaryKeyable, IntegrationJiraServicedesk) (*Integration, error)
 	CreateKlipfolio(context.Context, IntegrationKlipfolio) (*Integration, error)
-	UpdateKlipfolio(context.Context, IntegrationKlipfolio) (*Integration, error)
+	UpdateKlipfolio(context.Context, PrimaryKeyable, IntegrationKlipfolio) (*Integration, error)
 	CreateLibrato(context.Context, IntegrationLibrato) (*Integration, error)
-	UpdateLibrato(context.Context, IntegrationLibrato) (*Integration, error)
+	UpdateLibrato(context.Context, PrimaryKeyable, IntegrationLibrato) (*Integration, error)
 	CreateMicrosoftTeams(context.Context, IntegrationMicrosoftTeams) (*Integration, error)
-	UpdateMicrosoftTeams(context.Context, IntegrationMicrosoftTeams) (*Integration, error)
+	UpdateMicrosoftTeams(context.Context, PrimaryKeyable, IntegrationMicrosoftTeams) (*Integration, error)
 	CreateOpsgenie(context.Context, IntegrationOpsgenie) (*Integration, error)
-	UpdateOpsgenie(context.Context, IntegrationOpsgenie) (*Integration, error)
+	UpdateOpsgenie(context.Context, PrimaryKeyable, IntegrationOpsgenie) (*Integration, error)
 	CreatePagerduty(context.Context, IntegrationPagerduty) (*Integration, error)
-	UpdatePagerduty(context.Context, IntegrationPagerduty) (*Integration, error)
+	UpdatePagerduty(context.Context, PrimaryKeyable, IntegrationPagerduty) (*Integration, error)
 	CreatePushbullet(context.Context, IntegrationPushbullet) (*Integration, error)
-	UpdatePushbullet(context.Context, IntegrationPushbullet) (*Integration, error)
+	UpdatePushbullet(context.Context, PrimaryKeyable, IntegrationPushbullet) (*Integration, error)
 	CreatePushover(context.Context, IntegrationPushover) (*Integration, error)
-	UpdatePushover(context.Context, IntegrationPushover) (*Integration, error)
+	UpdatePushover(context.Context, PrimaryKeyable, IntegrationPushover) (*Integration, error)
 	CreateSlack(context.Context, IntegrationSlack) (*Integration, error)
-	UpdateSlack(context.Context, IntegrationSlack) (*Integration, error)
+	UpdateSlack(context.Context, PrimaryKeyable, IntegrationSlack) (*Integration, error)
 	CreateStatus(context.Context, IntegrationStatus) (*Integration, error)
-	UpdateStatus(context.Context, IntegrationStatus) (*Integration, error)
+	UpdateStatus(context.Context, PrimaryKeyable, IntegrationStatus) (*Integration, error)
 	CreateStatuspage(context.Context, IntegrationStatuspage) (*Integration, error)
-	UpdateStatuspage(context.Context, IntegrationStatuspage) (*Integration, error)
+	UpdateStatuspage(context.Context, PrimaryKeyable, IntegrationStatuspage) (*Integration, error)
 	CreateTwitter(context.Context, IntegrationTwitter) (*Integration, error)
-	UpdateTwitter(context.Context, IntegrationTwitter) (*Integration, error)
+	UpdateTwitter(context.Context, PrimaryKeyable, IntegrationTwitter) (*Integration, error)
 	CreateVictorops(context.Context, IntegrationVictorops) (*Integration, error)
-	UpdateVictorops(context.Context, IntegrationVictorops) (*Integration, error)
+	UpdateVictorops(context.Context, PrimaryKeyable, IntegrationVictorops) (*Integration, error)
 	CreateWavefront(context.Context, IntegrationWavefront) (*Integration, error)
-	UpdateWavefront(context.Context, IntegrationWavefront) (*Integration, error)
+	UpdateWavefront(context.Context, PrimaryKeyable, IntegrationWavefront) (*Integration, error)
 	CreateWebhook(context.Context, IntegrationWebhook) (*Integration, error)
-	UpdateWebhook(context.Context, IntegrationWebhook) (*Integration, error)
+	UpdateWebhook(context.Context, PrimaryKeyable, IntegrationWebhook) (*Integration, error)
 	CreateZapier(context.Context, IntegrationZapier) (*Integration, error)
-	UpdateZapier(context.Context, IntegrationZapier) (*Integration, error)
+	UpdateZapier(context.Context, PrimaryKeyable, IntegrationZapier) (*Integration, error)
 }
 
 func NewIntegrationsEndpoint(cbd CBD) IntegrationsEndpoint {
@@ -223,21 +223,16 @@ func (i integrationsEndpointCachetImpl) CreateCachet(ctx context.Context, data I
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointCachetImpl) UpdateCachet(ctx context.Context, data IntegrationCachet) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointCachetImpl) UpdateCachet(ctx context.Context, pk PrimaryKeyable, data IntegrationCachet) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationDatadog struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	APIKey        string   `json:"api_key,omitempty"`
 	APPKey        string   `json:"app_key,omitempty"`
 	Region        string   `json:"region,omitempty"`
-}
-
-func (i IntegrationDatadog) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointDatadogImpl struct {
@@ -249,20 +244,15 @@ func (i integrationsEndpointDatadogImpl) CreateDatadog(ctx context.Context, data
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointDatadogImpl) UpdateDatadog(ctx context.Context, data IntegrationDatadog) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointDatadogImpl) UpdateDatadog(ctx context.Context, pk PrimaryKeyable, data IntegrationDatadog) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationGeckoboard struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	APIKey        string   `json:"api_key,omitempty"`
 	DatasetName   string   `json:"dataset_name,omitempty"`
-}
-
-func (i IntegrationGeckoboard) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointGeckoboardImpl struct {
@@ -274,12 +264,11 @@ func (i integrationsEndpointGeckoboardImpl) CreateGeckoboard(ctx context.Context
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointGeckoboardImpl) UpdateGeckoboard(ctx context.Context, data IntegrationGeckoboard) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointGeckoboardImpl) UpdateGeckoboard(ctx context.Context, pk PrimaryKeyable, data IntegrationGeckoboard) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationJiraServicedesk struct {
-	PK                       int      `json:"pk,omitempty"`
 	Name                     string   `json:"name,omitempty"`
 	ContactGroups            []string `json:"contact_groups,omitempty"`
 	APIEmail                 string   `json:"api_email,omitempty"`
@@ -293,10 +282,6 @@ type IntegrationJiraServicedesk struct {
 	CustomFieldsJson         string   `json:"custom_fields_json,omitempty"`
 }
 
-func (i IntegrationJiraServicedesk) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
-}
-
 type integrationsEndpointJiraServicedeskImpl struct {
 	EndpointCreator[IntegrationJiraServicedesk, IntegrationResponse, Integration]
 	EndpointUpdater[IntegrationJiraServicedesk, IntegrationResponse, Integration]
@@ -306,20 +291,15 @@ func (i integrationsEndpointJiraServicedeskImpl) CreateJiraServicedesk(ctx conte
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointJiraServicedeskImpl) UpdateJiraServiceDesk(ctx context.Context, data IntegrationJiraServicedesk) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointJiraServicedeskImpl) UpdateJiraServiceDesk(ctx context.Context, pk PrimaryKeyable, data IntegrationJiraServicedesk) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationKlipfolio struct {
-	PK             int      `json:"pk,omitempty"`
 	Name           string   `json:"name,omitempty"`
 	ContactGroups  []string `json:"contact_groups,omitempty"`
 	APIKey         string   `json:"api_key,omitempty"`
 	DataSourceName string   `json:"data_source_name,omitempty"`
-}
-
-func (i IntegrationKlipfolio) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointKlipfolioImpl struct {
@@ -331,21 +311,16 @@ func (i integrationsEndpointKlipfolioImpl) CreateKlipfolio(ctx context.Context, 
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointKlipfolioImpl) UpdateKlipfolio(ctx context.Context, data IntegrationKlipfolio) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointKlipfolioImpl) UpdateKlipfolio(ctx context.Context, pk PrimaryKeyable, data IntegrationKlipfolio) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationLibrato struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	Email         string   `json:"email,omitempty"`
 	APIToken      string   `json:"api_token,omitempty"`
 	MetricName    string   `json:"metric_name,omitempty"`
-}
-
-func (i IntegrationLibrato) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointLibratoImpl struct {
@@ -357,19 +332,14 @@ func (i integrationsEndpointLibratoImpl) CreateLibrato(ctx context.Context, data
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointLibratoImpl) UpdateLibrato(ctx context.Context, data IntegrationLibrato) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointLibratoImpl) UpdateLibrato(ctx context.Context, pk PrimaryKeyable, data IntegrationLibrato) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationMicrosoftTeams struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	WebhookUrl    string   `json:"webhook_url,omitempty"`
-}
-
-func (i IntegrationMicrosoftTeams) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointMicrosoftTeamsImpl struct {
@@ -381,12 +351,11 @@ func (i integrationsEndpointMicrosoftTeamsImpl) CreateMicrosoftTeams(ctx context
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointMicrosoftTeamsImpl) UpdateMicrosoftTeams(ctx context.Context, data IntegrationMicrosoftTeams) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointMicrosoftTeamsImpl) UpdateMicrosoftTeams(ctx context.Context, pk PrimaryKeyable, data IntegrationMicrosoftTeams) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationOpsgenie struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	APIEndpoint   string   `json:"api_endpoint,omitempty"`
@@ -394,10 +363,6 @@ type IntegrationOpsgenie struct {
 	Teams         string   `json:"teams,omitempty"`
 	Tags          string   `json:"tags,omitempty"`
 	Autoresolve   bool     `json:"autoresolve,omitempty"`
-}
-
-func (i IntegrationOpsgenie) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointOpsgenieImpl struct {
@@ -409,20 +374,15 @@ func (i integrationsEndpointOpsgenieImpl) CreateOpsgenie(ctx context.Context, da
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointOpsgenieImpl) UpdateOpsgenie(ctx context.Context, data IntegrationOpsgenie) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointOpsgenieImpl) UpdateOpsgenie(ctx context.Context, pk PrimaryKeyable, data IntegrationOpsgenie) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationPagerduty struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	ServiceKey    string   `json:"service_key,omitempty"`
 	Autoresolve   bool     `json:"autoresolve,omitempty"`
-}
-
-func (i IntegrationPagerduty) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointPagerdutyImpl struct {
@@ -434,19 +394,14 @@ func (i integrationsEndpointPagerdutyImpl) CreatePagerduty(ctx context.Context, 
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointPagerdutyImpl) UpdatePagerduty(ctx context.Context, data IntegrationPagerduty) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointPagerdutyImpl) UpdatePagerduty(ctx context.Context, pk PrimaryKeyable, data IntegrationPagerduty) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationPushbullet struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	Email         string   `json:"email,omitempty"`
-}
-
-func (i IntegrationPushbullet) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointPushbulletImpl struct {
@@ -458,20 +413,15 @@ func (i integrationsEndpointPushbulletImpl) CreatePushbullet(ctx context.Context
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointPushbulletImpl) UpdatePushbullet(ctx context.Context, data IntegrationPushbullet) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointPushbulletImpl) UpdatePushbullet(ctx context.Context, pk PrimaryKeyable, data IntegrationPushbullet) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationPushover struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	User          string   `json:"user,omitempty"`
 	Priority      int      `json:"priority,omitempty"`
-}
-
-func (i IntegrationPushover) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointPushoverImpl struct {
@@ -483,20 +433,15 @@ func (i integrationsEndpointPushoverImpl) CreatePushover(ctx context.Context, da
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointPushoverImpl) UpdatePushover(ctx context.Context, data IntegrationPushover) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointPushoverImpl) UpdatePushover(ctx context.Context, pk PrimaryKeyable, data IntegrationPushover) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationSlack struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	WebhookURL    string   `json:"webhook_url,omitempty"`
 	Channel       string   `json:"channel,omitempty"`
-}
-
-func (i IntegrationSlack) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointSlackImpl struct {
@@ -508,12 +453,11 @@ func (i integrationsEndpointSlackImpl) CreateSlack(ctx context.Context, data Int
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointSlackImpl) UpdateSlack(ctx context.Context, data IntegrationSlack) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointSlackImpl) UpdateSlack(ctx context.Context, pk PrimaryKeyable, data IntegrationSlack) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationStatus struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	StatuspageID  string   `json:"statuspage_id,omitempty"`
@@ -522,10 +466,6 @@ type IntegrationStatus struct {
 	Component     string   `json:"component,omitempty"`
 	Container     string   `json:"container,omitempty"`
 	Metric        string   `json:"metric,omitempty"`
-}
-
-func (i IntegrationStatus) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointStatusImpl struct {
@@ -537,22 +477,17 @@ func (i integrationsEndpointStatusImpl) CreateStatus(ctx context.Context, data I
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointStatusImpl) UpdateStatus(ctx context.Context, data IntegrationStatus) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointStatusImpl) UpdateStatus(ctx context.Context, pk PrimaryKeyable, data IntegrationStatus) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationStatuspage struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	APIKey        string   `json:"api_key,omitempty"`
 	Page          string   `json:"page,omitempty"`
 	Component     string   `json:"component,omitempty"`
 	Metric        string   `json:"metric,omitempty"`
-}
-
-func (i IntegrationStatuspage) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointStatuspageImpl struct {
@@ -564,20 +499,15 @@ func (i integrationsEndpointStatuspageImpl) CreateStatuspage(ctx context.Context
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointStatuspageImpl) UpdateStatuspage(ctx context.Context, data IntegrationStatuspage) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointStatuspageImpl) UpdateStatuspage(ctx context.Context, pk PrimaryKeyable, data IntegrationStatuspage) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationTwitter struct {
-	PK               int      `json:"pk,omitempty"`
 	Name             string   `json:"name,omitempty"`
 	ContactGroups    []string `json:"contact_groups,omitempty"`
 	OauthToken       string   `json:"oauth_token,omitempty"`
 	OauthTokenSecret string   `json:"oauth_token_secret,omitempty"`
-}
-
-func (i IntegrationTwitter) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointTwitterImpl struct {
@@ -589,20 +519,15 @@ func (i integrationsEndpointTwitterImpl) CreateTwitter(ctx context.Context, data
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointTwitterImpl) UpdateTwitter(ctx context.Context, data IntegrationTwitter) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointTwitterImpl) UpdateTwitter(ctx context.Context, pk PrimaryKeyable, data IntegrationTwitter) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationVictorops struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	ServiceKey    string   `json:"service_key,omitempty"`
 	RoutingKey    string   `json:"routing_key,omitempty"`
-}
-
-func (i IntegrationVictorops) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointVictoropsImpl struct {
@@ -614,20 +539,15 @@ func (i integrationsEndpointVictoropsImpl) CreateVictorops(ctx context.Context, 
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointVictoropsImpl) UpdateVictorops(ctx context.Context, data IntegrationVictorops) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointVictoropsImpl) UpdateVictorops(ctx context.Context, pk PrimaryKeyable, data IntegrationVictorops) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationWavefront struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	WavefrontUrl  string   `json:"wavefront_url,omitempty"`
 	APIToken      string   `json:"api_token,omitempty"`
-}
-
-func (i IntegrationWavefront) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointWavefrontImpl struct {
@@ -639,21 +559,16 @@ func (i integrationsEndpointWavefrontImpl) CreateWavefront(ctx context.Context, 
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointWavefrontImpl) UpdateWavefront(ctx context.Context, data IntegrationWavefront) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointWavefrontImpl) UpdateWavefront(ctx context.Context, pk PrimaryKeyable, data IntegrationWavefront) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationWebhook struct {
-	PK               int      `json:"pk,omitempty"`
 	Name             string   `json:"name,omitempty"`
 	ContactGroups    []string `json:"contact_groups,omitempty"`
 	PostbackUrl      string   `json:"postback_url,omitempty"`
 	Headers          string   `json:"headers,omitempty"`
 	UseLegacyPayload bool     `json:"use_legacy_payload,omitempty"`
-}
-
-func (i IntegrationWebhook) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointWebhookImpl struct {
@@ -665,19 +580,14 @@ func (i integrationsEndpointWebhookImpl) CreateWebhook(ctx context.Context, data
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointWebhookImpl) UpdateWebhook(ctx context.Context, data IntegrationWebhook) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointWebhookImpl) UpdateWebhook(ctx context.Context, pk PrimaryKeyable, data IntegrationWebhook) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
 
 type IntegrationZapier struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	WebhookUrl    string   `json:"webhook_url,omitempty"`
-}
-
-func (i IntegrationZapier) PrimaryKey() PrimaryKey {
-	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointZapierImpl struct {
@@ -689,6 +599,6 @@ func (i integrationsEndpointZapierImpl) CreateZapier(ctx context.Context, data I
 	return i.EndpointCreator.Create(ctx, data)
 }
 
-func (i integrationsEndpointZapierImpl) UpdateZapier(ctx context.Context, data IntegrationZapier) (*Integration, error) {
-	return i.EndpointUpdater.Update(ctx, data)
+func (i integrationsEndpointZapierImpl) UpdateZapier(ctx context.Context, pk PrimaryKeyable, data IntegrationZapier) (*Integration, error) {
+	return i.EndpointUpdater.Update(ctx, pk, data)
 }
