@@ -53,8 +53,8 @@ func NewContactsEndpoint(cbd CBD) ContactsEndpoint {
 		EndpointLister:  NewEndpointLister[ContactListResponse, Contact, ContactListOptions](cbd, endpoint),
 		EndpointCreator: NewEndpointCreator[Contact, ContactResponse, Contact](cbd, endpoint),
 		EndpointUpdater: NewEndpointUpdater[Contact, ContactResponse, Contact](cbd, endpoint),
-		EndpointGetter:  NewEndpointGetter[PrimaryKeyable, ContactResponse, Contact](cbd, endpoint),
-		EndpointDeleter: NewEndpointDeleter[PrimaryKeyable](cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[ContactResponse, Contact](cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter(cbd, endpoint),
 	}
 }
 
@@ -62,6 +62,6 @@ type contactsEndpointImpl struct {
 	EndpointLister[ContactListResponse, Contact, ContactListOptions]
 	EndpointCreator[Contact, ContactResponse, Contact]
 	EndpointUpdater[Contact, ContactResponse, Contact]
-	EndpointGetter[PrimaryKeyable, ContactResponse, Contact]
-	EndpointDeleter[PrimaryKeyable]
+	EndpointGetter[ContactResponse, Contact]
+	EndpointDeleter
 }

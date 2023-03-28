@@ -67,7 +67,7 @@ func TestEndpointGetter(t *testing.T) {
 	cbd, err := WithBaseURL(srv.URL + "/api/v1/")(testCBD)
 	require.NoError(t, err)
 
-	ep := NewEndpointGetter[PrimaryKey, testItemResponse, testItem](cbd, "items")
+	ep := NewEndpointGetter[testItemResponse, testItem](cbd, "items")
 
 	obj, err := ep.Get(ctx, PrimaryKey(1))
 	require.NoError(t, err)
@@ -164,7 +164,7 @@ func TestEndpointDeleter(t *testing.T) {
 	c, err := WithBaseURL(srv.URL + "/api/v1/")(testCBD)
 	require.NoError(t, err)
 
-	ep := NewEndpointDeleter[PrimaryKey](c, "items")
+	ep := NewEndpointDeleter(c, "items")
 
 	err = ep.Delete(ctx, PrimaryKey(1))
 	require.NoError(t, err)

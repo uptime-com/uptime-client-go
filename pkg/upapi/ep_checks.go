@@ -128,9 +128,9 @@ type CheckStats struct {
 
 type ChecksEndpoint interface {
 	List(context.Context, CheckListOptions) ([]Check, error)
-	Get(context.Context, PrimaryKey) (*Check, error)
-	Delete(context.Context, PrimaryKey) error
-	Stats(context.Context, PrimaryKey, CheckStatsOptions) ([]CheckStats, error)
+	Get(context.Context, PrimaryKeyable) (*Check, error)
+	Delete(context.Context, PrimaryKeyable) error
+	Stats(context.Context, PrimaryKeyable, CheckStatsOptions) ([]CheckStats, error)
 
 	CreateAPI(ctx context.Context, check CheckAPI) (*Check, error)
 	UpdateAPI(ctx context.Context, check CheckAPI) (*Check, error)
@@ -283,8 +283,8 @@ func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 			endpoint: NewEndpointLister[CheckStatsResponse, CheckStats, CheckStatsOptions](&checksStatsEndpointCBD{cbd}, endpoint+"/%d/stats"),
 		},
 		EndpointLister:  NewEndpointLister[CheckListResponse, Check, CheckListOptions](cbd, endpoint),
-		EndpointGetter:  NewEndpointGetter[PrimaryKey, CheckResponse, Check](cbd, endpoint),
-		EndpointDeleter: NewEndpointDeleter[PrimaryKey](cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[CheckResponse, Check](cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter(cbd, endpoint),
 	}
 }
 
@@ -312,9 +312,9 @@ type checksEndpointImpl struct {
 	checksEndpointWHOISImpl
 	checksStatsEndpointImpl
 	EndpointLister[CheckListResponse, Check, CheckListOptions]
-	EndpointGetter[PrimaryKey, CheckResponse, Check]
+	EndpointGetter[CheckResponse, Check]
 	EndpointUpdater[Check, CheckResponse, Check]
-	EndpointDeleter[PrimaryKey]
+	EndpointDeleter
 }
 
 type checksStatsCtxKey struct{}
@@ -323,7 +323,7 @@ type checksStatsEndpointImpl struct {
 	endpoint EndpointLister[CheckStatsResponse, CheckStats, CheckStatsOptions]
 }
 
-func (c *checksEndpointImpl) Stats(ctx context.Context, pk PrimaryKey, opts CheckStatsOptions) ([]CheckStats, error) {
+func (c *checksEndpointImpl) Stats(ctx context.Context, pk PrimaryKeyable, opts CheckStatsOptions) ([]CheckStats, error) {
 	ctx = context.WithValue(ctx, checksStatsCtxKey{}, pk)
 	return c.endpoint.List(ctx, opts)
 }
