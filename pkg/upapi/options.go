@@ -119,11 +119,22 @@ type withTraceCBD struct {
 
 func (t *withTraceCBD) Do(rq *http.Request) (*http.Response, error) {
 	rq = rq.WithContext(httptrace.WithClientTrace(rq.Context(), t.trace()))
+	buf := bytes.NewBuffer(nil)
+	if rq.Body != nil {
+		rq.Body = io.NopCloser(io.TeeReader(rq.Body, buf))
+	}
 	rs, err := t.CBD.Do(rq)
 	if err != nil {
 		return nil, err
 	}
-	buf := bytes.NewBuffer(nil)
+	if buf.Len() > 0 {
+		t.log.Println("WroteRequestBody")
+		s := bufio.NewScanner(buf)
+		for s.Scan() {
+			t.log.Println(" +", s.Text())
+		}
+		buf.Reset()
+	}
 	t.log.Println("GotResponseHeader", rs.StatusCode)
 	_ = rs.Header.Write(buf)
 	s := bufio.NewScanner(buf)
