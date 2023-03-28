@@ -37,15 +37,15 @@ type TagListOptions struct {
 // TagItemResponse represents a response from the tagsImpl.
 type TagItemResponse = Tag
 
-func (t TagItemResponse) Item() *Tag {
-	return &t
+func (t TagItemResponse) Item() Tag {
+	return t
 }
 
 type TagsEndpoint interface {
 	List(context.Context, TagListOptions) ([]Tag, error)
-	Get(context.Context, PrimaryKeyable) (*Tag, error)
 	Create(context.Context, Tag) (*Tag, error)
-	Update(context.Context, Tag) (*Tag, error)
+	Get(context.Context, PrimaryKeyable) (*Tag, error)
+	Update(context.Context, PrimaryKeyable, Tag) (*Tag, error)
 	Delete(context.Context, PrimaryKeyable) error
 }
 

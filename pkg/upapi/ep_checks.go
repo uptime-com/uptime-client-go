@@ -61,6 +61,12 @@ func (c Check) PrimaryKey() PrimaryKey {
 	return PrimaryKey(c.PK)
 }
 
+type CheckGetResponse Check
+
+func (c CheckGetResponse) Item() Check {
+	return Check(c)
+}
+
 type CheckListResponse struct {
 	Count   int     `json:"count,omitempty"`
 	Results []Check `json:"results,omitempty"`
@@ -82,13 +88,13 @@ type CheckListOptions struct {
 	Tag                   []string `url:"tag,omitempty"`
 }
 
-type CheckResponse struct {
+type CheckCreateUpdateResponse struct {
 	Messages map[string]interface{} `json:"messages,omitempty"`
 	Results  Check                  `json:"results,omitempty"`
 }
 
-func (r CheckResponse) Item() *Check {
-	return &r.Results
+func (r CheckCreateUpdateResponse) Item() Check {
+	return r.Results
 }
 
 // CheckStatsOptions specifies the parameters to /api/v1/checks/{pk}/stats/ endpoint
@@ -132,158 +138,158 @@ type ChecksEndpoint interface {
 	Delete(context.Context, PrimaryKeyable) error
 	Stats(context.Context, PrimaryKeyable, CheckStatsOptions) ([]CheckStats, error)
 
-	CreateAPI(ctx context.Context, check CheckAPI) (*Check, error)
-	UpdateAPI(ctx context.Context, check CheckAPI) (*Check, error)
+	CreateAPI(context.Context, CheckAPI) (*Check, error)
+	UpdateAPI(context.Context, PrimaryKeyable, CheckAPI) (*Check, error)
 
-	CreateBlacklist(ctx context.Context, check CheckBlacklist) (*Check, error)
-	UpdateBlacklist(ctx context.Context, check CheckBlacklist) (*Check, error)
+	CreateBlacklist(context.Context, CheckBlacklist) (*Check, error)
+	UpdateBlacklist(context.Context, PrimaryKeyable, CheckBlacklist) (*Check, error)
 
-	CreateDNS(ctx context.Context, check CheckDNS) (*Check, error)
-	UpdateDNS(ctx context.Context, check CheckDNS) (*Check, error)
+	CreateDNS(context.Context, CheckDNS) (*Check, error)
+	UpdateDNS(context.Context, PrimaryKeyable, CheckDNS) (*Check, error)
 
-	CreateGroup(ctx context.Context, check CheckGroup) (*Check, error)
-	UpdateGroup(ctx context.Context, check CheckGroup) (*Check, error)
+	CreateGroup(context.Context, CheckGroup) (*Check, error)
+	UpdateGroup(context.Context, PrimaryKeyable, CheckGroup) (*Check, error)
 
-	CreateHeartbeat(ctx context.Context, check CheckHeartbeat) (*Check, error)
-	UpdateHeartbeat(ctx context.Context, check CheckHeartbeat) (*Check, error)
+	CreateHeartbeat(context.Context, CheckHeartbeat) (*Check, error)
+	UpdateHeartbeat(context.Context, PrimaryKeyable, CheckHeartbeat) (*Check, error)
 
-	CreateHTTP(ctx context.Context, check CheckHTTP) (*Check, error)
-	UpdateHTTP(ctx context.Context, check CheckHTTP) (*Check, error)
+	CreateHTTP(context.Context, CheckHTTP) (*Check, error)
+	UpdateHTTP(context.Context, PrimaryKeyable, CheckHTTP) (*Check, error)
 
-	CreateICMP(ctx context.Context, check CheckICMP) (*Check, error)
-	UpdateICMP(ctx context.Context, check CheckICMP) (*Check, error)
+	CreateICMP(context.Context, CheckICMP) (*Check, error)
+	UpdateICMP(context.Context, PrimaryKeyable, CheckICMP) (*Check, error)
 
-	CreateIMAP(ctx context.Context, check CheckIMAP) (*Check, error)
-	UpdateIMAP(ctx context.Context, check CheckIMAP) (*Check, error)
+	CreateIMAP(context.Context, CheckIMAP) (*Check, error)
+	UpdateIMAP(context.Context, PrimaryKeyable, CheckIMAP) (*Check, error)
 
-	CreateMalware(ctx context.Context, check CheckMalware) (*Check, error)
-	UpdateMalware(ctx context.Context, check CheckMalware) (*Check, error)
+	CreateMalware(context.Context, CheckMalware) (*Check, error)
+	UpdateMalware(context.Context, PrimaryKeyable, CheckMalware) (*Check, error)
 
-	CreateNTP(ctx context.Context, check CheckNTP) (*Check, error)
-	UpdateNTP(ctx context.Context, check CheckNTP) (*Check, error)
+	CreateNTP(context.Context, CheckNTP) (*Check, error)
+	UpdateNTP(context.Context, PrimaryKeyable, CheckNTP) (*Check, error)
 
-	CreatePOP(ctx context.Context, check CheckPOP) (*Check, error)
-	UpdatePOP(ctx context.Context, check CheckPOP) (*Check, error)
+	CreatePOP(context.Context, CheckPOP) (*Check, error)
+	UpdatePOP(context.Context, PrimaryKeyable, CheckPOP) (*Check, error)
 
-	CreateRUM(ctx context.Context, check CheckRUM) (*Check, error)
-	UpdateRUM(ctx context.Context, check CheckRUM) (*Check, error)
+	CreateRUM(context.Context, CheckRUM) (*Check, error)
+	UpdateRUM(context.Context, PrimaryKeyable, CheckRUM) (*Check, error)
 
-	CreateRUM2(ctx context.Context, check CheckRUM2) (*Check, error)
-	UpdateRUM2(ctx context.Context, check CheckRUM2) (*Check, error)
+	CreateRUM2(context.Context, CheckRUM2) (*Check, error)
+	UpdateRUM2(context.Context, PrimaryKeyable, CheckRUM2) (*Check, error)
 
-	CreateSMTP(ctx context.Context, check CheckSMTP) (*Check, error)
-	UpdateSMTP(ctx context.Context, check CheckSMTP) (*Check, error)
+	CreateSMTP(context.Context, CheckSMTP) (*Check, error)
+	UpdateSMTP(context.Context, PrimaryKeyable, CheckSMTP) (*Check, error)
 
-	CreateSSH(ctx context.Context, check CheckSSH) (*Check, error)
-	UpdateSSH(ctx context.Context, check CheckSSH) (*Check, error)
+	CreateSSH(context.Context, CheckSSH) (*Check, error)
+	UpdateSSH(context.Context, PrimaryKeyable, CheckSSH) (*Check, error)
 
-	CreateSSLCert(ctx context.Context, check CheckSSLCert) (*Check, error)
-	UpdateSSLCert(ctx context.Context, check CheckSSLCert) (*Check, error)
+	CreateSSLCert(context.Context, CheckSSLCert) (*Check, error)
+	UpdateSSLCert(context.Context, PrimaryKeyable, CheckSSLCert) (*Check, error)
 
-	CreateTCP(ctx context.Context, check CheckTCP) (*Check, error)
-	UpdateTCP(ctx context.Context, check CheckTCP) (*Check, error)
+	CreateTCP(context.Context, CheckTCP) (*Check, error)
+	UpdateTCP(context.Context, PrimaryKeyable, CheckTCP) (*Check, error)
 
-	CreateTransaction(ctx context.Context, check CheckTransaction) (*Check, error)
-	UpdateTransaction(ctx context.Context, check CheckTransaction) (*Check, error)
+	CreateTransaction(context.Context, CheckTransaction) (*Check, error)
+	UpdateTransaction(context.Context, PrimaryKeyable, CheckTransaction) (*Check, error)
 
-	CreateUDP(ctx context.Context, check CheckUDP) (*Check, error)
-	UpdateUDP(ctx context.Context, check CheckUDP) (*Check, error)
+	CreateUDP(context.Context, CheckUDP) (*Check, error)
+	UpdateUDP(context.Context, PrimaryKeyable, CheckUDP) (*Check, error)
 
-	CreateWebhook(ctx context.Context, check CheckWebhook) (*Check, error)
-	UpdateWebhook(ctx context.Context, check CheckWebhook) (*Check, error)
+	CreateWebhook(context.Context, CheckWebhook) (*Check, error)
+	UpdateWebhook(context.Context, PrimaryKeyable, CheckWebhook) (*Check, error)
 
-	CreateWHOIS(ctx context.Context, check CheckWHOIS) (*Check, error)
-	UpdateWHOIS(ctx context.Context, check CheckWHOIS) (*Check, error)
+	CreateWHOIS(context.Context, CheckWHOIS) (*Check, error)
+	UpdateWHOIS(context.Context, PrimaryKeyable, CheckWHOIS) (*Check, error)
 }
 
 func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 	endpoint := "checks"
 	return &checksEndpointImpl{
 		checksEndpointAPIImpl: checksEndpointAPIImpl{
-			EndpointCreator: NewEndpointCreator[CheckAPI, CheckResponse, Check](cbd, endpoint+"/add-api"),
-			EndpointUpdater: NewEndpointUpdater[CheckAPI, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckAPI, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-api"),
+			EndpointUpdater: NewEndpointUpdater[CheckAPI, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointBlacklistImpl: checksEndpointBlacklistImpl{
-			EndpointCreator: NewEndpointCreator[CheckBlacklist, CheckResponse, Check](cbd, endpoint+"/add-blacklist"),
-			EndpointUpdater: NewEndpointUpdater[CheckBlacklist, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckBlacklist, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-blacklist"),
+			EndpointUpdater: NewEndpointUpdater[CheckBlacklist, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointDNSImpl: checksEndpointDNSImpl{
-			EndpointCreator: NewEndpointCreator[CheckDNS, CheckResponse, Check](cbd, endpoint+"/add-dns"),
-			EndpointUpdater: NewEndpointUpdater[CheckDNS, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckDNS, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-dns"),
+			EndpointUpdater: NewEndpointUpdater[CheckDNS, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointGroupImpl: checksEndpointGroupImpl{
-			EndpointCreator: NewEndpointCreator[CheckGroup, CheckResponse, Check](cbd, endpoint+"/add-group"),
-			EndpointUpdater: NewEndpointUpdater[CheckGroup, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckGroup, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-group"),
+			EndpointUpdater: NewEndpointUpdater[CheckGroup, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointHeartbeatImpl: checksEndpointHeartbeatImpl{
-			EndpointCreator: NewEndpointCreator[CheckHeartbeat, CheckResponse, Check](cbd, endpoint+"/add-heartbeat"),
-			EndpointUpdater: NewEndpointUpdater[CheckHeartbeat, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckHeartbeat, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-heartbeat"),
+			EndpointUpdater: NewEndpointUpdater[CheckHeartbeat, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointHTTPImpl: checksEndpointHTTPImpl{
-			EndpointCreator: NewEndpointCreator[CheckHTTP, CheckResponse, Check](cbd, endpoint+"/add-http"),
-			EndpointUpdater: NewEndpointUpdater[CheckHTTP, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckHTTP, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-http"),
+			EndpointUpdater: NewEndpointUpdater[CheckHTTP, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointICMPImpl: checksEndpointICMPImpl{
-			EndpointCreator: NewEndpointCreator[CheckICMP, CheckResponse, Check](cbd, endpoint+"/add-icmp"),
-			EndpointUpdater: NewEndpointUpdater[CheckICMP, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckICMP, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-icmp"),
+			EndpointUpdater: NewEndpointUpdater[CheckICMP, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointIMAPImpl: checksEndpointIMAPImpl{
-			EndpointCreator: NewEndpointCreator[CheckIMAP, CheckResponse, Check](cbd, endpoint+"/add-imap"),
-			EndpointUpdater: NewEndpointUpdater[CheckIMAP, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckIMAP, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-imap"),
+			EndpointUpdater: NewEndpointUpdater[CheckIMAP, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointMalwareImpl: checksEndpointMalwareImpl{
-			EndpointCreator: NewEndpointCreator[CheckMalware, CheckResponse, Check](cbd, endpoint+"/add-malware"),
-			EndpointUpdater: NewEndpointUpdater[CheckMalware, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckMalware, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-malware"),
+			EndpointUpdater: NewEndpointUpdater[CheckMalware, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointNTPImpl: checksEndpointNTPImpl{
-			EndpointCreator: NewEndpointCreator[CheckNTP, CheckResponse, Check](cbd, endpoint+"/add-ntp"),
-			EndpointUpdater: NewEndpointUpdater[CheckNTP, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckNTP, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-ntp"),
+			EndpointUpdater: NewEndpointUpdater[CheckNTP, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointPOPImpl: checksEndpointPOPImpl{
-			EndpointCreator: NewEndpointCreator[CheckPOP, CheckResponse, Check](cbd, endpoint+"/add-pop"),
-			EndpointUpdater: NewEndpointUpdater[CheckPOP, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckPOP, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-pop"),
+			EndpointUpdater: NewEndpointUpdater[CheckPOP, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointRUMImpl: checksEndpointRUMImpl{
-			EndpointCreator: NewEndpointCreator[CheckRUM, CheckResponse, Check](cbd, endpoint+"/add-rum"),
-			EndpointUpdater: NewEndpointUpdater[CheckRUM, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckRUM, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-rum"),
+			EndpointUpdater: NewEndpointUpdater[CheckRUM, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointRUM2Impl: checksEndpointRUM2Impl{
-			EndpointCreator: NewEndpointCreator[CheckRUM2, CheckResponse, Check](cbd, endpoint+"/add-rum2"),
-			EndpointUpdater: NewEndpointUpdater[CheckRUM2, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckRUM2, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-rum2"),
+			EndpointUpdater: NewEndpointUpdater[CheckRUM2, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointSMTPImpl: checksEndpointSMTPImpl{
-			EndpointCreator: NewEndpointCreator[CheckSMTP, CheckResponse, Check](cbd, endpoint+"/add-smtp"),
-			EndpointUpdater: NewEndpointUpdater[CheckSMTP, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckSMTP, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-smtp"),
+			EndpointUpdater: NewEndpointUpdater[CheckSMTP, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointSSHImpl: checksEndpointSSHImpl{
-			EndpointCreator: NewEndpointCreator[CheckSSH, CheckResponse, Check](cbd, endpoint+"/add-ssh"),
-			EndpointUpdater: NewEndpointUpdater[CheckSSH, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckSSH, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-ssh"),
+			EndpointUpdater: NewEndpointUpdater[CheckSSH, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointSSLCertImpl: checksEndpointSSLCertImpl{
-			EndpointCreator: NewEndpointCreator[CheckSSLCert, CheckResponse, Check](cbd, endpoint+"/add-ssl-cert"),
-			EndpointUpdater: NewEndpointUpdater[CheckSSLCert, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckSSLCert, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-ssl-cert"),
+			EndpointUpdater: NewEndpointUpdater[CheckSSLCert, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointTCPImpl: checksEndpointTCPImpl{
-			EndpointCreator: NewEndpointCreator[CheckTCP, CheckResponse, Check](cbd, endpoint+"/add-tcp"),
-			EndpointUpdater: NewEndpointUpdater[CheckTCP, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckTCP, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-tcp"),
+			EndpointUpdater: NewEndpointUpdater[CheckTCP, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointUDPImpl: checksEndpointUDPImpl{
-			EndpointCreator: NewEndpointCreator[CheckUDP, CheckResponse, Check](cbd, endpoint+"/add-udp"),
-			EndpointUpdater: NewEndpointUpdater[CheckUDP, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckUDP, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-udp"),
+			EndpointUpdater: NewEndpointUpdater[CheckUDP, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointWebhookImpl: checksEndpointWebhookImpl{
-			EndpointCreator: NewEndpointCreator[CheckWebhook, CheckResponse, Check](cbd, endpoint+"/add-webhook"),
-			EndpointUpdater: NewEndpointUpdater[CheckWebhook, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckWebhook, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-webhook"),
+			EndpointUpdater: NewEndpointUpdater[CheckWebhook, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksEndpointWHOISImpl: checksEndpointWHOISImpl{
-			EndpointCreator: NewEndpointCreator[CheckWHOIS, CheckResponse, Check](cbd, endpoint+"/add-whois"),
-			EndpointUpdater: NewEndpointUpdater[CheckWHOIS, CheckResponse, Check](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[CheckWHOIS, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-whois"),
+			EndpointUpdater: NewEndpointUpdater[CheckWHOIS, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksStatsEndpointImpl: checksStatsEndpointImpl{
 			endpoint: NewEndpointLister[CheckStatsResponse, CheckStats, CheckStatsOptions](&checksStatsEndpointCBD{cbd}, endpoint+"/%d/stats"),
 		},
 		EndpointLister:  NewEndpointLister[CheckListResponse, Check, CheckListOptions](cbd, endpoint),
-		EndpointGetter:  NewEndpointGetter[CheckResponse, Check](cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[CheckGetResponse, Check](cbd, endpoint),
 		EndpointDeleter: NewEndpointDeleter(cbd, endpoint),
 	}
 }
@@ -312,8 +318,8 @@ type checksEndpointImpl struct {
 	checksEndpointWHOISImpl
 	checksStatsEndpointImpl
 	EndpointLister[CheckListResponse, Check, CheckListOptions]
-	EndpointGetter[CheckResponse, Check]
-	EndpointUpdater[Check, CheckResponse, Check]
+	EndpointGetter[CheckCreateUpdateResponse, Check]
+	EndpointUpdater[Check, CheckCreateUpdateResponse, Check]
 	EndpointDeleter
 }
 
@@ -339,7 +345,6 @@ func (c checksStatsEndpointCBD) BuildRequest(ctx context.Context, method string,
 }
 
 type CheckAPI struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -357,25 +362,20 @@ type CheckAPI struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckAPI) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointAPIImpl struct {
-	EndpointCreator[CheckAPI, CheckResponse, Check]
-	EndpointUpdater[CheckAPI, CheckResponse, Check]
+	EndpointCreator[CheckAPI, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckAPI, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointAPIImpl) CreateAPI(ctx context.Context, check CheckAPI) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointAPIImpl) UpdateAPI(ctx context.Context, check CheckAPI) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointAPIImpl) UpdateAPI(ctx context.Context, pk PrimaryKeyable, check CheckAPI) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckBlacklist struct {
-	PK                    int              `json:"pk,omitempty"`
 	Name                  string           `json:"name,omitempty"`
 	ContactGroups         []string         `json:"contact_groups,omitempty"`
 	Locations             []string         `json:"locations,omitempty"`
@@ -388,25 +388,20 @@ type CheckBlacklist struct {
 	Notes                 string           `json:"msp_notes,omitempty"`
 }
 
-func (c CheckBlacklist) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointBlacklistImpl struct {
-	EndpointCreator[CheckBlacklist, CheckResponse, Check]
-	EndpointUpdater[CheckBlacklist, CheckResponse, Check]
+	EndpointCreator[CheckBlacklist, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckBlacklist, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointBlacklistImpl) CreateBlacklist(ctx context.Context, check CheckBlacklist) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointBlacklistImpl) UpdateBlacklist(ctx context.Context, check CheckBlacklist) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointBlacklistImpl) UpdateBlacklist(ctx context.Context, pk PrimaryKeyable, check CheckBlacklist) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckDNS struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -426,25 +421,20 @@ type CheckDNS struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckDNS) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointDNSImpl struct {
-	EndpointCreator[CheckDNS, CheckResponse, Check]
-	EndpointUpdater[CheckDNS, CheckResponse, Check]
+	EndpointCreator[CheckDNS, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckDNS, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointDNSImpl) CreateDNS(ctx context.Context, check CheckDNS) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointDNSImpl) UpdateDNS(ctx context.Context, check CheckDNS) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointDNSImpl) UpdateDNS(ctx context.Context, pk PrimaryKeyable, check CheckDNS) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckGroup struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -465,25 +455,20 @@ type CheckGroup struct {
 	} `json:"groupcheckconfig,omitempty"`
 }
 
-func (c CheckGroup) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointGroupImpl struct {
-	EndpointCreator[CheckGroup, CheckResponse, Check]
-	EndpointUpdater[CheckGroup, CheckResponse, Check]
+	EndpointCreator[CheckGroup, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckGroup, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointGroupImpl) CreateGroup(ctx context.Context, check CheckGroup) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointGroupImpl) UpdateGroup(ctx context.Context, check CheckGroup) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointGroupImpl) UpdateGroup(ctx context.Context, pk PrimaryKeyable, check CheckGroup) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckHeartbeat struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -498,25 +483,20 @@ type CheckHeartbeat struct {
 	HeartbeatURL           string           `json:"heartbeat_url,omitempty"`
 }
 
-func (c CheckHeartbeat) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointHeartbeatImpl struct {
-	EndpointCreator[CheckHeartbeat, CheckResponse, Check]
-	EndpointUpdater[CheckHeartbeat, CheckResponse, Check]
+	EndpointCreator[CheckHeartbeat, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckHeartbeat, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointHeartbeatImpl) CreateHeartbeat(ctx context.Context, check CheckHeartbeat) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointHeartbeatImpl) UpdateHeartbeat(ctx context.Context, check CheckHeartbeat) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointHeartbeatImpl) UpdateHeartbeat(ctx context.Context, pk PrimaryKeyable, check CheckHeartbeat) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckHTTP struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -545,25 +525,20 @@ type CheckHTTP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckHTTP) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointHTTPImpl struct {
-	EndpointCreator[CheckHTTP, CheckResponse, Check]
-	EndpointUpdater[CheckHTTP, CheckResponse, Check]
+	EndpointCreator[CheckHTTP, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckHTTP, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointHTTPImpl) CreateHTTP(ctx context.Context, check CheckHTTP) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointHTTPImpl) UpdateHTTP(ctx context.Context, check CheckHTTP) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointHTTPImpl) UpdateHTTP(ctx context.Context, pk PrimaryKeyable, check CheckHTTP) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckICMP struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -580,25 +555,20 @@ type CheckICMP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckICMP) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointICMPImpl struct {
-	EndpointCreator[CheckICMP, CheckResponse, Check]
-	EndpointUpdater[CheckICMP, CheckResponse, Check]
+	EndpointCreator[CheckICMP, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckICMP, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointICMPImpl) CreateICMP(ctx context.Context, check CheckICMP) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointICMPImpl) UpdateICMP(ctx context.Context, check CheckICMP) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointICMPImpl) UpdateICMP(ctx context.Context, pk PrimaryKeyable, check CheckICMP) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckIMAP struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -618,25 +588,20 @@ type CheckIMAP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckIMAP) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointIMAPImpl struct {
-	EndpointCreator[CheckIMAP, CheckResponse, Check]
-	EndpointUpdater[CheckIMAP, CheckResponse, Check]
+	EndpointCreator[CheckIMAP, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckIMAP, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointIMAPImpl) CreateIMAP(ctx context.Context, check CheckIMAP) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointIMAPImpl) UpdateIMAP(ctx context.Context, check CheckIMAP) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointIMAPImpl) UpdateIMAP(ctx context.Context, pk PrimaryKeyable, check CheckIMAP) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckMalware struct {
-	PK            int              `json:"pk,omitempty"`
 	Name          string           `json:"name,omitempty"`
 	ContactGroups []string         `json:"contact_groups,omitempty"`
 	Locations     []string         `json:"locations,omitempty"`
@@ -649,25 +614,20 @@ type CheckMalware struct {
 	Notes         string           `json:"msp_notes,omitempty"`
 }
 
-func (c CheckMalware) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointMalwareImpl struct {
-	EndpointCreator[CheckMalware, CheckResponse, Check]
-	EndpointUpdater[CheckMalware, CheckResponse, Check]
+	EndpointCreator[CheckMalware, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckMalware, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointMalwareImpl) CreateMalware(ctx context.Context, check CheckMalware) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointMalwareImpl) UpdateMalware(ctx context.Context, check CheckMalware) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointMalwareImpl) UpdateMalware(ctx context.Context, pk PrimaryKeyable, check CheckMalware) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckNTP struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -686,25 +646,20 @@ type CheckNTP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckNTP) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointNTPImpl struct {
-	EndpointCreator[CheckNTP, CheckResponse, Check]
-	EndpointUpdater[CheckNTP, CheckResponse, Check]
+	EndpointCreator[CheckNTP, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckNTP, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointNTPImpl) CreateNTP(ctx context.Context, check CheckNTP) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointNTPImpl) UpdateNTP(ctx context.Context, check CheckNTP) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointNTPImpl) UpdateNTP(ctx context.Context, pk PrimaryKeyable, check CheckNTP) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckPOP struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -724,25 +679,20 @@ type CheckPOP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckPOP) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointPOPImpl struct {
-	EndpointCreator[CheckPOP, CheckResponse, Check]
-	EndpointUpdater[CheckPOP, CheckResponse, Check]
+	EndpointCreator[CheckPOP, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckPOP, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointPOPImpl) CreatePOP(ctx context.Context, check CheckPOP) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointPOPImpl) UpdatePOP(ctx context.Context, check CheckPOP) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointPOPImpl) UpdatePOP(ctx context.Context, pk PrimaryKeyable, check CheckPOP) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckRUM struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -755,25 +705,20 @@ type CheckRUM struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckRUM) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointRUMImpl struct {
-	EndpointCreator[CheckRUM, CheckResponse, Check]
-	EndpointUpdater[CheckRUM, CheckResponse, Check]
+	EndpointCreator[CheckRUM, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckRUM, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointRUMImpl) CreateRUM(ctx context.Context, check CheckRUM) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointRUMImpl) UpdateRUM(ctx context.Context, check CheckRUM) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointRUMImpl) UpdateRUM(ctx context.Context, pk PrimaryKeyable, check CheckRUM) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckRUM2 struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -785,25 +730,20 @@ type CheckRUM2 struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckRUM2) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointRUM2Impl struct {
-	EndpointCreator[CheckRUM2, CheckResponse, Check]
-	EndpointUpdater[CheckRUM2, CheckResponse, Check]
+	EndpointCreator[CheckRUM2, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckRUM2, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointRUM2Impl) CreateRUM2(ctx context.Context, check CheckRUM2) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointRUM2Impl) UpdateRUM2(ctx context.Context, check CheckRUM2) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointRUM2Impl) UpdateRUM2(ctx context.Context, pk PrimaryKeyable, check CheckRUM2) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckSMTP struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -825,25 +765,20 @@ type CheckSMTP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckSMTP) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointSMTPImpl struct {
-	EndpointCreator[CheckSMTP, CheckResponse, Check]
-	EndpointUpdater[CheckSMTP, CheckResponse, Check]
+	EndpointCreator[CheckSMTP, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckSMTP, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointSMTPImpl) CreateSMTP(ctx context.Context, check CheckSMTP) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointSMTPImpl) UpdateSMTP(ctx context.Context, check CheckSMTP) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointSMTPImpl) UpdateSMTP(ctx context.Context, pk PrimaryKeyable, check CheckSMTP) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckSSH struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -861,25 +796,20 @@ type CheckSSH struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckSSH) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointSSHImpl struct {
-	EndpointCreator[CheckSSH, CheckResponse, Check]
-	EndpointUpdater[CheckSSH, CheckResponse, Check]
+	EndpointCreator[CheckSSH, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckSSH, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointSSHImpl) CreateSSH(ctx context.Context, check CheckSSH) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointSSHImpl) UpdateSSH(ctx context.Context, check CheckSSH) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointSSHImpl) UpdateSSH(ctx context.Context, pk PrimaryKeyable, check CheckSSH) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckSSLCert struct {
-	PK            int              `json:"pk,omitempty"`
 	Name          string           `json:"name,omitempty"`
 	ContactGroups []string         `json:"contact_groups,omitempty"`
 	Locations     []string         `json:"locations,omitempty"`
@@ -905,25 +835,20 @@ type CheckSSLCert struct {
 	} `json:"sslconfig,omitempty"`
 }
 
-func (c CheckSSLCert) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointSSLCertImpl struct {
-	EndpointCreator[CheckSSLCert, CheckResponse, Check]
-	EndpointUpdater[CheckSSLCert, CheckResponse, Check]
+	EndpointCreator[CheckSSLCert, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckSSLCert, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointSSLCertImpl) CreateSSLCert(ctx context.Context, check CheckSSLCert) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointSSLCertImpl) UpdateSSLCert(ctx context.Context, check CheckSSLCert) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointSSLCertImpl) UpdateSSLCert(ctx context.Context, pk PrimaryKeyable, check CheckSSLCert) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckTCP struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -943,25 +868,20 @@ type CheckTCP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckTCP) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointTCPImpl struct {
-	EndpointCreator[CheckTCP, CheckResponse, Check]
-	EndpointUpdater[CheckTCP, CheckResponse, Check]
+	EndpointCreator[CheckTCP, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckTCP, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointTCPImpl) CreateTCP(ctx context.Context, check CheckTCP) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointTCPImpl) UpdateTCP(ctx context.Context, check CheckTCP) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointTCPImpl) UpdateTCP(ctx context.Context, pk PrimaryKeyable, check CheckTCP) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckTransaction struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -978,25 +898,20 @@ type CheckTransaction struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckTransaction) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointTransactionImpl struct {
-	EndpointCreator[CheckTransaction, CheckResponse, Check]
-	EndpointUpdater[CheckTransaction, CheckResponse, Check]
+	EndpointCreator[CheckTransaction, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckTransaction, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointTransactionImpl) CreateTransaction(ctx context.Context, check CheckTransaction) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointTransactionImpl) UpdateTransaction(ctx context.Context, check CheckTransaction) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointTransactionImpl) UpdateTransaction(ctx context.Context, pk PrimaryKeyable, check CheckTransaction) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckUDP struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -1016,25 +931,20 @@ type CheckUDP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckUDP) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointUDPImpl struct {
-	EndpointCreator[CheckUDP, CheckResponse, Check]
-	EndpointUpdater[CheckUDP, CheckResponse, Check]
+	EndpointCreator[CheckUDP, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckUDP, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointUDPImpl) CreateUDP(ctx context.Context, check CheckUDP) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointUDPImpl) UpdateUDP(ctx context.Context, check CheckUDP) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointUDPImpl) UpdateUDP(ctx context.Context, pk PrimaryKeyable, check CheckUDP) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckWebhook struct {
-	PK                     int              `json:"pk,omitempty"`
 	Name                   string           `json:"name,omitempty"`
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
@@ -1047,25 +957,20 @@ type CheckWebhook struct {
 	WebhookUrl             string           `json:"webhook_url,omitempty"`
 }
 
-func (c CheckWebhook) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointWebhookImpl struct {
-	EndpointCreator[CheckWebhook, CheckResponse, Check]
-	EndpointUpdater[CheckWebhook, CheckResponse, Check]
+	EndpointCreator[CheckWebhook, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckWebhook, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointWebhookImpl) CreateWebhook(ctx context.Context, check CheckWebhook) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointWebhookImpl) UpdateWebhook(ctx context.Context, check CheckWebhook) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointWebhookImpl) UpdateWebhook(ctx context.Context, pk PrimaryKeyable, check CheckWebhook) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
 
 type CheckWHOIS struct {
-	PK            int      `json:"pk,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	Locations     []string `json:"locations,omitempty"`
@@ -1079,19 +984,15 @@ type CheckWHOIS struct {
 	Notes         string   `json:"msp_notes,omitempty"`
 }
 
-func (c CheckWHOIS) PrimaryKey() PrimaryKey {
-	return PrimaryKey(c.PK)
-}
-
 type checksEndpointWHOISImpl struct {
-	EndpointCreator[CheckWHOIS, CheckResponse, Check]
-	EndpointUpdater[CheckWHOIS, CheckResponse, Check]
+	EndpointCreator[CheckWHOIS, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckWHOIS, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointWHOISImpl) CreateWHOIS(ctx context.Context, check CheckWHOIS) (*Check, error) {
 	return c.Create(ctx, check)
 }
 
-func (c checksEndpointWHOISImpl) UpdateWHOIS(ctx context.Context, check CheckWHOIS) (*Check, error) {
-	return c.Update(ctx, check)
+func (c checksEndpointWHOISImpl) UpdateWHOIS(ctx context.Context, pk PrimaryKeyable, check CheckWHOIS) (*Check, error) {
+	return c.Update(ctx, pk, check)
 }
