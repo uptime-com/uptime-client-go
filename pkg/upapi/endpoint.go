@@ -25,21 +25,21 @@ func (p PrimaryKey) PrimaryKey() PrimaryKey {
 }
 
 // EndpointGetter is a generic interface for getting a single item from an endpoint.
-type EndpointGetter[RequestType PrimaryKeyable, ResponseType ItemGetter[Item], Item any] interface {
-	Get(ctx context.Context, arg RequestType) (*Item, error)
+type EndpointGetter[ResponseType ItemGetter[Item], Item any] interface {
+	Get(ctx context.Context, pk PrimaryKeyable) (*Item, error)
 }
 
-func NewEndpointGetter[RequestType PrimaryKeyable, ResponseType ItemGetter[ItemType], ItemType any](cbd CBD, endpoint string) EndpointGetter[RequestType, ResponseType, ItemType] {
-	return &endpointGetterImpl[RequestType, ResponseType, ItemType]{cbd, endpoint}
+func NewEndpointGetter[ResponseType ItemGetter[ItemType], ItemType any](cbd CBD, endpoint string) EndpointGetter[ResponseType, ItemType] {
+	return &endpointGetterImpl[ResponseType, ItemType]{cbd, endpoint}
 }
 
-type endpointGetterImpl[RequestType PrimaryKeyable, ResponseType ItemGetter[ItemType], ItemType any] struct {
+type endpointGetterImpl[ResponseType ItemGetter[ItemType], ItemType any] struct {
 	CBD
 	endpoint string
 }
 
-func (p *endpointGetterImpl[RequestType, ResponseType, ItemType]) Get(ctx context.Context, arg RequestType) (*ItemType, error) {
-	rq, err := p.BuildRequest(ctx, http.MethodGet, fmt.Sprintf("%s/%d/", p.endpoint, arg.PrimaryKey()), nil, nil)
+func (p *endpointGetterImpl[ResponseType, ItemType]) Get(ctx context.Context, pk PrimaryKeyable) (*ItemType, error) {
+	rq, err := p.BuildRequest(ctx, http.MethodGet, fmt.Sprintf("%s/%d/", p.endpoint, pk.PrimaryKey()), nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -165,21 +165,21 @@ func (p *endpointUpdaterImpl[RequestType, ResponseType, ItemType]) Update(ctx co
 }
 
 // EndpointDeleter is a generic interface for deleting an item from an endpoint.
-type EndpointDeleter[RequestType PrimaryKeyable] interface {
-	Delete(ctx context.Context, arg RequestType) error
+type EndpointDeleter interface {
+	Delete(ctx context.Context, pk PrimaryKeyable) error
 }
 
-func NewEndpointDeleter[RequestType PrimaryKeyable](cbd CBD, endpoint string) EndpointDeleter[RequestType] {
-	return &endpointDeleterImpl[RequestType]{cbd, endpoint}
+func NewEndpointDeleter(cbd CBD, endpoint string) EndpointDeleter {
+	return &endpointDeleterImpl{cbd, endpoint}
 }
 
-type endpointDeleterImpl[RequestType PrimaryKeyable] struct {
+type endpointDeleterImpl struct {
 	CBD
 	endpoint string
 }
 
-func (p *endpointDeleterImpl[RequestType]) Delete(ctx context.Context, arg RequestType) error {
-	rq, err := p.BuildRequest(ctx, http.MethodDelete, fmt.Sprintf("%s/%d/", p.endpoint, arg.PrimaryKey()), nil, nil)
+func (p *endpointDeleterImpl) Delete(ctx context.Context, pk PrimaryKeyable) error {
+	rq, err := p.BuildRequest(ctx, http.MethodDelete, fmt.Sprintf("%s/%d/", p.endpoint, pk.PrimaryKey()), nil, nil)
 	if err != nil {
 		return err
 	}

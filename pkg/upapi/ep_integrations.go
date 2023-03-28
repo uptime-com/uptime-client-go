@@ -48,8 +48,8 @@ func (r IntegrationResponse) Item() *Integration {
 
 type IntegrationsEndpoint interface {
 	List(context.Context, IntegrationListOptions) ([]Integration, error)
-	Get(context.Context, PrimaryKey) (*Integration, error)
-	Delete(context.Context, PrimaryKey) error
+	Get(context.Context, PrimaryKeyable) (*Integration, error)
+	Delete(context.Context, PrimaryKeyable) error
 	CreateCachet(context.Context, IntegrationCachet) (*Integration, error)
 	UpdateCachet(context.Context, IntegrationCachet) (*Integration, error)
 	CreateDatadog(context.Context, IntegrationDatadog) (*Integration, error)
@@ -170,8 +170,8 @@ func NewIntegrationsEndpoint(cbd CBD) IntegrationsEndpoint {
 			EndpointUpdater: NewEndpointUpdater[IntegrationZapier, IntegrationResponse, Integration](cbd, endpoint),
 		},
 		EndpointLister:  NewEndpointLister[IntegrationListResponse, Integration, IntegrationListOptions](cbd, endpoint),
-		EndpointGetter:  NewEndpointGetter[PrimaryKey, IntegrationResponse, Integration](cbd, endpoint),
-		EndpointDeleter: NewEndpointDeleter[PrimaryKey](cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[IntegrationResponse, Integration](cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter(cbd, endpoint),
 	}
 }
 
@@ -196,8 +196,8 @@ type integrationsEndpointImpl struct {
 	integrationsEndpointWebhookImpl
 	integrationsEndpointZapierImpl
 	EndpointLister[IntegrationListResponse, Integration, IntegrationListOptions]
-	EndpointGetter[PrimaryKey, IntegrationResponse, Integration]
-	EndpointDeleter[PrimaryKey]
+	EndpointGetter[IntegrationResponse, Integration]
+	EndpointDeleter
 }
 
 type IntegrationCachet struct {

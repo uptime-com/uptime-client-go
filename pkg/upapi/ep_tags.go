@@ -43,27 +43,27 @@ func (t TagItemResponse) Item() *Tag {
 
 type TagsEndpoint interface {
 	List(context.Context, TagListOptions) ([]Tag, error)
-	Get(context.Context, PrimaryKey) (*Tag, error)
+	Get(context.Context, PrimaryKeyable) (*Tag, error)
 	Create(context.Context, Tag) (*Tag, error)
 	Update(context.Context, Tag) (*Tag, error)
-	Delete(context.Context, PrimaryKey) error
+	Delete(context.Context, PrimaryKeyable) error
 }
 
 func NewTagsEndpoint(cbd CBD) TagsEndpoint {
 	const endpoint = "check-tags"
 	return &tagsEndpointImpl{
 		EndpointLister:  NewEndpointLister[TagListResponse, Tag, TagListOptions](cbd, endpoint),
-		EndpointGetter:  NewEndpointGetter[PrimaryKey, TagItemResponse, Tag](cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[TagItemResponse, Tag](cbd, endpoint),
 		EndpointCreator: NewEndpointCreator[Tag, TagItemResponse, Tag](cbd, endpoint),
 		EndpointUpdater: NewEndpointUpdater[Tag, TagItemResponse, Tag](cbd, endpoint),
-		EndpointDeleter: NewEndpointDeleter[PrimaryKey](cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter(cbd, endpoint),
 	}
 }
 
 type tagsEndpointImpl struct {
 	EndpointLister[TagListResponse, Tag, TagListOptions]
-	EndpointGetter[PrimaryKey, TagItemResponse, Tag]
+	EndpointGetter[TagItemResponse, Tag]
 	EndpointCreator[Tag, TagItemResponse, Tag]
 	EndpointUpdater[Tag, TagItemResponse, Tag]
-	EndpointDeleter[PrimaryKey]
+	EndpointDeleter
 }

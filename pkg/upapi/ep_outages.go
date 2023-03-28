@@ -75,11 +75,11 @@ func NewOutagesEndpoint(cbd CBD) OutagesEndpoint {
 	const endpoint = "outages"
 	return &outagesEndpointImpl{
 		EndpointLister: NewEndpointLister[OutageListResponse, Outage, OutageListOptions](cbd, endpoint),
-		EndpointGetter: NewEndpointGetter[PrimaryKeyable, OutageResponse, Outage](cbd, endpoint),
+		EndpointGetter: NewEndpointGetter[OutageResponse, Outage](cbd, endpoint),
 	}
 }
 
 type outagesEndpointImpl struct {
 	EndpointLister[OutageListResponse, Outage, OutageListOptions]
-	EndpointGetter[PrimaryKeyable, OutageResponse, Outage]
+	EndpointGetter[OutageResponse, Outage]
 }
