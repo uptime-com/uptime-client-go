@@ -68,18 +68,18 @@ type OutageListOptions struct {
 
 type OutagesEndpoint interface {
 	List(context.Context, OutageListOptions) ([]Outage, error)
-	Get(context.Context, PrimaryKey) (*Outage, error)
+	Get(context.Context, PrimaryKeyable) (*Outage, error)
 }
 
 func NewOutagesEndpoint(cbd CBD) OutagesEndpoint {
 	const endpoint = "outages"
 	return &outagesEndpointImpl{
 		EndpointLister: NewEndpointLister[OutageListResponse, Outage, OutageListOptions](cbd, endpoint),
-		EndpointGetter: NewEndpointGetter[PrimaryKey, OutageResponse, Outage](cbd, endpoint),
+		EndpointGetter: NewEndpointGetter[PrimaryKeyable, OutageResponse, Outage](cbd, endpoint),
 	}
 }
 
 type outagesEndpointImpl struct {
 	EndpointLister[OutageListResponse, Outage, OutageListOptions]
-	EndpointGetter[PrimaryKey, OutageResponse, Outage]
+	EndpointGetter[PrimaryKeyable, OutageResponse, Outage]
 }

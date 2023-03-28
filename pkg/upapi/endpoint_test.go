@@ -19,7 +19,7 @@ type testItem struct {
 	Baz bool   `json:"baz"`
 }
 
-func (i testItem) PrimaryKey() int {
+func (i testItem) PrimaryKey() PrimaryKey {
 	return 1
 }
 

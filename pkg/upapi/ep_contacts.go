@@ -12,8 +12,8 @@ type Contact struct {
 	PushNotificationProfiles []string `json:"push_notification_profiles,omitempty"`
 }
 
-func (c Contact) PrimaryKey() int {
-	return c.PK
+func (c Contact) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type ContactListOptions struct {
@@ -43,8 +43,8 @@ type ContactsEndpoint interface {
 	List(context.Context, ContactListOptions) ([]Contact, error)
 	Create(context.Context, Contact) (*Contact, error)
 	Update(context.Context, Contact) (*Contact, error)
-	Get(context.Context, PrimaryKey) (*Contact, error)
-	Delete(context.Context, PrimaryKey) error
+	Get(context.Context, PrimaryKeyable) (*Contact, error)
+	Delete(context.Context, PrimaryKeyable) error
 }
 
 func NewContactsEndpoint(cbd CBD) ContactsEndpoint {
@@ -53,8 +53,8 @@ func NewContactsEndpoint(cbd CBD) ContactsEndpoint {
 		EndpointLister:  NewEndpointLister[ContactListResponse, Contact, ContactListOptions](cbd, endpoint),
 		EndpointCreator: NewEndpointCreator[Contact, ContactResponse, Contact](cbd, endpoint),
 		EndpointUpdater: NewEndpointUpdater[Contact, ContactResponse, Contact](cbd, endpoint),
-		EndpointGetter:  NewEndpointGetter[PrimaryKey, ContactResponse, Contact](cbd, endpoint),
-		EndpointDeleter: NewEndpointDeleter[PrimaryKey](cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[PrimaryKeyable, ContactResponse, Contact](cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter[PrimaryKeyable](cbd, endpoint),
 	}
 }
 
@@ -62,6 +62,6 @@ type contactsEndpointImpl struct {
 	EndpointLister[ContactListResponse, Contact, ContactListOptions]
 	EndpointCreator[Contact, ContactResponse, Contact]
 	EndpointUpdater[Contact, ContactResponse, Contact]
-	EndpointGetter[PrimaryKey, ContactResponse, Contact]
-	EndpointDeleter[PrimaryKey]
+	EndpointGetter[PrimaryKeyable, ContactResponse, Contact]
+	EndpointDeleter[PrimaryKeyable]
 }

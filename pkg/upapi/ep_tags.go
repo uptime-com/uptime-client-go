@@ -10,8 +10,8 @@ type Tag struct {
 	ColorHex string `json:"color_hex,omitempty"`
 }
 
-func (t Tag) PrimaryKey() int {
-	return t.PK
+func (t Tag) PrimaryKey() PrimaryKey {
+	return PrimaryKey(t.PK)
 }
 
 // TagListResponse represents a list of check tags.

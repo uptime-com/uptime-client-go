@@ -14,26 +14,26 @@ type ListGetter[Item any] interface {
 	List() []Item
 }
 
-type PrimaryKeyGetter interface {
-	PrimaryKey() int
+type PrimaryKeyable interface {
+	PrimaryKey() PrimaryKey
 }
 
 type PrimaryKey int
 
-func (p PrimaryKey) PrimaryKey() int {
-	return int(p)
+func (p PrimaryKey) PrimaryKey() PrimaryKey {
+	return p
 }
 
 // EndpointGetter is a generic interface for getting a single item from an endpoint.
-type EndpointGetter[RequestType PrimaryKeyGetter, ResponseType ItemGetter[Item], Item any] interface {
+type EndpointGetter[RequestType PrimaryKeyable, ResponseType ItemGetter[Item], Item any] interface {
 	Get(ctx context.Context, arg RequestType) (*Item, error)
 }
 
-func NewEndpointGetter[RequestType PrimaryKeyGetter, ResponseType ItemGetter[ItemType], ItemType any](cbd CBD, endpoint string) EndpointGetter[RequestType, ResponseType, ItemType] {
+func NewEndpointGetter[RequestType PrimaryKeyable, ResponseType ItemGetter[ItemType], ItemType any](cbd CBD, endpoint string) EndpointGetter[RequestType, ResponseType, ItemType] {
 	return &endpointGetterImpl[RequestType, ResponseType, ItemType]{cbd, endpoint}
 }
 
-type endpointGetterImpl[RequestType PrimaryKeyGetter, ResponseType ItemGetter[ItemType], ItemType any] struct {
+type endpointGetterImpl[RequestType PrimaryKeyable, ResponseType ItemGetter[ItemType], ItemType any] struct {
 	CBD
 	endpoint string
 }
@@ -130,15 +130,15 @@ func (p *endpointCreatorImpl[RequestType, ResponseType, ItemType]) Create(ctx co
 }
 
 // EndpointUpdater is a generic interface for updating an item from an endpoint.
-type EndpointUpdater[RequestType PrimaryKeyGetter, ResponseType ItemGetter[ItemType], ItemType any] interface {
+type EndpointUpdater[RequestType PrimaryKeyable, ResponseType ItemGetter[ItemType], ItemType any] interface {
 	Update(ctx context.Context, arg RequestType) (*ItemType, error)
 }
 
-func NewEndpointUpdater[RequestType PrimaryKeyGetter, ResponseType ItemGetter[ItemType], ItemType any](cbd CBD, endpoint string) EndpointUpdater[RequestType, ResponseType, ItemType] {
+func NewEndpointUpdater[RequestType PrimaryKeyable, ResponseType ItemGetter[ItemType], ItemType any](cbd CBD, endpoint string) EndpointUpdater[RequestType, ResponseType, ItemType] {
 	return &endpointUpdaterImpl[RequestType, ResponseType, ItemType]{cbd, endpoint}
 }
 
-type endpointUpdaterImpl[RequestType PrimaryKeyGetter, ResponseType ItemGetter[ItemType], ItemType any] struct {
+type endpointUpdaterImpl[RequestType PrimaryKeyable, ResponseType ItemGetter[ItemType], ItemType any] struct {
 	CBD
 	endpoint string
 }
@@ -165,15 +165,15 @@ func (p *endpointUpdaterImpl[RequestType, ResponseType, ItemType]) Update(ctx co
 }
 
 // EndpointDeleter is a generic interface for deleting an item from an endpoint.
-type EndpointDeleter[RequestType PrimaryKeyGetter] interface {
+type EndpointDeleter[RequestType PrimaryKeyable] interface {
 	Delete(ctx context.Context, arg RequestType) error
 }
 
-func NewEndpointDeleter[RequestType PrimaryKeyGetter](cbd CBD, endpoint string) EndpointDeleter[RequestType] {
+func NewEndpointDeleter[RequestType PrimaryKeyable](cbd CBD, endpoint string) EndpointDeleter[RequestType] {
 	return &endpointDeleterImpl[RequestType]{cbd, endpoint}
 }
 
-type endpointDeleterImpl[RequestType PrimaryKeyGetter] struct {
+type endpointDeleterImpl[RequestType PrimaryKeyable] struct {
 	CBD
 	endpoint string
 }
