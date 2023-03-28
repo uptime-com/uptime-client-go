@@ -57,8 +57,8 @@ type Check struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c Check) PrimaryKey() int {
-	return c.PK
+func (c Check) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type CheckListResponse struct {
@@ -357,8 +357,8 @@ type CheckAPI struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckAPI) PrimaryKey() int {
-	return c.PK
+func (c CheckAPI) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointAPIImpl struct {
@@ -388,8 +388,8 @@ type CheckBlacklist struct {
 	Notes                 string           `json:"msp_notes,omitempty"`
 }
 
-func (c CheckBlacklist) PrimaryKey() int {
-	return c.PK
+func (c CheckBlacklist) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointBlacklistImpl struct {
@@ -426,8 +426,8 @@ type CheckDNS struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckDNS) PrimaryKey() int {
-	return c.PK
+func (c CheckDNS) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointDNSImpl struct {
@@ -465,8 +465,8 @@ type CheckGroup struct {
 	} `json:"groupcheckconfig,omitempty"`
 }
 
-func (c CheckGroup) PrimaryKey() int {
-	return c.PK
+func (c CheckGroup) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointGroupImpl struct {
@@ -498,8 +498,8 @@ type CheckHeartbeat struct {
 	HeartbeatURL           string           `json:"heartbeat_url,omitempty"`
 }
 
-func (c CheckHeartbeat) PrimaryKey() int {
-	return c.PK
+func (c CheckHeartbeat) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointHeartbeatImpl struct {
@@ -545,8 +545,8 @@ type CheckHTTP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckHTTP) PrimaryKey() int {
-	return c.PK
+func (c CheckHTTP) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointHTTPImpl struct {
@@ -580,8 +580,8 @@ type CheckICMP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckICMP) PrimaryKey() int {
-	return c.PK
+func (c CheckICMP) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointICMPImpl struct {
@@ -618,8 +618,8 @@ type CheckIMAP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckIMAP) PrimaryKey() int {
-	return c.PK
+func (c CheckIMAP) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointIMAPImpl struct {
@@ -649,8 +649,8 @@ type CheckMalware struct {
 	Notes         string           `json:"msp_notes,omitempty"`
 }
 
-func (c CheckMalware) PrimaryKey() int {
-	return c.PK
+func (c CheckMalware) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointMalwareImpl struct {
@@ -686,8 +686,8 @@ type CheckNTP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckNTP) PrimaryKey() int {
-	return c.PK
+func (c CheckNTP) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointNTPImpl struct {
@@ -724,8 +724,8 @@ type CheckPOP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckPOP) PrimaryKey() int {
-	return c.PK
+func (c CheckPOP) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointPOPImpl struct {
@@ -755,8 +755,8 @@ type CheckRUM struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckRUM) PrimaryKey() int {
-	return c.PK
+func (c CheckRUM) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointRUMImpl struct {
@@ -785,8 +785,8 @@ type CheckRUM2 struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckRUM2) PrimaryKey() int {
-	return c.PK
+func (c CheckRUM2) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointRUM2Impl struct {
@@ -825,8 +825,8 @@ type CheckSMTP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckSMTP) PrimaryKey() int {
-	return c.PK
+func (c CheckSMTP) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointSMTPImpl struct {
@@ -861,8 +861,8 @@ type CheckSSH struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckSSH) PrimaryKey() int {
-	return c.PK
+func (c CheckSSH) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointSSHImpl struct {
@@ -905,8 +905,8 @@ type CheckSSLCert struct {
 	} `json:"sslconfig,omitempty"`
 }
 
-func (c CheckSSLCert) PrimaryKey() int {
-	return c.PK
+func (c CheckSSLCert) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointSSLCertImpl struct {
@@ -943,8 +943,8 @@ type CheckTCP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckTCP) PrimaryKey() int {
-	return c.PK
+func (c CheckTCP) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointTCPImpl struct {
@@ -978,8 +978,8 @@ type CheckTransaction struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckTransaction) PrimaryKey() int {
-	return c.PK
+func (c CheckTransaction) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointTransactionImpl struct {
@@ -1016,8 +1016,8 @@ type CheckUDP struct {
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics,omitempty"`
 }
 
-func (c CheckUDP) PrimaryKey() int {
-	return c.PK
+func (c CheckUDP) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointUDPImpl struct {
@@ -1047,8 +1047,8 @@ type CheckWebhook struct {
 	WebhookUrl             string           `json:"webhook_url,omitempty"`
 }
 
-func (c CheckWebhook) PrimaryKey() int {
-	return c.PK
+func (c CheckWebhook) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointWebhookImpl struct {
@@ -1079,8 +1079,8 @@ type CheckWHOIS struct {
 	Notes         string   `json:"msp_notes,omitempty"`
 }
 
-func (c CheckWHOIS) PrimaryKey() int {
-	return c.PK
+func (c CheckWHOIS) PrimaryKey() PrimaryKey {
+	return PrimaryKey(c.PK)
 }
 
 type checksEndpointWHOISImpl struct {

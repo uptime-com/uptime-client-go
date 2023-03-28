@@ -15,8 +15,8 @@ type Integration struct {
 	LastError     string   `json:"last_error,omitempty"`
 }
 
-func (i Integration) PrimaryKey() int {
-	return i.PK
+func (i Integration) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type IntegrationListResponse struct {
@@ -210,8 +210,8 @@ type IntegrationCachet struct {
 	Metric        string   `json:"metric,omitempty"`
 }
 
-func (i IntegrationCachet) PrimaryKey() int {
-	return i.PK
+func (i IntegrationCachet) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointCachetImpl struct {
@@ -236,8 +236,8 @@ type IntegrationDatadog struct {
 	Region        string   `json:"region,omitempty"`
 }
 
-func (i IntegrationDatadog) PrimaryKey() int {
-	return i.PK
+func (i IntegrationDatadog) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointDatadogImpl struct {
@@ -261,8 +261,8 @@ type IntegrationGeckoboard struct {
 	DatasetName   string   `json:"dataset_name,omitempty"`
 }
 
-func (i IntegrationGeckoboard) PrimaryKey() int {
-	return i.PK
+func (i IntegrationGeckoboard) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointGeckoboardImpl struct {
@@ -293,8 +293,8 @@ type IntegrationJiraServicedesk struct {
 	CustomFieldsJson         string   `json:"custom_fields_json,omitempty"`
 }
 
-func (i IntegrationJiraServicedesk) PrimaryKey() int {
-	return i.PK
+func (i IntegrationJiraServicedesk) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointJiraServicedeskImpl struct {
@@ -318,8 +318,8 @@ type IntegrationKlipfolio struct {
 	DataSourceName string   `json:"data_source_name,omitempty"`
 }
 
-func (i IntegrationKlipfolio) PrimaryKey() int {
-	return i.PK
+func (i IntegrationKlipfolio) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointKlipfolioImpl struct {
@@ -344,8 +344,8 @@ type IntegrationLibrato struct {
 	MetricName    string   `json:"metric_name,omitempty"`
 }
 
-func (i IntegrationLibrato) PrimaryKey() int {
-	return i.PK
+func (i IntegrationLibrato) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointLibratoImpl struct {
@@ -368,8 +368,8 @@ type IntegrationMicrosoftTeams struct {
 	WebhookUrl    string   `json:"webhook_url,omitempty"`
 }
 
-func (i IntegrationMicrosoftTeams) PrimaryKey() int {
-	return i.PK
+func (i IntegrationMicrosoftTeams) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointMicrosoftTeamsImpl struct {
@@ -396,8 +396,8 @@ type IntegrationOpsgenie struct {
 	Autoresolve   bool     `json:"autoresolve,omitempty"`
 }
 
-func (i IntegrationOpsgenie) PrimaryKey() int {
-	return i.PK
+func (i IntegrationOpsgenie) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointOpsgenieImpl struct {
@@ -421,8 +421,8 @@ type IntegrationPagerduty struct {
 	Autoresolve   bool     `json:"autoresolve,omitempty"`
 }
 
-func (i IntegrationPagerduty) PrimaryKey() int {
-	return i.PK
+func (i IntegrationPagerduty) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointPagerdutyImpl struct {
@@ -445,8 +445,8 @@ type IntegrationPushbullet struct {
 	Email         string   `json:"email,omitempty"`
 }
 
-func (i IntegrationPushbullet) PrimaryKey() int {
-	return i.PK
+func (i IntegrationPushbullet) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointPushbulletImpl struct {
@@ -470,8 +470,8 @@ type IntegrationPushover struct {
 	Priority      int      `json:"priority,omitempty"`
 }
 
-func (i IntegrationPushover) PrimaryKey() int {
-	return i.PK
+func (i IntegrationPushover) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointPushoverImpl struct {
@@ -495,8 +495,8 @@ type IntegrationSlack struct {
 	Channel       string   `json:"channel,omitempty"`
 }
 
-func (i IntegrationSlack) PrimaryKey() int {
-	return i.PK
+func (i IntegrationSlack) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointSlackImpl struct {
@@ -524,8 +524,8 @@ type IntegrationStatus struct {
 	Metric        string   `json:"metric,omitempty"`
 }
 
-func (i IntegrationStatus) PrimaryKey() int {
-	return i.PK
+func (i IntegrationStatus) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointStatusImpl struct {
@@ -551,8 +551,8 @@ type IntegrationStatuspage struct {
 	Metric        string   `json:"metric,omitempty"`
 }
 
-func (i IntegrationStatuspage) PrimaryKey() int {
-	return i.PK
+func (i IntegrationStatuspage) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointStatuspageImpl struct {
@@ -576,8 +576,8 @@ type IntegrationTwitter struct {
 	OauthTokenSecret string   `json:"oauth_token_secret,omitempty"`
 }
 
-func (i IntegrationTwitter) PrimaryKey() int {
-	return i.PK
+func (i IntegrationTwitter) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointTwitterImpl struct {
@@ -601,8 +601,8 @@ type IntegrationVictorops struct {
 	RoutingKey    string   `json:"routing_key,omitempty"`
 }
 
-func (i IntegrationVictorops) PrimaryKey() int {
-	return i.PK
+func (i IntegrationVictorops) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointVictoropsImpl struct {
@@ -626,8 +626,8 @@ type IntegrationWavefront struct {
 	APIToken      string   `json:"api_token,omitempty"`
 }
 
-func (i IntegrationWavefront) PrimaryKey() int {
-	return i.PK
+func (i IntegrationWavefront) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointWavefrontImpl struct {
@@ -652,8 +652,8 @@ type IntegrationWebhook struct {
 	UseLegacyPayload bool     `json:"use_legacy_payload,omitempty"`
 }
 
-func (i IntegrationWebhook) PrimaryKey() int {
-	return i.PK
+func (i IntegrationWebhook) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointWebhookImpl struct {
@@ -676,8 +676,8 @@ type IntegrationZapier struct {
 	WebhookUrl    string   `json:"webhook_url,omitempty"`
 }
 
-func (i IntegrationZapier) PrimaryKey() int {
-	return i.PK
+func (i IntegrationZapier) PrimaryKey() PrimaryKey {
+	return PrimaryKey(i.PK)
 }
 
 type integrationsEndpointZapierImpl struct {
