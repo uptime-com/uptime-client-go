@@ -409,8 +409,8 @@ type CheckDNS struct {
 	IsPaused               bool             `json:"is_paused"`
 	Interval               int              `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address,omitempty"`
-	DnsServer              string           `json:"msp_dns_server,omitempty"`
-	DnsRecordType          string           `json:"msp_dns_record_type,omitempty"`
+	DNSServer              string           `json:"msp_dns_server,omitempty"`
+	DNSRecordType          string           `json:"msp_dns_record_type,omitempty"`
 	ExpectString           string           `json:"msp_expect_string,omitempty"`
 	Threshold              int              `json:"msp_threshold,omitempty"`
 	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
