@@ -27,7 +27,7 @@ type Check struct {
 	Threshold       int      `json:"msp_threshold,omitempty"`
 	NumRetries      int      `json:"msp_num_retries,omitempty"`
 	UptimeSLA       int      `json:"msp_uptime_sla,omitempty"`
-	ResponseTimeSLA int      `json:"msp_response_time_sla,omitempty"`
+	ResponseTimeSLA string   `json:"msp_response_time_sla,omitempty"`
 	Headers         string   `json:"msp_headers,omitempty"`
 	Username        string   `json:"msp_username,omitempty"`
 	Password        string   `json:"msp_password,omitempty"`
