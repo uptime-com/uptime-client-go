@@ -41,6 +41,15 @@ func (t TagItemResponse) Item() Tag {
 	return t
 }
 
+// TagCreateUpdateResponse represents a response from the tagsImpl
+type TagCreateUpdateResponse struct {
+	Results Tag `json:"results,omitempty"`
+}
+
+func (t TagCreateUpdateResponse) Item() Tag {
+	return t.Results
+}
+
 type TagsEndpoint interface {
 	List(context.Context, TagListOptions) ([]Tag, error)
 	Create(context.Context, Tag) (*Tag, error)
@@ -54,8 +63,8 @@ func NewTagsEndpoint(cbd CBD) TagsEndpoint {
 	return &tagsEndpointImpl{
 		EndpointLister:  NewEndpointLister[TagListResponse, Tag, TagListOptions](cbd, endpoint),
 		EndpointGetter:  NewEndpointGetter[TagItemResponse, Tag](cbd, endpoint),
-		EndpointCreator: NewEndpointCreator[Tag, TagItemResponse, Tag](cbd, endpoint),
-		EndpointUpdater: NewEndpointUpdater[Tag, TagItemResponse, Tag](cbd, endpoint),
+		EndpointCreator: NewEndpointCreator[Tag, TagCreateUpdateResponse, Tag](cbd, endpoint),
+		EndpointUpdater: NewEndpointUpdater[Tag, TagCreateUpdateResponse, Tag](cbd, endpoint),
 		EndpointDeleter: NewEndpointDeleter(cbd, endpoint),
 	}
 }

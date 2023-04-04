@@ -105,8 +105,7 @@ func tagsUpdate(ctx context.Context, pkstr string) (*upapi.Tag, error) {
 	if err != nil {
 		return nil, err
 	}
-	tagsUpdateFlags.PK = pk
-	return api.Tags().Update(ctx, tagsUpdateFlags)
+	return api.Tags().Update(ctx, upapi.PrimaryKey(pk), tagsUpdateFlags)
 }
 
 var (
