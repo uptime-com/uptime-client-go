@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/http/httptrace"
 	"net/url"
+	"strings"
 	"time"
 
 	"golang.org/x/time/rate"
@@ -108,7 +109,7 @@ func (s *withRateLimitCBD) Do(rq *http.Request) (*http.Response, error) {
 
 func WithTrace(w io.Writer) Option {
 	return func(cbd CBD) (CBD, error) {
-		return &withTraceCBD{cbd, log.New(w, "http trace", log.LstdFlags)}, nil
+		return &withTraceCBD{cbd, log.New(w, "››› ", log.LstdFlags)}, nil
 	}
 }
 
@@ -123,6 +124,7 @@ func (t *withTraceCBD) Do(rq *http.Request) (*http.Response, error) {
 	if rq.Body != nil {
 		rq.Body = io.NopCloser(io.TeeReader(rq.Body, buf))
 	}
+	t.log.Println(rq.Method, rq.URL.String())
 	rs, err := t.CBD.Do(rq)
 	if err != nil {
 		return nil, err
@@ -170,6 +172,13 @@ func (t *withTraceCBD) trace() *httptrace.ClientTrace {
 			}
 		},
 		WroteHeaderField: func(key string, value []string) {
+			if key == "authorization" {
+				for i := range value {
+					if strings.HasPrefix(value[i], "Token ") {
+						value[i] = "Token " + strings.Repeat("*", len(value[i])-6)
+					}
+				}
+			}
 			t.log.Println("WroteHeaderField", key, value)
 		},
 		WroteHeaders: func() {

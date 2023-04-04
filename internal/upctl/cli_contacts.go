@@ -94,13 +94,12 @@ func init() {
 	contactsCmd.AddCommand(contactsUpdateCmd)
 }
 
-func contactsUpdate(ctx context.Context, pkStr string) (*upapi.Contact, error) {
-	pk, err := parsePK(pkStr)
+func contactsUpdate(ctx context.Context, arg string) (*upapi.Contact, error) {
+	pk, err := parsePK(arg)
 	if err != nil {
 		return nil, err
 	}
-	contactsUpdateFlags.PK = pk
-	return api.Contacts().Update(ctx, contactsUpdateFlags)
+	return api.Contacts().Update(ctx, upapi.PrimaryKey(pk), contactsUpdateFlags)
 }
 
 var (
