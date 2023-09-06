@@ -1,9 +1,12 @@
 package upapi
 
-import "context"
+import (
+	"context"
+)
 
 type Contact struct {
 	PK                       int      `json:"pk,omitempty"`
+	URL                      string   `json:"url,omitempty"`
 	Name                     string   `json:"name,omitempty"`
 	SmsList                  []string `json:"sms_list,omitempty"`
 	EmailList                []string `json:"email_list,omitempty"`
@@ -39,6 +42,14 @@ func (r ContactResponse) Item() Contact {
 	return Contact(r)
 }
 
+type ContactCreateUpdateResponse struct {
+	Results Contact `json:"results,omitempty"`
+}
+
+func (r ContactCreateUpdateResponse) Item() Contact {
+	return r.Results
+}
+
 type ContactsEndpoint interface {
 	List(context.Context, ContactListOptions) ([]Contact, error)
 	Create(context.Context, Contact) (*Contact, error)
@@ -51,8 +62,8 @@ func NewContactsEndpoint(cbd CBD) ContactsEndpoint {
 	const endpoint = "contacts"
 	return &contactsEndpointImpl{
 		EndpointLister:  NewEndpointLister[ContactListResponse, Contact, ContactListOptions](cbd, endpoint),
-		EndpointCreator: NewEndpointCreator[Contact, ContactResponse, Contact](cbd, endpoint),
-		EndpointUpdater: NewEndpointUpdater[Contact, ContactResponse, Contact](cbd, endpoint),
+		EndpointCreator: NewEndpointCreator[Contact, ContactCreateUpdateResponse, Contact](cbd, endpoint),
+		EndpointUpdater: NewEndpointUpdater[Contact, ContactCreateUpdateResponse, Contact](cbd, endpoint),
 		EndpointGetter:  NewEndpointGetter[ContactResponse, Contact](cbd, endpoint),
 		EndpointDeleter: NewEndpointDeleter(cbd, endpoint),
 	}
@@ -60,8 +71,8 @@ func NewContactsEndpoint(cbd CBD) ContactsEndpoint {
 
 type contactsEndpointImpl struct {
 	EndpointLister[ContactListResponse, Contact, ContactListOptions]
-	EndpointCreator[Contact, ContactResponse, Contact]
-	EndpointUpdater[Contact, ContactResponse, Contact]
+	EndpointCreator[Contact, ContactCreateUpdateResponse, Contact]
+	EndpointUpdater[Contact, ContactCreateUpdateResponse, Contact]
 	EndpointGetter[ContactResponse, Contact]
 	EndpointDeleter
 }
