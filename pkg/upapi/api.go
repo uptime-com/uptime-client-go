@@ -19,6 +19,7 @@ type API interface {
 	Tags() TagsEndpoint
 	Outages() OutagesEndpoint
 	ProbeServers() ProbeServersEndpoint
+	StatusPages() StatusPagesEndpoint
 }
 
 // New returns a new API client instance.
@@ -62,6 +63,7 @@ func New(opts ...Option) (api API, err error) {
 		tags:         NewTagsEndpoint(cbd),
 		outages:      NewOutagesEndpoint(cbd),
 		probeServers: NewProbeServersEndpoint(cbd),
+		statusPages:  NewStatusPagesEndpoint(cbd),
 	}
 	return api, nil
 }
@@ -74,6 +76,7 @@ type apiImpl struct {
 	tags         TagsEndpoint
 	outages      OutagesEndpoint
 	probeServers ProbeServersEndpoint
+	statusPages  StatusPagesEndpoint
 }
 
 func (api *apiImpl) Checks() ChecksEndpoint {
@@ -98,4 +101,8 @@ func (api *apiImpl) Outages() OutagesEndpoint {
 
 func (api *apiImpl) ProbeServers() ProbeServersEndpoint {
 	return api.probeServers
+}
+
+func (api *apiImpl) StatusPages() StatusPagesEndpoint {
+	return api.statusPages
 }
