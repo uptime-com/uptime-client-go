@@ -107,7 +107,7 @@ var (
 		Use:     "delete",
 		Aliases: []string{"del", "rm"},
 		Short:   "Delete a tag",
-		Args:    cobra.NoArgs,
+		Args:    cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return output(contactsDelete(cmd.Context(), args[0]))
 		},
@@ -118,14 +118,14 @@ func init() {
 	contactsCmd.AddCommand(contactsDeleteCmd)
 }
 
-func contactsDelete(ctx context.Context, pkstr string) (*upapi.Tag, error) {
+func contactsDelete(ctx context.Context, pkstr string) (*upapi.Contact, error) {
 	pk, err := parsePK(pkstr)
 	if err != nil {
 		return nil, err
 	}
-	tag, err := api.Tags().Get(ctx, upapi.PrimaryKey(pk))
+	obj, err := api.Contacts().Get(ctx, upapi.PrimaryKey(pk))
 	if err != nil {
 		return nil, err
 	}
-	return tag, api.Tags().Delete(ctx, upapi.PrimaryKey(pk))
+	return obj, api.Contacts().Delete(ctx, upapi.PrimaryKey(pk))
 }
