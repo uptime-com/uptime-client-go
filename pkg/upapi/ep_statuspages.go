@@ -3,7 +3,7 @@ package upapi
 import "context"
 
 type StatusPage struct {
-	PK                        int64  `json:"pk,omitempty"`
+	PK                        int    `json:"pk,omitempty"`
 	URL                       string `json:"url,omitempty"`
 	Name                      string `json:"name"`
 	VisibilityLevel           string `json:"visibility_level"`
