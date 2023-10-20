@@ -11,8 +11,8 @@ import (
 
 type CheckSSLCertConfig struct {
 	Protocol         string `json:"ssl_cert_protocol,omitempty" flag:"sslcert.protocol"`
-	CRL              bool   `json:"ssl_cert_crl,omitempty" flag:"sslcert.crl"`
-	FirstElementOnly bool   `json:"ssl_cert_first_element_only,omitempty" flag:"sslcert.first-element-only"`
+	CRL              bool   `json:"ssl_cert_crl" flag:"sslcert.crl"`
+	FirstElementOnly bool   `json:"ssl_cert_first_element_only" flag:"sslcert.first-element-only"`
 	Match            string `json:"ssl_cert_match,omitempty" flag:"sslcert.match"`
 	Issuer           string `json:"ssl_cert_issuer,omitempty" flag:"sslcert.issuer"`
 	MinVersion       string `json:"ssl_cert_minimum_ssl_tls_version,omitempty" flag:"sslcert.min-version"`
