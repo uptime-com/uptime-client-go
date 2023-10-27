@@ -23,12 +23,12 @@ type CheckSSLCertConfig struct {
 
 // Check represents a check in Uptime.com.
 type Check struct {
-	PK                     int              `json:"pk,omitempty"`
+	PK                     int64            `json:"pk,omitempty"`
 	URL                    string           `json:"url,omitempty"`
 	StatsURL               string           `json:"stats_url,omitempty"`
 	AlertsURL              string           `json:"alerts_url,omitempty"`
 	Name                   string           `json:"name,omitempty"`
-	CachedResponseTime     float32          `json:"cached_response_time,omitempty"`
+	CachedResponseTime     float64          `json:"cached_response_time,omitempty"`
 	ContactGroups          []string         `json:"contact_groups"`
 	CreatedAt              time.Time        `json:"created_at,omitempty"`
 	ModifiedAt             time.Time        `json:"modified_at,omitempty"`
@@ -44,9 +44,9 @@ type Check struct {
 	StateChangedAt         time.Time        `json:"state_changed_at,omitempty"`
 	HeartbeatURL           string           `json:"heartbeat_url,omitempty"`
 	Protocol               string           `json:"msp_protocol,omitempty"`
-	Interval               int              `json:"msp_interval,omitempty"`
+	Interval               int64            `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address"`
-	Port                   int              `json:"msp_port,omitempty"`
+	Port                   int64            `json:"msp_port,omitempty"`
 	Username               string           `json:"msp_username,omitempty"`
 	Password               string           `json:"msp_password,omitempty"`
 	Proxy                  string           `json:"msp_proxy,omitempty"`
@@ -57,12 +57,12 @@ type Check struct {
 	ExpectString           string           `json:"msp_expect_string,omitempty"`
 	ExpectStringType       string           `json:"msp_expect_string_type,omitempty"`
 	Encryption             string           `json:"msp_encryption,omitempty"`
-	Threshold              int              `json:"msp_threshold,omitempty"`
+	Threshold              int64            `json:"msp_threshold,omitempty"`
 	Headers                string           `json:"msp_headers,omitempty"`
 	Script                 string           `json:"msp_script,omitempty"`
-	Version                int              `json:"msp_version,omitempty"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Version                int64            `json:"msp_version,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UseIPVersion           string           `json:"msp_use_ip_version,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
@@ -83,7 +83,7 @@ func (c CheckGetResponse) Item() Check {
 }
 
 type CheckListResponse struct {
-	Count   int     `json:"count,omitempty"`
+	Count   int64   `json:"count,omitempty"`
 	Results []Check `json:"results,omitempty"`
 }
 
@@ -93,8 +93,8 @@ func (r CheckListResponse) List() []Check {
 
 // CheckListOptions specifies the optional parameters to the CheckService.List method.
 type CheckListOptions struct {
-	Page                  int      `url:"page,omitempty"`
-	PageSize              int      `url:"page_size,omitempty"`
+	Page                  int64    `url:"page,omitempty"`
+	PageSize              int64    `url:"page_size,omitempty"`
 	Search                string   `url:"search,omitempty"`
 	Ordering              string   `url:"ordering,omitempty"`
 	MonitoringServiceType string   `url:"monitoring_service_type,omitempty"`
@@ -128,7 +128,7 @@ type CheckStatsResponse struct {
 	StartDate string `json:"start_date"`
 	EndDate   string `json:"end_date"`
 	Totals    struct {
-		Outages      int   `json:"outages,omitempty"`
+		Outages      int64 `json:"outages,omitempty"`
 		DowntimeSecs int64 `json:"downtime_secs,omitempty"`
 	} `json:"totals"`
 	Statistics []CheckStats `json:"statistics"`
@@ -140,8 +140,8 @@ func (c CheckStatsResponse) List() []CheckStats {
 
 type CheckStats struct {
 	Date                   string   `json:"date"`
-	Outages                int      `json:"outages"`
-	DowntimeSecs           int      `json:"downtime_secs"`
+	Outages                int64    `json:"outages"`
+	DowntimeSecs           int64    `json:"downtime_secs"`
 	Uptime                 *float64 `json:"uptime,omitempty"`
 	ResponseTime           *float64 `json:"response_time,omitempty"`
 	ResponseTimeDatapoints [][]any  `json:"response_time_datapoints,omitempty"`
@@ -365,11 +365,11 @@ type CheckAPI struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval,omitempty"`
-	Threshold              int              `json:"msp_threshold,omitempty"`
+	Interval               int64            `json:"msp_interval,omitempty"`
+	Threshold              int64            `json:"msp_threshold,omitempty"`
 	Script                 string           `json:"msp_script,omitempty"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UseIPVersion           string           `json:"msp_use_ip_version,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
@@ -397,7 +397,7 @@ type CheckBlacklist struct {
 	Tags          []string         `json:"tags,omitempty"`
 	IsPaused      bool             `json:"is_paused"`
 	Address       string           `json:"msp_address"`
-	NumRetries    int              `json:"msp_num_retries,omitempty"`
+	NumRetries    int64            `json:"msp_num_retries,omitempty"`
 	UptimeSLA     *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	Notes         string           `json:"msp_notes,omitempty"`
 }
@@ -421,14 +421,14 @@ type CheckDNS struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval,omitempty"`
+	Interval               int64            `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address"`
 	DNSServer              string           `json:"msp_dns_server,omitempty"`
 	DNSRecordType          string           `json:"msp_dns_record_type,omitempty"`
 	ExpectString           string           `json:"msp_expect_string,omitempty"`
-	Threshold              int              `json:"msp_threshold,omitempty"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Threshold              int64            `json:"msp_threshold,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
@@ -487,7 +487,7 @@ type CheckHeartbeat struct {
 	ContactGroups          []string         `json:"contact_groups,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval,omitempty"`
+	Interval               int64            `json:"msp_interval,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
@@ -514,9 +514,9 @@ type CheckHTTP struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval,omitempty"`
+	Interval               int64            `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address"`
-	Port                   int              `json:"msp_port,omitempty"`
+	Port                   int64            `json:"msp_port,omitempty"`
 	Username               string           `json:"msp_username,omitempty"`
 	Password               string           `json:"msp_password,omitempty"`
 	Proxy                  string           `json:"msp_proxy,omitempty"`
@@ -525,11 +525,11 @@ type CheckHTTP struct {
 	ExpectString           string           `json:"msp_expect_string,omitempty"`
 	ExpectStringType       string           `json:"msp_expect_string_type,omitempty"`
 	Encryption             string           `json:"msp_encryption,omitempty"`
-	Threshold              int              `json:"msp_threshold,omitempty"`
+	Threshold              int64            `json:"msp_threshold,omitempty"`
 	Headers                string           `json:"msp_headers,omitempty"`
-	Version                int              `json:"msp_version,omitempty"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Version                int64            `json:"msp_version,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UseIPVersion           string           `json:"msp_use_ip_version,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
@@ -556,10 +556,10 @@ type CheckICMP struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval,omitempty"`
+	Interval               int64            `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UseIPVersion           string           `json:"msp_use_ip_version,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
@@ -586,13 +586,13 @@ type CheckIMAP struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval,omitempty"`
+	Interval               int64            `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address"`
-	Port                   int              `json:"msp_port,omitempty"`
+	Port                   int64            `json:"msp_port,omitempty"`
 	ExpectString           string           `json:"msp_expect_string,omitempty"`
 	Encryption             string           `json:"msp_encryption,omitempty"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UseIPVersion           string           `json:"msp_use_ip_version,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
@@ -620,7 +620,7 @@ type CheckMalware struct {
 	Tags          []string         `json:"tags,omitempty"`
 	IsPaused      bool             `json:"is_paused"`
 	Address       string           `json:"msp_address"`
-	NumRetries    int              `json:"msp_num_retries,omitempty"`
+	NumRetries    int64            `json:"msp_num_retries,omitempty"`
 	UptimeSLA     *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	Notes         string           `json:"msp_notes,omitempty"`
 }
@@ -644,12 +644,12 @@ type CheckNTP struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval"`
+	Interval               int64            `json:"msp_interval"`
 	Address                string           `json:"msp_address"`
-	Port                   int              `json:"msp_port,omitempty"`
-	Threshold              int              `json:"msp_threshold,omitempty"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Port                   int64            `json:"msp_port,omitempty"`
+	Threshold              int64            `json:"msp_threshold,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UseIPVersion           string           `json:"msp_use_ip_version,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
@@ -676,13 +676,13 @@ type CheckPOP struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval,omitempty"`
+	Interval               int64            `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address"`
-	Port                   int              `json:"msp_port,omitempty"`
+	Port                   int64            `json:"msp_port,omitempty"`
 	ExpectString           string           `json:"msp_expect_string,omitempty"`
 	Encryption             string           `json:"msp_encryption,omitempty"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UseIPVersion           string           `json:"msp_use_ip_version,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
@@ -710,7 +710,7 @@ type CheckRUM struct {
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
 	Address                string           `json:"msp_address"`
-	Threshold              int              `json:"msp_threshold,omitempty"`
+	Threshold              int64            `json:"msp_threshold,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
 	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
@@ -760,15 +760,15 @@ type CheckSMTP struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval"`
+	Interval               int64            `json:"msp_interval"`
 	Address                string           `json:"msp_address"`
-	Port                   int              `json:"msp_port,omitempty"`
+	Port                   int64            `json:"msp_port,omitempty"`
 	Username               string           `json:"msp_username,omitempty"`
 	Password               string           `json:"msp_password,omitempty"`
 	ExpectString           string           `json:"msp_expect_string,omitempty"`
 	Encryption             string           `json:"msp_encryption,omitempty"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UseIpVersion           string           `json:"msp_use_ip_version,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
@@ -795,11 +795,11 @@ type CheckSSH struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval,omitempty"`
+	Interval               int64            `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address"`
-	Port                   int              `json:"msp_port,omitempty"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Port                   int64            `json:"msp_port,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UseIpVersion           string           `json:"msp_use_ip_version,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
@@ -828,9 +828,9 @@ type CheckSSLCert struct {
 	IsPaused      bool               `json:"is_paused"`
 	Protocol      string             `json:"msp_protocol,omitempty"`
 	Address       string             `json:"msp_address"`
-	Port          int                `json:"msp_port,omitempty"`
-	Threshold     int                `json:"msp_threshold"`
-	NumRetries    int                `json:"msp_num_retries,omitempty"`
+	Port          int64              `json:"msp_port,omitempty"`
+	Threshold     int64              `json:"msp_threshold"`
+	NumRetries    int64              `json:"msp_num_retries,omitempty"`
 	UptimeSLA     *decimal.Decimal   `json:"msp_uptime_sla,omitempty"`
 	Notes         string             `json:"msp_notes,omitempty"`
 	SSLConfig     CheckSSLCertConfig `json:"sslconfig,omitempty"`
@@ -855,13 +855,13 @@ type CheckTCP struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval,omitempty"`
+	Interval               int64            `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address"`
-	Port                   int              `json:"msp_port,omitempty"`
+	Port                   int64            `json:"msp_port,omitempty"`
 	SendString             string           `json:"msp_send_string,omitempty"`
 	ExpectString           string           `json:"msp_expect_string,omitempty"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UseIpVersion           string           `json:"msp_use_ip_version,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
@@ -888,11 +888,11 @@ type CheckTransaction struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval,omitempty"`
-	Threshold              int              `json:"msp_threshold,omitempty"`
+	Interval               int64            `json:"msp_interval,omitempty"`
+	Threshold              int64            `json:"msp_threshold,omitempty"`
 	Script                 string           `json:"msp_script,omitempty"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string           `json:"msp_notes,omitempty"`
@@ -918,13 +918,13 @@ type CheckUDP struct {
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
-	Interval               int              `json:"msp_interval,omitempty"`
+	Interval               int64            `json:"msp_interval,omitempty"`
 	Address                string           `json:"msp_address"`
-	Port                   int              `json:"msp_port,omitempty"`
+	Port                   int64            `json:"msp_port,omitempty"`
 	SendString             string           `json:"msp_send_string,omitempty"`
 	ExpectString           string           `json:"msp_expect_string,omitempty"`
-	Sensitivity            int              `json:"msp_sensitivity,omitempty"`
-	NumRetries             int              `json:"msp_num_retries,omitempty"`
+	Sensitivity            int64            `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64            `json:"msp_num_retries,omitempty"`
 	UseIpVersion           string           `json:"msp_use_ip_version,omitempty"`
 	UptimeSLA              *decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        *decimal.Decimal `json:"msp_response_time_sla,omitempty"`
@@ -979,8 +979,8 @@ type CheckWHOIS struct {
 	IsPaused      bool     `json:"is_paused"`
 	Address       string   `json:"msp_address"`
 	ExpectString  string   `json:"msp_expect_string,omitempty"`
-	Threshold     int      `json:"msp_threshold,omitempty"`
-	NumRetries    int      `json:"msp_num_retries,omitempty"`
+	Threshold     int64    `json:"msp_threshold,omitempty"`
+	NumRetries    int64    `json:"msp_num_retries,omitempty"`
 	UptimeSla     float64  `json:"msp_uptime_sla,omitempty"`
 	Notes         string   `json:"msp_notes,omitempty"`
 }

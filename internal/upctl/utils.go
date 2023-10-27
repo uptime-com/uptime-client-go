@@ -10,7 +10,7 @@ import (
 
 type FlagSet interface {
 	StringVarP(ptr *string, name, shorthand, value, usage string)
-	IntVarP(ptr *int, name, shorthand string, value int, usage string)
+	Int64VarP(ptr *int64, name, shorthand string, value int64, usage string)
 	Float64VarP(ptr *float64, name, shorthand string, value float64, usage string)
 	BoolVarP(ptr *bool, name, shorthand string, value bool, usage string)
 	StringSliceVarP(ptr *[]string, name, shorthand string, value []string, usage string)
@@ -50,9 +50,9 @@ func Bind(fs FlagSet, obj any) error {
 		case t.Field(i).Type.Kind() == reflect.String:
 			ptr, val := ptrVal[string](vf)
 			fs.StringVarP(ptr, flag, short, val, usage)
-		case t.Field(i).Type.Kind() == reflect.Int:
-			ptr, val := ptrVal[int](vf)
-			fs.IntVarP(ptr, flag, short, val, usage)
+		case t.Field(i).Type.Kind() == reflect.Int64:
+			ptr, val := ptrVal[int64](vf)
+			fs.Int64VarP(ptr, flag, short, val, usage)
 		case t.Field(i).Type.Kind() == reflect.Float64:
 			ptr, val := ptrVal[float64](vf)
 			fs.Float64VarP(ptr, flag, short, val, usage)
@@ -88,8 +88,8 @@ func ptr[T any](v T) *T {
 	return &v
 }
 
-func parsePK(s string) (int, error) {
-	var pk int
+func parsePK(s string) (int64, error) {
+	var pk int64
 	_, err := fmt.Sscanf(s, "%d", &pk)
 	if err != nil {
 		return 0, fmt.Errorf("invalid PK: %s", s)

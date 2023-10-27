@@ -4,7 +4,7 @@ import "context"
 
 // Tag represents a check tag in Uptime.com.
 type Tag struct {
-	PK       int    `json:"pk,omitempty"`
+	PK       int64  `json:"pk,omitempty"`
 	URL      string `json:"url,omitempty"`
 	Tag      string `json:"tag,omitempty"`
 	ColorHex string `json:"color_hex,omitempty"`
@@ -16,7 +16,7 @@ func (t Tag) PrimaryKey() PrimaryKey {
 
 // TagListResponse represents a list of check tags.
 type TagListResponse struct {
-	Count    int    `json:"count,omitempty"`
+	Count    int64  `json:"count,omitempty"`
 	Next     string `json:"next,omitempty"`
 	Previous string `json:"previous,omitempty"`
 	Results  []Tag  `json:"results,omitempty"`
@@ -28,8 +28,8 @@ func (r TagListResponse) List() []Tag {
 
 // TagListOptions specifies the optional parameters to tag listing API call.
 type TagListOptions struct {
-	Page     int    `url:"page,omitempty"`
-	PageSize int    `url:"page_size,omitempty"`
+	Page     int64  `url:"page,omitempty"`
+	PageSize int64  `url:"page_size,omitempty"`
 	Search   string `url:"search,omitempty"`
 	Ordering string `url:"ordering,omitempty"`
 }

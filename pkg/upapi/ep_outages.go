@@ -21,7 +21,7 @@ type Outage struct {
 	CheckMonitoringServiceType string    `json:"check_monitoring_service_type,omitempty"`
 	StateIsUp                  bool      `json:"state_is_up,omitempty"`
 	Ignored                    bool      `json:"ignored,omitempty"`
-	NumLocationsDown           int       `json:"num_locations_down,omitempty"`
+	NumLocationsDown           int64     `json:"num_locations_down,omitempty"`
 	AllAlerts                  *[]Alert  `json:"all_alerts,omitempty"`
 }
 
@@ -40,7 +40,7 @@ type Alert struct {
 // OutageListResponse represents a page of Outage results returned by
 // the Uptime.com API.
 type OutageListResponse struct {
-	Count    int      `json:"count,omitempty"`
+	Count    int64    `json:"count,omitempty"`
 	Next     string   `json:"next,omitempty"`
 	Previous string   `json:"previous,omitempty"`
 	Results  []Outage `json:"results,omitempty"`
@@ -59,8 +59,8 @@ func (o OutageResponse) Item() Outage {
 // OutageListOptions specifies the optional parameters to the OutagesService.List
 // and OutagesService.ListByServiceType methods.
 type OutageListOptions struct {
-	Page                       int    `url:"page,omitempty"`
-	PageSize                   int    `url:"page_size,omitempty"`
+	Page                       int64  `url:"page,omitempty"`
+	PageSize                   int64  `url:"page_size,omitempty"`
 	Search                     string `url:"search,omitempty"`
 	Ordering                   string `url:"ordering,omitempty"`
 	CheckMonitoringServiceType string `url:"check_monitoring_service_type,omitempty"`

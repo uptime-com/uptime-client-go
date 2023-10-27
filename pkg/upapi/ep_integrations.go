@@ -6,7 +6,7 @@ import (
 
 // Integration represents an integration in Uptime.com.
 type Integration struct {
-	PK            int      `json:"pk,omitempty"`
+	PK            int64    `json:"pk,omitempty"`
 	URL           string   `json:"url,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	Module        string   `json:"module,omitempty"`
@@ -20,7 +20,7 @@ func (i Integration) PrimaryKey() PrimaryKey {
 }
 
 type IntegrationListResponse struct {
-	Count    int           `json:"count,omitempty"`
+	Count    int64         `json:"count,omitempty"`
 	Next     string        `json:"next,omitempty"`
 	Previous string        `json:"previous,omitempty"`
 	Results  []Integration `json:"results,omitempty"`
@@ -31,8 +31,8 @@ func (r IntegrationListResponse) List() []Integration {
 }
 
 type IntegrationListOptions struct {
-	Page     int    `url:"page,omitempty"`
-	PageSize int    `url:"page_size,omitempty"`
+	Page     int64  `url:"page,omitempty"`
+	PageSize int64  `url:"page_size,omitempty"`
 	Search   string `url:"search,omitempty"`
 	Ordering string `url:"ordering,omitempty"`
 	Module   string `url:"module,omitempty"`
@@ -201,7 +201,7 @@ type integrationsEndpointImpl struct {
 }
 
 type IntegrationCachet struct {
-	PK            int      `json:"pk,omitempty"`
+	PK            int64    `json:"pk,omitempty"`
 	CachetURL     string   `json:"url,omitempty"`
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
@@ -276,9 +276,9 @@ type IntegrationJiraServicedesk struct {
 	JiraSubdomain            string   `json:"jira_subdomain,omitempty"`
 	ProjectKey               string   `json:"project_key,omitempty"`
 	Labels                   string   `json:"labels,omitempty"`
-	CustomFieldIdAccountName int      `json:"custom_field_id_account_name,omitempty"`
-	CustomFieldIdCheckName   int      `json:"custom_field_id_check_name,omitempty"`
-	CustomFieldIdCheckUrl    int      `json:"custom_field_id_check_url,omitempty"`
+	CustomFieldIdAccountName int64    `json:"custom_field_id_account_name,omitempty"`
+	CustomFieldIdCheckName   int64    `json:"custom_field_id_check_name,omitempty"`
+	CustomFieldIdCheckUrl    int64    `json:"custom_field_id_check_url,omitempty"`
 	CustomFieldsJson         string   `json:"custom_fields_json,omitempty"`
 }
 
@@ -421,7 +421,7 @@ type IntegrationPushover struct {
 	Name          string   `json:"name,omitempty"`
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	User          string   `json:"user,omitempty"`
-	Priority      int      `json:"priority,omitempty"`
+	Priority      int64    `json:"priority,omitempty"`
 }
 
 type integrationsEndpointPushoverImpl struct {

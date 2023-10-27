@@ -17,7 +17,7 @@ func (f *flagSetMock) StringVarP(ptr *string, name, shorthand, value, usage stri
 	f.Called(ptr, name, shorthand, value, usage)
 }
 
-func (f *flagSetMock) IntVarP(ptr *int, name, shorthand string, value int, usage string) {
+func (f *flagSetMock) Int64VarP(ptr *int64, name, shorthand string, value int64, usage string) {
 	f.Called(ptr, name, shorthand, value, usage)
 }
 
@@ -47,13 +47,13 @@ func TestBind(t *testing.T) {
 			require.NoError(t, err)
 			fs.AssertExpectations(t)
 		})
-		t.Run("int", func(t *testing.T) {
+		t.Run("int64", func(t *testing.T) {
 			fs := flagSetMock{}
-			fs.On("IntVarP", mock.Anything, "int", "i", 42, "Lenin lives!").Return().Once()
+			fs.On("Int64VarP", mock.Anything, "int64", "i", int64(42), "Lenin lives!").Return().Once()
 			obj := struct {
-				Int int `flag:"int" short:"i" usage:"Lenin lives!"`
+				Int64 int64 `flag:"int64" short:"i" usage:"Lenin lives!"`
 			}{
-				Int: 42,
+				Int64: 42,
 			}
 			err := Bind(&fs, &obj)
 			require.NoError(t, err)
