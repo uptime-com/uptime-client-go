@@ -5,7 +5,7 @@ import (
 )
 
 type Contact struct {
-	PK                       int      `json:"pk,omitempty"`
+	PK                       int64    `json:"pk,omitempty"`
 	URL                      string   `json:"url,omitempty"`
 	Name                     string   `json:"name,omitempty"`
 	SmsList                  []string `json:"sms_list,omitempty"`
@@ -20,15 +20,15 @@ func (c Contact) PrimaryKey() PrimaryKey {
 }
 
 type ContactListOptions struct {
-	Page              int    `url:"page,omitempty"`
-	PageSize          int    `url:"page_size,omitempty"`
+	Page              int64  `url:"page,omitempty"`
+	PageSize          int64  `url:"page_size,omitempty"`
 	Search            string `url:"search,omitempty"`
 	Ordering          string `url:"ordering,omitempty"`
 	HasOnCallSchedule bool   `url:"has_on_call_schedule,omitempty"`
 }
 
 type ContactListResponse struct {
-	Count   int       `json:"count,omitempty"`
+	Count   int64     `json:"count,omitempty"`
 	Results []Contact `json:"results,omitempty"`
 }
 

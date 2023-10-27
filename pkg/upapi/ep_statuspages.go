@@ -3,7 +3,7 @@ package upapi
 import "context"
 
 type StatusPage struct {
-	PK                        int    `json:"pk,omitempty"`
+	PK                        int64  `json:"pk,omitempty"`
 	URL                       string `json:"url,omitempty"`
 	Name                      string `json:"name"`
 	VisibilityLevel           string `json:"visibility_level"`
@@ -20,7 +20,7 @@ type StatusPage struct {
 	ShowActiveIncidents       bool   `json:"show_active_incidents"`
 	ShowComponentResponseTime bool   `json:"show_component_response_time"`
 	ShowHistoryTab            bool   `json:"show_history_tab"`
-	DefaultHistoryDateRange   int    `json:"default_history_date_range"`
+	DefaultHistoryDateRange   int64  `json:"default_history_date_range"`
 	UptimeCalculationType     string `json:"uptime_calculation_type"`
 	ShowHistorySnake          bool   `json:"show_history_snake"`
 	ShowComponentHistory      bool   `json:"show_component_history"`
@@ -43,15 +43,15 @@ func (s StatusPage) PrimaryKey() PrimaryKey {
 }
 
 type StatusPageListOptions struct {
-	Page            int    `url:"page,omitempty"`
-	PageSize        int    `url:"page_size,omitempty"`
+	Page            int64  `url:"page,omitempty"`
+	PageSize        int64  `url:"page_size,omitempty"`
 	Search          string `url:"search,omitempty"`
 	Ordering        string `url:"ordering,omitempty"`
 	VisibilityLevel string `url:"visibility_level,omitempty"`
 }
 
 type StatusPageListResponse struct {
-	Count   int          `json:"count,omitempty"`
+	Count   int64        `json:"count,omitempty"`
 	Results []StatusPage `json:"results,omitempty"`
 }
 
