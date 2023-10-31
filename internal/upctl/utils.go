@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/gobeam/stringy"
+	"github.com/shopspring/decimal"
 )
 
 type FlagSet interface {
@@ -69,6 +70,10 @@ func Bind(fs FlagSet, obj any) error {
 				return err
 			}
 		case t.Field(i).Type.Kind() == reflect.Struct:
+			if tf.Type == reflect.TypeOf(decimal.Decimal{}) {
+				// TODO: implement
+				continue
+			}
 			x := vf.Addr().Interface()
 			if err := Bind(fs, x); err != nil {
 				return err
