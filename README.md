@@ -5,6 +5,7 @@ A Go client library for Uptime.com
 ## Supported resources:
 
 * Checks
+* Dashboards
 * Tags
 * Outages
 * Integrations

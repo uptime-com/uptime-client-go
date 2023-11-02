@@ -15,6 +15,7 @@ const (
 type API interface {
 	Checks() ChecksEndpoint
 	Contacts() ContactsEndpoint
+	Dashboards() DashboardsEndpoint
 	Integrations() IntegrationsEndpoint
 	Tags() TagsEndpoint
 	Outages() OutagesEndpoint
@@ -59,6 +60,7 @@ func New(opts ...Option) (api API, err error) {
 		CBD:          cbd,
 		checks:       NewChecksEndpoint(cbd),
 		contacts:     NewContactsEndpoint(cbd),
+		dashboards:   NewDashboardsEndpoint(cbd),
 		integrations: NewIntegrationsEndpoint(cbd),
 		tags:         NewTagsEndpoint(cbd),
 		outages:      NewOutagesEndpoint(cbd),
@@ -72,6 +74,7 @@ type apiImpl struct {
 	CBD
 	checks       ChecksEndpoint
 	contacts     ContactsEndpoint
+	dashboards   DashboardsEndpoint
 	integrations IntegrationsEndpoint
 	tags         TagsEndpoint
 	outages      OutagesEndpoint
@@ -85,6 +88,10 @@ func (api *apiImpl) Checks() ChecksEndpoint {
 
 func (api *apiImpl) Contacts() ContactsEndpoint {
 	return api.contacts
+}
+
+func (api *apiImpl) Dashboards() DashboardsEndpoint {
+	return api.dashboards
 }
 
 func (api *apiImpl) Integrations() IntegrationsEndpoint {
