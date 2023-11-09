@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -43,6 +44,7 @@ var (
 			if cmdArgs.Trace {
 				opts = append(opts, upapi.WithTrace(os.Stderr))
 			}
+			opts = append(opts, upapi.WithRetry(10, time.Second*30, os.Stderr))
 			api, err = upapi.New(opts...)
 			return err
 		},

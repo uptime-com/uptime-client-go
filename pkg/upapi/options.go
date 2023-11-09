@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"net/http/httptrace"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 
@@ -188,4 +189,55 @@ func (t *withTraceCBD) trace() *httptrace.ClientTrace {
 			t.log.Println("WroteRequest")
 		},
 	}
+}
+
+func WithRetry(limit int, maxDelay time.Duration, w io.Writer) Option {
+	if w == nil {
+		w = io.Discard
+	}
+	l := log.New(w, "••• ", 0)
+	return func(cbd CBD) (CBD, error) {
+		return &autoRetryCBD{cbd, l, limit, maxDelay}, nil
+	}
+}
+
+type autoRetryCBD struct {
+	CBD
+	log           *log.Logger
+	countdown     int
+	retryAfterCap time.Duration
+}
+
+func (r *autoRetryCBD) Do(rq *http.Request) (*http.Response, error) {
+	rs, err := r.CBD.Do(rq)
+	if err != nil {
+		return nil, err
+	}
+	if rs.StatusCode != http.StatusTooManyRequests {
+		return rs, nil
+	}
+	if r.countdown == 0 {
+		return rs, nil
+	}
+
+	retryAfterSeconds, err := strconv.Atoi(rs.Header.Get("Retry-After"))
+	if err != nil {
+		return rs, nil
+	}
+	retryAfter := time.Duration(retryAfterSeconds) * time.Second
+
+	r.log.Printf("server instructed us to retry in %s", retryAfter)
+	if r.retryAfterCap > 0 && retryAfter > r.retryAfterCap {
+		r.log.Printf("...but delay is capped to %s", r.retryAfterCap)
+		retryAfter = r.retryAfterCap
+	}
+
+	wait, cancel := context.WithTimeout(rq.Context(), retryAfter)
+	defer cancel()
+	<-wait.Done()
+
+	r.log.Printf("proceeding, %d attempts left", r.countdown)
+
+	r.countdown--
+	return r.Do(rq)
 }
