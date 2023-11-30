@@ -21,6 +21,13 @@ type CheckSSLCertConfig struct {
 	URL              string `json:"ssl_cert_file,omitempty" flag:"sslcert.url"`
 }
 
+type CheckPageSpeedConfig struct {
+	EmulatedDevice       string `json:"emulated_device,omitempty"`
+	ConnectionThrottling string `json:"connection_throttling,omitempty"`
+	ExcludeURLs          string `json:"exclude_urls,omitempty"`
+	UptimeGradeThreshold string `json:"uptime_grade_threshold,omitempty"`
+}
+
 // Check represents a check in Uptime.com.
 type Check struct {
 	PK                     int64           `json:"pk,omitempty"`
@@ -69,7 +76,8 @@ type Check struct {
 	Notes                  string          `json:"msp_notes,omitempty"`
 	IncludeInGlobalMetrics bool            `json:"msp_include_in_global_metrics,omitempty"`
 
-	SSLConfig *CheckSSLCertConfig `json:"sslconfig,omitempty"`
+	SSLConfig       *CheckSSLCertConfig   `json:"sslconfig,omitempty"`
+	PageSpeedConfig *CheckPageSpeedConfig `json:"pagespeedconfig,omitempty"`
 }
 
 func (c Check) PrimaryKey() PrimaryKey {
@@ -215,6 +223,9 @@ type ChecksEndpoint interface {
 
 	CreateWHOIS(context.Context, CheckWHOIS) (*Check, error)
 	UpdateWHOIS(context.Context, PrimaryKeyable, CheckWHOIS) (*Check, error)
+
+	CreatePageSpeed(context.Context, CheckPageSpeed) (*Check, error)
+	UpdatePageSpeed(context.Context, PrimaryKeyable, CheckPageSpeed) (*Check, error)
 }
 
 func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
@@ -303,6 +314,10 @@ func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 		checksStatsEndpointImpl: checksStatsEndpointImpl{
 			endpoint: NewEndpointLister[CheckStatsResponse, CheckStats, CheckStatsOptions](&checksStatsEndpointCBD{cbd}, endpoint+"/%d/stats"),
 		},
+		checksEndpointPageSpeedImpl: checksEndpointPageSpeedImpl{
+			EndpointCreator: NewEndpointCreator[CheckPageSpeed, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-pagespeed"),
+			EndpointUpdater: NewEndpointUpdater[CheckPageSpeed, CheckCreateUpdateResponse, Check](cbd, endpoint),
+		},
 		EndpointLister:  NewEndpointLister[CheckListResponse, Check, CheckListOptions](cbd, endpoint),
 		EndpointGetter:  NewEndpointGetter[CheckGetResponse, Check](cbd, endpoint),
 		EndpointDeleter: NewEndpointDeleter(cbd, endpoint),
@@ -332,6 +347,7 @@ type checksEndpointImpl struct {
 	checksEndpointWebhookImpl
 	checksEndpointWHOISImpl
 	checksStatsEndpointImpl
+	checksEndpointPageSpeedImpl
 	EndpointLister[CheckListResponse, Check, CheckListOptions]
 	EndpointGetter[CheckCreateUpdateResponse, Check]
 	EndpointUpdater[Check, CheckCreateUpdateResponse, Check]
@@ -995,5 +1011,35 @@ func (c checksEndpointWHOISImpl) CreateWHOIS(ctx context.Context, check CheckWHO
 }
 
 func (c checksEndpointWHOISImpl) UpdateWHOIS(ctx context.Context, pk PrimaryKeyable, check CheckWHOIS) (*Check, error) {
+	return c.Update(ctx, pk, check)
+}
+
+type CheckPageSpeed struct {
+	Name          string               `json:"name,omitempty"`
+	ContactGroups []string             `json:"contact_groups,omitempty"`
+	Locations     []string             `json:"locations,omitempty"`
+	Tags          []string             `json:"tags,omitempty"`
+	IsPaused      bool                 `json:"is_paused"`
+	Address       string               `json:"msp_address"`
+	Interval      int64                `json:"msp_interval,omitempty"`
+	Username      string               `json:"msp_username,omitempty"`
+	Password      string               `json:"msp_password,omitempty"`
+	Headers       string               `json:"msp_headers,omitempty"`
+	Script        string               `json:"msp_script,omitempty"`
+	NumRetries    int64                `json:"msp_num_retries,omitempty"`
+	Notes         string               `json:"msp_notes,omitempty"`
+	Config        CheckPageSpeedConfig `json:"pagespeedconfig,omitempty"`
+}
+
+type checksEndpointPageSpeedImpl struct {
+	EndpointCreator[CheckPageSpeed, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckPageSpeed, CheckCreateUpdateResponse, Check]
+}
+
+func (c checksEndpointPageSpeedImpl) CreatePageSpeed(ctx context.Context, check CheckPageSpeed) (*Check, error) {
+	return c.Create(ctx, check)
+}
+
+func (c checksEndpointPageSpeedImpl) UpdatePageSpeed(ctx context.Context, pk PrimaryKeyable, check CheckPageSpeed) (*Check, error) {
 	return c.Update(ctx, pk, check)
 }
