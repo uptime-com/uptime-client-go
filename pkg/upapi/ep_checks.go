@@ -28,6 +28,16 @@ type CheckPageSpeedConfig struct {
 	UptimeGradeThreshold string `json:"uptime_grade_threshold,omitempty"`
 }
 
+type CheckGroupConfig struct {
+	CheckServices               []string `json:"group_check_services,omitempty"`
+	CheckTags                   []string `json:"group_check_tags,omitempty"`
+	CheckDownCondition          string   `json:"group_check_down_condition,omitempty"`
+	UptimePercentCalculation    string   `json:"group_uptime_percent_calculation,omitempty"`
+	ResponseTimeCalculationMode string   `json:"group_response_time_calculation_mode,omitempty"`
+	ResponseTimeCheckType       string   `json:"group_response_time_check_type,omitempty"`
+	ResponseTimeSingleCheck     string   `json:"group_response_time_single_check,omitempty"`
+}
+
 // Check represents a check in Uptime.com.
 type Check struct {
 	PK                     int64           `json:"pk,omitempty"`
@@ -78,6 +88,7 @@ type Check struct {
 
 	SSLConfig       *CheckSSLCertConfig   `json:"sslconfig,omitempty"`
 	PageSpeedConfig *CheckPageSpeedConfig `json:"pagespeedconfig,omitempty"`
+	GroupConfig     *CheckGroupConfig     `json:"groupcheckconfig,omitempty"`
 }
 
 func (c Check) PrimaryKey() PrimaryKey {
@@ -465,24 +476,16 @@ func (c checksEndpointDNSImpl) UpdateDNS(ctx context.Context, pk PrimaryKeyable,
 }
 
 type CheckGroup struct {
-	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
-	Locations              []string        `json:"locations,omitempty"`
-	Tags                   []string        `json:"tags,omitempty"`
-	IsPaused               bool            `json:"is_paused"`
-	UptimeSLA              decimal.Decimal `json:"msp_uptime_sla,omitempty"`
-	ResponseTimeSLA        decimal.Decimal `json:"msp_response_time_sla,omitempty"`
-	Notes                  string          `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool            `json:"msp_include_in_global_metrics"`
-	Config                 struct {
-		CheckServices               []string `json:"group_check_services,omitempty"`
-		CheckTags                   []string `json:"group_check_tags,omitempty"`
-		CheckDownCondition          string   `json:"group_check_down_condition,omitempty"`
-		UptimePercentCalculation    string   `json:"group_uptime_percent_calculation,omitempty"`
-		ResponseTimeCalculationMode string   `json:"group_response_time_calculation_mode,omitempty"`
-		ResponseTimeCheckType       string   `json:"group_response_time_check_type,omitempty"`
-		ResponseTimeSingleCheck     string   `json:"group_response_time_single_check,omitempty"`
-	} `json:"groupcheckconfig,omitempty"`
+	Name                   string           `json:"name,omitempty"`
+	ContactGroups          []string         `json:"contact_groups,omitempty"`
+	Locations              []string         `json:"locations,omitempty"`
+	Tags                   []string         `json:"tags,omitempty"`
+	IsPaused               bool             `json:"is_paused"`
+	UptimeSLA              decimal.Decimal  `json:"msp_uptime_sla,omitempty"`
+	ResponseTimeSLA        decimal.Decimal  `json:"msp_response_time_sla,omitempty"`
+	Notes                  string           `json:"msp_notes,omitempty"`
+	IncludeInGlobalMetrics bool             `json:"msp_include_in_global_metrics"`
+	Config                 CheckGroupConfig `json:"groupcheckconfig,omitempty"`
 }
 
 type checksEndpointGroupImpl struct {
