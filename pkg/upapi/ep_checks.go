@@ -60,6 +60,7 @@ type Check struct {
 	StateIsUp              bool            `json:"state_is_up,omitempty"`
 	StateChangedAt         time.Time       `json:"state_changed_at,omitempty"`
 	HeartbeatURL           string          `json:"heartbeat_url,omitempty"`
+	WebhookURL             string          `json:"webhook_url,omitempty"`
 	Protocol               string          `json:"msp_protocol,omitempty"`
 	Interval               int64           `json:"msp_interval,omitempty"`
 	Address                string          `json:"msp_address"`
