@@ -311,6 +311,10 @@ func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 			EndpointCreator: NewEndpointCreator[CheckTCP, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-tcp"),
 			EndpointUpdater: NewEndpointUpdater[CheckTCP, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
+		checksEndpointTransactionImpl: checksEndpointTransactionImpl{
+			EndpointCreator: NewEndpointCreator[CheckTransaction, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-transaction"),
+			EndpointUpdater: NewEndpointUpdater[CheckTransaction, CheckCreateUpdateResponse, Check](cbd, endpoint),
+		},
 		checksEndpointUDPImpl: checksEndpointUDPImpl{
 			EndpointCreator: NewEndpointCreator[CheckUDP, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-udp"),
 			EndpointUpdater: NewEndpointUpdater[CheckUDP, CheckCreateUpdateResponse, Check](cbd, endpoint),
