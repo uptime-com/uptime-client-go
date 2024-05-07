@@ -544,7 +544,7 @@ type CheckHTTP struct {
 	Username               string          `json:"msp_username,omitempty"`
 	Password               string          `json:"msp_password,omitempty"`
 	Proxy                  string          `json:"msp_proxy,omitempty"`
-	StatusCode             string          `json:"msp_status_code,omitempty"`
+	StatusCode             string          `json:"msp_status_code"`
 	SendString             string          `json:"msp_send_string,omitempty"`
 	ExpectString           string          `json:"msp_expect_string,omitempty"`
 	ExpectStringType       string          `json:"msp_expect_string_type,omitempty"`
