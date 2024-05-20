@@ -760,6 +760,7 @@ type CheckRUM2 struct {
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
 	Address                string          `json:"msp_address"`
+	Threshold              int64           `json:"msp_threshold,omitempty"`
 	UptimeSLA              decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	Notes                  string          `json:"msp_notes,omitempty"`
 	IncludeInGlobalMetrics bool            `json:"msp_include_in_global_metrics"`
