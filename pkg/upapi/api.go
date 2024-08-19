@@ -21,6 +21,7 @@ type API interface {
 	Outages() OutagesEndpoint
 	ProbeServers() ProbeServersEndpoint
 	StatusPages() StatusPagesEndpoint
+	SLAReports() SLAReportsEndpoint
 }
 
 // New returns a new API client instance.
@@ -45,6 +46,9 @@ func New(opts ...Option) (api API, err error) {
 	}
 
 	rq, err := cbd.BuildRequest(context.Background(), "GET", "/", nil, nil)
+	if err != nil {
+		return nil, err
+	}
 	if rq.URL.Host == "" {
 		defs = append(defs, WithBaseURL(defaultBaseURL))
 	}
@@ -66,6 +70,7 @@ func New(opts ...Option) (api API, err error) {
 		outages:      NewOutagesEndpoint(cbd),
 		probeServers: NewProbeServersEndpoint(cbd),
 		statusPages:  NewStatusPagesEndpoint(cbd),
+		slaReports:   NewSLAReportsEndpoint(cbd),
 	}
 	return api, nil
 }
@@ -80,6 +85,7 @@ type apiImpl struct {
 	outages      OutagesEndpoint
 	probeServers ProbeServersEndpoint
 	statusPages  StatusPagesEndpoint
+	slaReports   SLAReportsEndpoint
 }
 
 func (api *apiImpl) Checks() ChecksEndpoint {
@@ -112,4 +118,8 @@ func (api *apiImpl) ProbeServers() ProbeServersEndpoint {
 
 func (api *apiImpl) StatusPages() StatusPagesEndpoint {
 	return api.statusPages
+}
+
+func (api *apiImpl) SLAReports() SLAReportsEndpoint {
+	return api.slaReports
 }
