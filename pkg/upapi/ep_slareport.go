@@ -43,31 +43,25 @@ func (s SLAReportService) MarshalJSON() ([]byte, error) {
 	return json.Marshal(s.Name)
 }
 
-type SLAReportReportingGroup struct {
-	ID            int      `json:"id,omitempty"`
-	Name          string   `json:"name,omitempty"`
-	GroupServices []string `json:"group_services,omitempty"`
-}
-
 type SLAReport struct {
-	PK                              int64                      `json:"pk,omitempty"`
-	URL                             string                     `json:"url,omitempty"`
-	StatsURL                        string                     `json:"stats_url,omitempty"`
-	Name                            string                     `json:"name"`
-	ServicesTags                    []string                   `json:"service_tags,omitempty"`
-	ServicesSelected                *[]SLAReportService        `json:"services_selected,omitempty"`
-	ReportingGroups                 *[]SLAReportReportingGroup `json:"reporting_groups,omitempty"`
-	DefaultDateRange                string                     `json:"default_date_range,omitempty"`
-	FilterWithDowntime              bool                       `json:"filter_with_downtime,omitempty"`
-	FilterUptimeSLAViolations       bool                       `json:"filter_uptime_sla_violations,omitempty"`
-	FilterSlowest                   bool                       `json:"filter_slowest,omitempty"`
-	FilterResponseTimeSLAViolations bool                       `json:"filter_response_time_sla_violations,omitempty"`
-	ShowUptimeSection               bool                       `json:"show_uptime_section,omitempty"`
-	ShowUptimeSLA                   bool                       `json:"show_uptime_sla,omitempty"`
-	ShowResponseTimeSection         bool                       `json:"show_response_time_section,omitempty"`
-	ShowResponseTimeSLA             bool                       `json:"show_response_time_sla,omitempty"`
-	UptimeSectionSort               string                     `json:"uptime_section_sort,omitempty"`
-	ResponseTimeSectionSort         string                     `json:"response_time_section_sort,omitempty"`
+	PK                              int64               `json:"pk,omitempty"`
+	URL                             string              `json:"url,omitempty"`
+	StatsURL                        string              `json:"stats_url,omitempty"`
+	Name                            string              `json:"name"`
+	ServicesTags                    []string            `json:"services_tags,omitempty"`
+	ServicesSelected                *[]SLAReportService `json:"services_selected,omitempty"`
+	ReportingGroups                 *[]SLAReportGroup   `json:"reporting_groups,omitempty"`
+	DefaultDateRange                string              `json:"default_date_range,omitempty"`
+	FilterWithDowntime              bool                `json:"filter_with_downtime,omitempty"`
+	FilterUptimeSLAViolations       bool                `json:"filter_uptime_sla_violations,omitempty"`
+	FilterSlowest                   bool                `json:"filter_slowest,omitempty"`
+	FilterResponseTimeSLAViolations bool                `json:"filter_response_time_sla_violations,omitempty"`
+	ShowUptimeSection               bool                `json:"show_uptime_section,omitempty"`
+	ShowUptimeSLA                   bool                `json:"show_uptime_sla,omitempty"`
+	ShowResponseTimeSection         bool                `json:"show_response_time_section,omitempty"`
+	ShowResponseTimeSLA             bool                `json:"show_response_time_sla,omitempty"`
+	UptimeSectionSort               string              `json:"uptime_section_sort,omitempty"`
+	ResponseTimeSectionSort         string              `json:"response_time_section_sort,omitempty"`
 }
 
 func (s SLAReport) PrimaryKey() PrimaryKey {
@@ -110,11 +104,14 @@ type SLAReportsEndpoint interface {
 	Update(context.Context, PrimaryKeyable, SLAReport) (*SLAReport, error)
 	Get(context.Context, PrimaryKeyable) (*SLAReport, error)
 	Delete(context.Context, PrimaryKeyable) error
+	ReportingGroups(PrimaryKeyable) SLAReportsGroupsEndpoint
 }
 
 func NewSLAReportsEndpoint(cbd CBD) SLAReportsEndpoint {
 	const endpoint = "sla-reports"
 	return &slaReportEndpointImpl{
+		cbd:             cbd,
+		endpoint:        endpoint,
 		EndpointLister:  NewEndpointLister[SLAReportListResponse, SLAReport, SLAReportListOptions](cbd, endpoint),
 		EndpointCreator: NewEndpointCreator[SLAReport, SLAReportCreateUpdateResponse](cbd, endpoint),
 		EndpointUpdater: NewEndpointUpdater[SLAReport, SLAReportCreateUpdateResponse](cbd, endpoint),
@@ -124,9 +121,21 @@ func NewSLAReportsEndpoint(cbd CBD) SLAReportsEndpoint {
 }
 
 type slaReportEndpointImpl struct {
+	cbd      CBD
+	endpoint string
 	EndpointLister[SLAReportListResponse, SLAReport, SLAReportListOptions]
 	EndpointCreator[SLAReport, SLAReportCreateUpdateResponse, SLAReport]
 	EndpointUpdater[SLAReport, SLAReportCreateUpdateResponse, SLAReport]
 	EndpointGetter[SLAReportResponse, SLAReport]
 	EndpointDeleter
+}
+
+func (c *slaReportEndpointImpl) ReportingGroups(pk PrimaryKeyable) SLAReportsGroupsEndpoint {
+	endpoint := fmt.Sprintf("%s/%d/groups", c.endpoint, pk.PrimaryKey())
+	return &slaReportsGroupsEndpointImpl{
+		EndpointLister:  NewEndpointLister[SLAReportGroupListResponse, SLAReportGroup, SLAReportGroupListOptions](c.cbd, endpoint),
+		EndpointCreator: NewEndpointCreator[SLAReportGroup, SLAReportGroupCreateUpdateResponse](c.cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[SLAReportGroupResponse](c.cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter(c.cbd, endpoint),
+	}
 }
