@@ -12,6 +12,7 @@ import (
 type FlagSet interface {
 	StringVarP(ptr *string, name, shorthand, value, usage string)
 	Int64VarP(ptr *int64, name, shorthand string, value int64, usage string)
+	Int32VarP(ptr *int32, name, shorthand string, value int32, usage string)
 	Float64VarP(ptr *float64, name, shorthand string, value float64, usage string)
 	BoolVarP(ptr *bool, name, shorthand string, value bool, usage string)
 	StringSliceVarP(ptr *[]string, name, shorthand string, value []string, usage string)
@@ -51,6 +52,9 @@ func Bind(fs FlagSet, obj any) error {
 		case t.Field(i).Type.Kind() == reflect.String:
 			ptr, val := ptrVal[string](vf)
 			fs.StringVarP(ptr, flag, short, val, usage)
+		case t.Field(i).Type.Kind() == reflect.Int32:
+			ptr, val := ptrVal[int32](vf)
+			fs.Int32VarP(ptr, flag, short, val, usage)
 		case t.Field(i).Type.Kind() == reflect.Int64:
 			ptr, val := ptrVal[int64](vf)
 			fs.Int64VarP(ptr, flag, short, val, usage)
