@@ -17,6 +17,10 @@ func (f *flagSetMock) StringVarP(ptr *string, name, shorthand, value, usage stri
 	f.Called(ptr, name, shorthand, value, usage)
 }
 
+func (f *flagSetMock) Int32VarP(ptr *int32, name, shorthand string, value int32, usage string) {
+	f.Called(ptr, name, shorthand, value, usage)
+}
+
 func (f *flagSetMock) Int64VarP(ptr *int64, name, shorthand string, value int64, usage string) {
 	f.Called(ptr, name, shorthand, value, usage)
 }

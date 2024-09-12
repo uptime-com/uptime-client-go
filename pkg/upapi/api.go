@@ -22,6 +22,7 @@ type API interface {
 	ProbeServers() ProbeServersEndpoint
 	StatusPages() StatusPagesEndpoint
 	SLAReports() SLAReportsEndpoint
+	ScheduledReports() ScheduledReportsEndpoint
 }
 
 // New returns a new API client instance.
@@ -61,31 +62,33 @@ func New(opts ...Option) (api API, err error) {
 	}
 
 	api = &apiImpl{
-		CBD:          cbd,
-		checks:       NewChecksEndpoint(cbd),
-		contacts:     NewContactsEndpoint(cbd),
-		dashboards:   NewDashboardsEndpoint(cbd),
-		integrations: NewIntegrationsEndpoint(cbd),
-		tags:         NewTagsEndpoint(cbd),
-		outages:      NewOutagesEndpoint(cbd),
-		probeServers: NewProbeServersEndpoint(cbd),
-		statusPages:  NewStatusPagesEndpoint(cbd),
-		slaReports:   NewSLAReportsEndpoint(cbd),
+		CBD:              cbd,
+		checks:           NewChecksEndpoint(cbd),
+		contacts:         NewContactsEndpoint(cbd),
+		dashboards:       NewDashboardsEndpoint(cbd),
+		integrations:     NewIntegrationsEndpoint(cbd),
+		tags:             NewTagsEndpoint(cbd),
+		outages:          NewOutagesEndpoint(cbd),
+		probeServers:     NewProbeServersEndpoint(cbd),
+		statusPages:      NewStatusPagesEndpoint(cbd),
+		slaReports:       NewSLAReportsEndpoint(cbd),
+		scheduledReports: NewScheduledReportsEndpoint(cbd),
 	}
 	return api, nil
 }
 
 type apiImpl struct {
 	CBD
-	checks       ChecksEndpoint
-	contacts     ContactsEndpoint
-	dashboards   DashboardsEndpoint
-	integrations IntegrationsEndpoint
-	tags         TagsEndpoint
-	outages      OutagesEndpoint
-	probeServers ProbeServersEndpoint
-	statusPages  StatusPagesEndpoint
-	slaReports   SLAReportsEndpoint
+	checks           ChecksEndpoint
+	contacts         ContactsEndpoint
+	dashboards       DashboardsEndpoint
+	integrations     IntegrationsEndpoint
+	tags             TagsEndpoint
+	outages          OutagesEndpoint
+	probeServers     ProbeServersEndpoint
+	statusPages      StatusPagesEndpoint
+	slaReports       SLAReportsEndpoint
+	scheduledReports ScheduledReportsEndpoint
 }
 
 func (api *apiImpl) Checks() ChecksEndpoint {
@@ -122,4 +125,8 @@ func (api *apiImpl) StatusPages() StatusPagesEndpoint {
 
 func (api *apiImpl) SLAReports() SLAReportsEndpoint {
 	return api.slaReports
+}
+
+func (api *apiImpl) ScheduledReports() ScheduledReportsEndpoint {
+	return api.scheduledReports
 }
