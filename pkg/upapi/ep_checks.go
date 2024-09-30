@@ -482,7 +482,7 @@ func (c checksEndpointDNSImpl) UpdateDNS(ctx context.Context, pk PrimaryKeyable,
 
 type CheckGroup struct {
 	Name                   string           `json:"name,omitempty"`
-	ContactGroups          []string         `json:"contact_groups,omitempty"`
+	ContactGroups          []string         `json:"contact_groups"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
