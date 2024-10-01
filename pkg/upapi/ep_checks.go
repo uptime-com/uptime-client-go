@@ -53,7 +53,6 @@ type Check struct {
 	Tags                   []string        `json:"tags,omitempty"`
 	CheckType              string          `json:"check_type,omitempty"`
 	Escalations            string          `json:"-,omitempty"` // TODO
-	Maintenance            string          `json:"-,omitempty"` // TODO
 	MonitoringServiceType  string          `json:"monitoring_service_type,omitempty"`
 	IsPaused               bool            `json:"is_paused,omitempty"`
 	IsUnderMaintenance     bool            `json:"is_under_maintenance,omitempty"`
@@ -86,6 +85,8 @@ type Check struct {
 	ResponseTimeSLA        decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string          `json:"msp_notes,omitempty"`
 	IncludeInGlobalMetrics bool            `json:"msp_include_in_global_metrics,omitempty"`
+
+	Maintenance *CheckMaintenance `json:"maintenance,omitempty"`
 
 	SSLConfig       *CheckSSLCertConfig   `json:"sslconfig,omitempty"`
 	PageSpeedConfig *CheckPageSpeedConfig `json:"pagespeedconfig,omitempty"`
@@ -238,6 +239,8 @@ type ChecksEndpoint interface {
 
 	CreatePageSpeed(context.Context, CheckPageSpeed) (*Check, error)
 	UpdatePageSpeed(context.Context, PrimaryKeyable, CheckPageSpeed) (*Check, error)
+
+	UpdateMaintenance(context.Context, PrimaryKeyable, CheckMaintenance) (*Check, error)
 }
 
 func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
@@ -328,11 +331,16 @@ func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 			EndpointUpdater: NewEndpointUpdater[CheckWHOIS, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
 		checksStatsEndpointImpl: checksStatsEndpointImpl{
-			endpoint: NewEndpointLister[CheckStatsResponse, CheckStats, CheckStatsOptions](&checksStatsEndpointCBD{cbd}, endpoint+"/%d/stats"),
+			endpoint: NewEndpointLister[CheckStatsResponse, CheckStats, CheckStatsOptions](&checksNestedEndpointCBD{CBD: cbd}, endpoint+"/%d/stats"),
 		},
 		checksEndpointPageSpeedImpl: checksEndpointPageSpeedImpl{
 			EndpointCreator: NewEndpointCreator[CheckPageSpeed, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-pagespeed"),
 			EndpointUpdater: NewEndpointUpdater[CheckPageSpeed, CheckCreateUpdateResponse, Check](cbd, endpoint),
+		},
+		checksEndpointMaintenanceImpl: checksEndpointMaintenanceImpl{
+			EndpointUpdater: NewEndpointUpdater[CheckMaintenance, CheckCreateUpdateResponse, Check](
+				&checksNestedEndpointCBD{CBD: cbd, EndpointSuffix: "maintenance/"}, endpoint,
+			),
 		},
 		EndpointLister:  NewEndpointLister[CheckListResponse, Check, CheckListOptions](cbd, endpoint),
 		EndpointGetter:  NewEndpointGetter[CheckGetResponse, Check](cbd, endpoint),
@@ -364,30 +372,37 @@ type checksEndpointImpl struct {
 	checksEndpointWHOISImpl
 	checksStatsEndpointImpl
 	checksEndpointPageSpeedImpl
+	checksEndpointMaintenanceImpl
 	EndpointLister[CheckListResponse, Check, CheckListOptions]
 	EndpointGetter[CheckCreateUpdateResponse, Check]
 	EndpointUpdater[Check, CheckCreateUpdateResponse, Check]
 	EndpointDeleter
 }
 
-type checksStatsCtxKey struct{}
+type checksPKCtxKey struct{}
 
 type checksStatsEndpointImpl struct {
 	endpoint EndpointLister[CheckStatsResponse, CheckStats, CheckStatsOptions]
 }
 
 func (c *checksEndpointImpl) Stats(ctx context.Context, pk PrimaryKeyable, opts CheckStatsOptions) ([]CheckStats, error) {
-	ctx = context.WithValue(ctx, checksStatsCtxKey{}, pk)
+	ctx = context.WithValue(ctx, checksPKCtxKey{}, pk)
 	return c.endpoint.List(ctx, opts)
 }
 
-type checksStatsEndpointCBD struct {
+type checksNestedEndpointCBD struct {
 	CBD
+	EndpointSuffix string
 }
 
-func (c checksStatsEndpointCBD) BuildRequest(ctx context.Context, method string, endpoint string, args any, data any) (*http.Request, error) {
-	pk := ctx.Value(checksStatsCtxKey{}).(PrimaryKey)
-	endpoint = fmt.Sprintf(endpoint, pk.PrimaryKey())
+func (c checksNestedEndpointCBD) BuildRequest(ctx context.Context, method string, endpoint string, args any, data any) (*http.Request, error) {
+	if c.EndpointSuffix != "" {
+		endpoint += c.EndpointSuffix
+	}
+	pk, ok := ctx.Value(checksPKCtxKey{}).(PrimaryKey)
+	if ok {
+		endpoint = fmt.Sprintf(endpoint, pk.PrimaryKey())
+	}
 	return c.CBD.BuildRequest(ctx, method, endpoint, args, data)
 }
 
@@ -1052,4 +1067,29 @@ func (c checksEndpointPageSpeedImpl) CreatePageSpeed(ctx context.Context, check 
 
 func (c checksEndpointPageSpeedImpl) UpdatePageSpeed(ctx context.Context, pk PrimaryKeyable, check CheckPageSpeed) (*Check, error) {
 	return c.Update(ctx, pk, check)
+}
+
+type CheckMaintenanceSchedule struct {
+	Type          string `json:"type"`
+	FromTime      string `json:"from_time,omitempty"`
+	ToTime        string `json:"to_time,omitempty"`
+	Monthday      int    `json:"monthday,omitempty"`
+	MonthdayFrom  int    `json:"monthday_from,omitempty"`
+	MonthdayTo    int    `json:"monthday_to,omitempty"`
+	OnceStartDate string `json:"once_start_date,omitempty"`
+	OnceEndDate   string `json:"once_end_date,omitempty"`
+	Weekdays      []int  `json:"weekdays,omitempty"`
+}
+
+type CheckMaintenance struct {
+	State    string                     `json:"state,omitempty"`
+	Schedule []CheckMaintenanceSchedule `json:"schedule,omitempty"`
+}
+
+type checksEndpointMaintenanceImpl struct {
+	EndpointUpdater[CheckMaintenance, CheckCreateUpdateResponse, Check]
+}
+
+func (c checksEndpointMaintenanceImpl) UpdateMaintenance(ctx context.Context, pk PrimaryKeyable, maintenance CheckMaintenance) (*Check, error) {
+	return c.Update(ctx, pk, maintenance)
 }
