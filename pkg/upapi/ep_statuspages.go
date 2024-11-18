@@ -1,6 +1,9 @@
 package upapi
 
-import "context"
+import (
+	"context"
+	"fmt"
+)
 
 type StatusPage struct {
 	PK                        int64  `json:"pk,omitempty"`
@@ -79,11 +82,20 @@ type StatusPagesEndpoint interface {
 	Update(context.Context, PrimaryKeyable, StatusPage) (*StatusPage, error)
 	Get(context.Context, PrimaryKeyable) (*StatusPage, error)
 	Delete(context.Context, PrimaryKeyable) error
+	Components(PrimaryKeyable) StatusPageComponentEndpoint
+	Incidents(PrimaryKeyable) StatusPageIncidentEndpoint
+	Metrics(PrimaryKeyable) StatusPageMetricEndpoint
+	Subscribers(PrimaryKeyable) StatusPageSubscriberEndpoint
+	SubscriptionDomainAllowList(PrimaryKeyable) StatusPageSubsDomainAllowListEndpoint
+	SubscriptionDomainBlockList(PrimaryKeyable) StatusPageSubsDomainBlockListEndpoint
+	Users(PrimaryKeyable) StatusPageUserEndpoint
 }
 
 func NewStatusPagesEndpoint(cbd CBD) StatusPagesEndpoint {
 	const endpoint = "statuspages"
 	return &statusPagesEndpointImpl{
+		cbd:             cbd,
+		endpoint:        endpoint,
 		EndpointLister:  NewEndpointLister[StatusPageListResponse, StatusPage, StatusPageListOptions](cbd, endpoint),
 		EndpointCreator: NewEndpointCreator[StatusPage, StatusPageCreateUpdateResponse, StatusPage](cbd, endpoint),
 		EndpointUpdater: NewEndpointUpdater[StatusPage, StatusPageCreateUpdateResponse, StatusPage](cbd, endpoint),
@@ -93,9 +105,87 @@ func NewStatusPagesEndpoint(cbd CBD) StatusPagesEndpoint {
 }
 
 type statusPagesEndpointImpl struct {
+	cbd      CBD
+	endpoint string
 	EndpointLister[StatusPageListResponse, StatusPage, StatusPageListOptions]
 	EndpointCreator[StatusPage, StatusPageCreateUpdateResponse, StatusPage]
 	EndpointUpdater[StatusPage, StatusPageCreateUpdateResponse, StatusPage]
 	EndpointGetter[StatusPageResponse, StatusPage]
 	EndpointDeleter
+}
+
+func (c *statusPagesEndpointImpl) Components(pk PrimaryKeyable) StatusPageComponentEndpoint {
+	endpoint := fmt.Sprintf("%s/%d/components", c.endpoint, pk.PrimaryKey())
+	return &statusPageComponentEndpointImpl{
+		EndpointLister:  NewEndpointLister[StatusPageComponentListResponse, StatusPageComponent, StatusPageComponentListOptions](c.cbd, endpoint),
+		EndpointCreator: NewEndpointCreator[StatusPageComponent, StatusPageComponentCreateUpdateResponse](c.cbd, endpoint),
+		EndpointUpdater: NewEndpointUpdater[StatusPageComponent, StatusPageComponentCreateUpdateResponse](c.cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[StatusPageComponentResponse](c.cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter(c.cbd, endpoint),
+	}
+}
+
+func (c *statusPagesEndpointImpl) Incidents(pk PrimaryKeyable) StatusPageIncidentEndpoint {
+	endpoint := fmt.Sprintf("%s/%d/incidents", c.endpoint, pk.PrimaryKey())
+	return &statusPageIncidentEndpointImpl{
+		EndpointLister:  NewEndpointLister[StatusPageIncidentListResponse, StatusPageIncident, StatusPageIncidentListOptions](c.cbd, endpoint),
+		EndpointCreator: NewEndpointCreator[StatusPageIncident, StatusPageIncidentCreateUpdateResponse](c.cbd, endpoint),
+		EndpointUpdater: NewEndpointUpdater[StatusPageIncident, StatusPageIncidentCreateUpdateResponse](c.cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[StatusPageIncidentResponse](c.cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter(c.cbd, endpoint),
+	}
+}
+
+func (c *statusPagesEndpointImpl) Metrics(pk PrimaryKeyable) StatusPageMetricEndpoint {
+	endpoint := fmt.Sprintf("%s/%d/metrics", c.endpoint, pk.PrimaryKey())
+	return &statusPageMetricEndpointImpl{
+		EndpointLister:  NewEndpointLister[StatusPageMetricListResponse, StatusPageMetric, StatusPageMetricListOptions](c.cbd, endpoint),
+		EndpointCreator: NewEndpointCreator[StatusPageMetric, StatusPageMetricCreateUpdateResponse](c.cbd, endpoint),
+		EndpointUpdater: NewEndpointUpdater[StatusPageMetric, StatusPageMetricCreateUpdateResponse](c.cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[StatusPageMetricResponse](c.cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter(c.cbd, endpoint),
+	}
+}
+
+func (c *statusPagesEndpointImpl) Subscribers(pk PrimaryKeyable) StatusPageSubscriberEndpoint {
+	endpoint := fmt.Sprintf("%s/%d/subscribers", c.endpoint, pk.PrimaryKey())
+	return &statusPageSubscriberEndpointImpl{
+		EndpointLister:  NewEndpointLister[StatusPageSubscriberListResponse, StatusPageSubscriber, StatusPageSubscriberListOptions](c.cbd, endpoint),
+		EndpointCreator: NewEndpointCreator[StatusPageSubscriber, StatusPageSubscriberCreateResponse](c.cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[StatusPageSubscriberResponse](c.cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter(c.cbd, endpoint),
+	}
+}
+
+func (c *statusPagesEndpointImpl) SubscriptionDomainAllowList(pk PrimaryKeyable) StatusPageSubsDomainAllowListEndpoint {
+	endpoint := fmt.Sprintf("%s/%d/subscription-domain-allow-list", c.endpoint, pk.PrimaryKey())
+	return &statusPageSubsDomainAllowListEndpointImpl{
+		EndpointLister:  NewEndpointLister[StatusPageSubsDomainAllowListListResponse, StatusPageSubsDomainAllowList, StatusPageSubsDomainAllowListListOptions](c.cbd, endpoint),
+		EndpointCreator: NewEndpointCreator[StatusPageSubsDomainAllowList, StatusPageSubsDomainAllowListCreateUpdateResponse](c.cbd, endpoint),
+		EndpointUpdater: NewEndpointUpdater[StatusPageSubsDomainAllowList, StatusPageSubsDomainAllowListCreateUpdateResponse](c.cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[StatusPageSubsDomainAllowListResponse](c.cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter(c.cbd, endpoint),
+	}
+}
+
+func (c *statusPagesEndpointImpl) SubscriptionDomainBlockList(pk PrimaryKeyable) StatusPageSubsDomainBlockListEndpoint {
+	endpoint := fmt.Sprintf("%s/%d/subscription-domain-block-list", c.endpoint, pk.PrimaryKey())
+	return &statusPageSubsDomainBlockListEndpointImpl{
+		EndpointLister:  NewEndpointLister[StatusPageSubsDomainBlockListListResponse, StatusPageSubsDomainBlockList, StatusPageSubsDomainBlockListListOptions](c.cbd, endpoint),
+		EndpointCreator: NewEndpointCreator[StatusPageSubsDomainBlockList, StatusPageSubsDomainBlockListCreateUpdateResponse](c.cbd, endpoint),
+		EndpointUpdater: NewEndpointUpdater[StatusPageSubsDomainBlockList, StatusPageSubsDomainBlockListCreateUpdateResponse](c.cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[StatusPageSubsDomainBlockListResponse](c.cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter(c.cbd, endpoint),
+	}
+}
+
+func (c *statusPagesEndpointImpl) Users(pk PrimaryKeyable) StatusPageUserEndpoint {
+	endpoint := fmt.Sprintf("%s/%d/users", c.endpoint, pk.PrimaryKey())
+	return &statusPageUserEndpointImpl{
+		EndpointLister:  NewEndpointLister[StatusPageUserListResponse, StatusPageUser, StatusPageUserListOptions](c.cbd, endpoint),
+		EndpointCreator: NewEndpointCreator[StatusPageUser, StatusPageUserCreateUpdateResponse](c.cbd, endpoint),
+		EndpointUpdater: NewEndpointUpdater[StatusPageUser, StatusPageUserCreateUpdateResponse](c.cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[StatusPageUserResponse](c.cbd, endpoint),
+		EndpointDeleter: NewEndpointDeleter(c.cbd, endpoint),
+	}
 }
