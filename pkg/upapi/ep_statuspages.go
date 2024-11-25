@@ -39,6 +39,16 @@ type StatusPage struct {
 	CustomCss                 string `json:"custom_css"`
 	CompanyWebsiteUrl         string `json:"company_website_url"`
 	Timezone                  string `json:"timezone"`
+
+	AllowSubscriptionsEmail   bool   `json:"allow_subscriptions_email"`
+	AllowSubscriptionsRss     bool   `json:"allow_subscriptions_rss"`
+	AllowSubscriptionsSlack   bool   `json:"allow_subscriptions_slack"`
+	AllowSubscriptionsSms     bool   `json:"allow_subscriptions_sms"`
+	AllowSubscriptionsWebhook bool   `json:"allow_subscriptions_webhook"`
+	HideEmptyTabsHistory      bool   `json:"hide_empty_tabs_history"`
+	Theme                     string `json:"theme"`
+	CustomHeaderBgColorHex    string `json:"custom_header_bg_color_hex"`
+	CustomHeaderTextColorHex  string `json:"custom_header_text_color_hex"`
 }
 
 func (s StatusPage) PrimaryKey() PrimaryKey {
