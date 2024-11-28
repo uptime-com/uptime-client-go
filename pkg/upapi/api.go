@@ -23,6 +23,7 @@ type API interface {
 	StatusPages() StatusPagesEndpoint
 	SLAReports() SLAReportsEndpoint
 	ScheduledReports() ScheduledReportsEndpoint
+	Credentials() CredentialEndpoint
 }
 
 // New returns a new API client instance.
@@ -129,4 +130,8 @@ func (api *apiImpl) SLAReports() SLAReportsEndpoint {
 
 func (api *apiImpl) ScheduledReports() ScheduledReportsEndpoint {
 	return api.scheduledReports
+}
+
+func (api *apiImpl) Credentials() CredentialEndpoint {
+	return NewCredentialsEndpoint(api.CBD)
 }
