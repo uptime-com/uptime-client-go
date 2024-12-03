@@ -563,7 +563,7 @@ type CheckHTTP struct {
 	SendString             string          `json:"msp_send_string,omitempty"`
 	ExpectString           string          `json:"msp_expect_string,omitempty"`
 	ExpectStringType       string          `json:"msp_expect_string_type,omitempty"`
-	Encryption             string          `json:"msp_encryption,omitempty"`
+	Encryption             string          `json:"msp_encryption"`
 	Threshold              int64           `json:"msp_threshold,omitempty"`
 	Headers                string          `json:"msp_headers,omitempty"`
 	Version                int64           `json:"msp_version,omitempty"`
