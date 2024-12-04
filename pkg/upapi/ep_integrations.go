@@ -13,10 +13,24 @@ type Integration struct {
 	ContactGroups []string `json:"contact_groups,omitempty"`
 	IsErrored     bool     `json:"is_errored,omitempty"`
 	LastError     string   `json:"last_error,omitempty"`
+
+	// Optional fields for particular integrations
+	APIEndpoint string `json:"api_endpoint,omitempty"`
+	APIKey      string `json:"api_key,omitempty"`
+	Teams       string `json:"teams,omitempty"`
+	Tags        string `json:"tags,omitempty"`
+	Autoresolve bool   `json:"autoresolve,omitempty"`
 }
 
 func (i Integration) PrimaryKey() PrimaryKey {
 	return PrimaryKey(i.PK)
+}
+
+func (r Integration) Item() Integration {
+	// Integration API, don't follow the pattern of returning data
+	// It doesn't wrap response by `results` key, so we add this method to make it compatible
+	// with the generic endpoint getter
+	return r
 }
 
 type IntegrationListResponse struct {
@@ -94,83 +108,83 @@ func NewIntegrationsEndpoint(cbd CBD) IntegrationsEndpoint {
 	const endpoint = "integrations"
 	return &integrationsEndpointImpl{
 		integrationsEndpointCachetImpl: integrationsEndpointCachetImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationCachet, IntegrationResponse, Integration](cbd, endpoint+"/add-cachet"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationCachet, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationCachet, IntegrationResponse](cbd, endpoint+"/add-cachet"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationCachet, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointDatadogImpl: integrationsEndpointDatadogImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationDatadog, IntegrationResponse, Integration](cbd, endpoint+"/add-datadog"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationDatadog, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationDatadog, IntegrationResponse](cbd, endpoint+"/add-datadog"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationDatadog, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointGeckoboardImpl: integrationsEndpointGeckoboardImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationGeckoboard, IntegrationResponse, Integration](cbd, endpoint+"/add-geckoboard"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationGeckoboard, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationGeckoboard, IntegrationResponse](cbd, endpoint+"/add-geckoboard"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationGeckoboard, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointJiraServicedeskImpl: integrationsEndpointJiraServicedeskImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationJiraServicedesk, IntegrationResponse, Integration](cbd, endpoint+"/add-jiraservicedesk"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationJiraServicedesk, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationJiraServicedesk, IntegrationResponse](cbd, endpoint+"/add-jiraservicedesk"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationJiraServicedesk, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointKlipfolioImpl: integrationsEndpointKlipfolioImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationKlipfolio, IntegrationResponse, Integration](cbd, endpoint+"/add-klipfolio"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationKlipfolio, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationKlipfolio, IntegrationResponse](cbd, endpoint+"/add-klipfolio"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationKlipfolio, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointLibratoImpl: integrationsEndpointLibratoImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationLibrato, IntegrationResponse, Integration](cbd, endpoint+"/add-librato"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationLibrato, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationLibrato, IntegrationResponse](cbd, endpoint+"/add-librato"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationLibrato, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointMicrosoftTeamsImpl: integrationsEndpointMicrosoftTeamsImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationMicrosoftTeams, IntegrationResponse, Integration](cbd, endpoint+"/add-microsoft-teams"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationMicrosoftTeams, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationMicrosoftTeams, IntegrationResponse](cbd, endpoint+"/add-microsoft-teams"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationMicrosoftTeams, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointOpsgenieImpl: integrationsEndpointOpsgenieImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationOpsgenie, IntegrationResponse, Integration](cbd, endpoint+"/add-opsgenie"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationOpsgenie, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationOpsgenie, IntegrationResponse](cbd, endpoint+"/add-opsgenie"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationOpsgenie, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointPagerdutyImpl: integrationsEndpointPagerdutyImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationPagerduty, IntegrationResponse, Integration](cbd, endpoint+"/add-pagerduty"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationPagerduty, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationPagerduty, IntegrationResponse](cbd, endpoint+"/add-pagerduty"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationPagerduty, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointPushbulletImpl: integrationsEndpointPushbulletImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationPushbullet, IntegrationResponse, Integration](cbd, endpoint+"/add-pushbullet"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationPushbullet, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationPushbullet, IntegrationResponse](cbd, endpoint+"/add-pushbullet"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationPushbullet, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointPushoverImpl: integrationsEndpointPushoverImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationPushover, IntegrationResponse, Integration](cbd, endpoint+"/add-pushover"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationPushover, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationPushover, IntegrationResponse](cbd, endpoint+"/add-pushover"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationPushover, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointSlackImpl: integrationsEndpointSlackImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationSlack, IntegrationResponse, Integration](cbd, endpoint+"/add-slack"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationSlack, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationSlack, IntegrationResponse](cbd, endpoint+"/add-slack"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationSlack, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointStatusImpl: integrationsEndpointStatusImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationStatus, IntegrationResponse, Integration](cbd, endpoint+"/add-status"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationStatus, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationStatus, IntegrationResponse](cbd, endpoint+"/add-status"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationStatus, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointStatuspageImpl: integrationsEndpointStatuspageImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationStatuspage, IntegrationResponse, Integration](cbd, endpoint+"/add-statuspage"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationStatuspage, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationStatuspage, IntegrationResponse](cbd, endpoint+"/add-statuspage"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationStatuspage, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointTwitterImpl: integrationsEndpointTwitterImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationTwitter, IntegrationResponse, Integration](cbd, endpoint+"/add-twitter"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationTwitter, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationTwitter, IntegrationResponse](cbd, endpoint+"/add-twitter"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationTwitter, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointVictoropsImpl: integrationsEndpointVictoropsImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationVictorops, IntegrationResponse, Integration](cbd, endpoint+"/add-victorops"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationVictorops, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationVictorops, IntegrationResponse](cbd, endpoint+"/add-victorops"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationVictorops, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointWavefrontImpl: integrationsEndpointWavefrontImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationWavefront, IntegrationResponse, Integration](cbd, endpoint+"/add-wavefront"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationWavefront, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationWavefront, IntegrationResponse](cbd, endpoint+"/add-wavefront"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationWavefront, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointWebhookImpl: integrationsEndpointWebhookImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationWebhook, IntegrationResponse, Integration](cbd, endpoint+"/add-webhook"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationWebhook, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationWebhook, IntegrationResponse](cbd, endpoint+"/add-webhook"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationWebhook, IntegrationResponse](cbd, endpoint),
 		},
 		integrationsEndpointZapierImpl: integrationsEndpointZapierImpl{
-			EndpointCreator: NewEndpointCreator[IntegrationZapier, IntegrationResponse, Integration](cbd, endpoint+"/add-zapier"),
-			EndpointUpdater: NewEndpointUpdater[IntegrationZapier, IntegrationResponse, Integration](cbd, endpoint),
+			EndpointCreator: NewEndpointCreator[IntegrationZapier, IntegrationResponse](cbd, endpoint+"/add-zapier"),
+			EndpointUpdater: NewEndpointUpdater[IntegrationZapier, IntegrationResponse](cbd, endpoint),
 		},
 		EndpointLister:  NewEndpointLister[IntegrationListResponse, Integration, IntegrationListOptions](cbd, endpoint),
-		EndpointGetter:  NewEndpointGetter[IntegrationResponse, Integration](cbd, endpoint),
+		EndpointGetter:  NewEndpointGetter[Integration](cbd, endpoint),
 		EndpointDeleter: NewEndpointDeleter(cbd, endpoint),
 	}
 }
