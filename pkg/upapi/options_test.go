@@ -143,3 +143,45 @@ func TestWithHTTPClientTrace(t *testing.T) {
 
 	cbdm.AssertExpectations(t)
 }
+
+func TestWithSubaccount(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	cbdm := new(cbdMock)
+	cbdm.
+		On("BuildRequest", ctx, http.MethodGet, "/", nil, nil).
+		Return(http.NewRequestWithContext(ctx, http.MethodGet, "/", nil)).
+		Once()
+
+	c, err := WithSubaccount(112233445566)(cbdm)
+	require.NoError(t, err)
+
+	req, err := c.BuildRequest(ctx, http.MethodGet, "/", nil, nil)
+	require.NoError(t, err)
+	require.Equal(t, "112233445566", req.Header.Get("X-Subaccount"))
+
+	cbdm.AssertExpectations(t)
+}
+
+func TestWithSubaccountIgnoreEmpty(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	cbdm := new(cbdMock)
+	cbdm.
+		On("BuildRequest", ctx, http.MethodGet, "/", nil, nil).
+		Return(http.NewRequestWithContext(ctx, http.MethodGet, "/", nil)).
+		Once()
+
+	c, err := WithSubaccount(0)(cbdm)
+	require.NoError(t, err)
+
+	req, err := c.BuildRequest(ctx, http.MethodGet, "/", nil, nil)
+	require.NoError(t, err)
+
+	_, ok := req.Header["X-Subaccount"]
+	require.False(t, ok)
+
+	cbdm.AssertExpectations(t)
+}

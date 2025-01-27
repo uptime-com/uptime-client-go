@@ -241,3 +241,25 @@ func (r *autoRetryCBD) Do(rq *http.Request) (*http.Response, error) {
 	r.countdown--
 	return r.Do(rq)
 }
+
+type withSubaccountCBD struct {
+	CBD
+	subaccount int64
+}
+
+func (s *withSubaccountCBD) BuildRequest(ctx context.Context, method string, endpoint string, opts any, data any) (*http.Request, error) {
+	req, err := s.CBD.BuildRequest(ctx, method, endpoint, opts, data)
+	if err != nil {
+		return nil, err
+	}
+	if s.subaccount > 0 {
+		req.Header.Set("X-Subaccount", strconv.FormatInt(s.subaccount, 10))
+	}
+	return req, nil
+}
+
+func WithSubaccount(subaccount int64) Option {
+	return func(cbd CBD) (CBD, error) {
+		return &withSubaccountCBD{cbd, subaccount}, nil
+	}
+}
