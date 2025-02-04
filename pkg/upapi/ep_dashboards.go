@@ -3,7 +3,7 @@ package upapi
 import "context"
 
 type Dashboard struct {
-	PK                         int64    `json:"pk"`
+	PK                         int64    `json:"pk,omitempty"`
 	ServicesSelected           []string `json:"services_selected"`
 	ServicesTags               []string `json:"services_tags"`
 	Ordering                   int64    `json:"ordering"`
