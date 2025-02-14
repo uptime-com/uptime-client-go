@@ -32,8 +32,8 @@ type StatusPageIncident struct {
 	AffectedComponents []IncidentAffectedComponentEntity `json:"affected_components,omitempty"`
 
 	IncidentType                     string `json:"incident_type,omitempty"`
-	StartsAt                         string `json:"starts_at,omitempty"`
-	EndsAt                           string `json:"ends_at"`
+	StartsAt                         string `json:"starts_at"`
+	EndsAt                           string `json:"ends_at,omitempty"`
 	UpdateComponentStatus            bool   `json:"update_component_status,omitempty"`
 	NotifySubscribers                bool   `json:"notify_subscribers,omitempty"`
 	SendMaintenanceStartNotification bool   `json:"send_maintenance_start_notification,omitempty"`
