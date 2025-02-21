@@ -8,10 +8,10 @@ type StatusPageComponent struct {
 	PK             int64  `json:"pk"`
 	URL            string `json:"url,omitempty"`
 	Name           string `json:"name"`
-	Description    string `json:"description,omitempty"`
+	Description    string `json:"description"`
 	IsGroup        bool   `json:"is_group,omitempty"`
-	GroupID        int64  `json:"group_id,omitempty"`
-	ServiceID      int64  `json:"service_id,omitempty"`
+	GroupID        *int64 `json:"group_id"`
+	ServiceID      *int64 `json:"service_id"`
 	Status         string `json:"status,omitempty"`
 	AutoStatusDown string `json:"auto_status_down,omitempty"`
 	AutoStatusUp   string `json:"auto_status_up,omitempty"`
