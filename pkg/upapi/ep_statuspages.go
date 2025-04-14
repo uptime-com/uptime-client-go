@@ -19,6 +19,7 @@ type StatusPage struct {
 	AllowDrillDown            bool   `json:"allow_drill_down"`
 	AuthUsername              string `json:"auth_username"`
 	AuthPassword              string `json:"auth_password"`
+	MaxVisibleComponentDays   int64  `json:"max_visible_component_days,omitempty"`
 	ShowStatusTab             bool   `json:"show_status_tab"`
 	ShowActiveIncidents       bool   `json:"show_active_incidents"`
 	ShowComponentResponseTime bool   `json:"show_component_response_time"`
