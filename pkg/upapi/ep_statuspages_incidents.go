@@ -9,6 +9,7 @@ type IncidentUpdate struct {
 	URL           string `json:"url,omitempty"`
 	Description   string `json:"description"`
 	IncidentState string `json:"incident_state"`
+	UpdatedAt     string `json:"updated_at"`
 }
 
 type IncidentAffectedComponent struct {
