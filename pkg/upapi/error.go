@@ -14,14 +14,14 @@ var DecodeError = errors.New("error response decode error")
 
 type Error struct {
 	Response *http.Response
-	Code     string              `json:"error_code"`
-	Message  string              `json:"error_message"`
-	Fields   map[string][]string `json:"error_fields,omitempty"`
+	Code     string           `json:"error_code"`
+	Message  string           `json:"error_message"`
+	Fields   map[string][]any `json:"error_fields,omitempty"`
 }
 
 func NewError() *Error {
 	return &Error{
-		Fields: make(map[string][]string),
+		Fields: make(map[string][]any),
 	}
 }
 
