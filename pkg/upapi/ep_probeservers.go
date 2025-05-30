@@ -5,7 +5,10 @@ import "context"
 type ProbeServer struct {
 	Location  string `json:"location"`
 	ProbeName string `json:"probe_name"`
-	IPAddress string `json:"ip_address"`
+	// IPAddress is deprecated, and returns empty value use IPv4Addresses or IPv6Addresses instead
+	IPAddress     string   `json:"ip_address"`
+	IPv4Addresses []string `json:"ipv4_addresses"`
+	IPv6Addresses []string `json:"ipv6_addresses"`
 }
 
 type ProbeServerListResponse []ProbeServer
