@@ -237,6 +237,9 @@ type ChecksEndpoint interface {
 	CreateWHOIS(context.Context, CheckWHOIS) (*Check, error)
 	UpdateWHOIS(context.Context, PrimaryKeyable, CheckWHOIS) (*Check, error)
 
+	CreateRDAP(context.Context, CheckRDAP) (*Check, error)
+	UpdateRDAP(context.Context, PrimaryKeyable, CheckRDAP) (*Check, error)
+
 	CreatePageSpeed(context.Context, CheckPageSpeed) (*Check, error)
 	UpdatePageSpeed(context.Context, PrimaryKeyable, CheckPageSpeed) (*Check, error)
 
@@ -330,6 +333,10 @@ func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 			EndpointCreator: NewEndpointCreator[CheckWHOIS, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-whois"),
 			EndpointUpdater: NewEndpointUpdater[CheckWHOIS, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
+		checksEndpointRDAPImpl: checksEndpointRDAPImpl{
+			EndpointCreator: NewEndpointCreator[CheckRDAP, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-rdap"),
+			EndpointUpdater: NewEndpointUpdater[CheckRDAP, CheckCreateUpdateResponse, Check](cbd, endpoint),
+		},
 		checksStatsEndpointImpl: checksStatsEndpointImpl{
 			endpoint: NewEndpointLister[CheckStatsResponse, CheckStats, CheckStatsOptions](&checksNestedEndpointCBD{CBD: cbd}, endpoint+"/%d/stats"),
 		},
@@ -370,6 +377,7 @@ type checksEndpointImpl struct {
 	checksEndpointUDPImpl
 	checksEndpointWebhookImpl
 	checksEndpointWHOISImpl
+	checksEndpointRDAPImpl
 	checksStatsEndpointImpl
 	checksEndpointPageSpeedImpl
 	checksEndpointMaintenanceImpl
@@ -1036,6 +1044,34 @@ func (c checksEndpointWHOISImpl) CreateWHOIS(ctx context.Context, check CheckWHO
 }
 
 func (c checksEndpointWHOISImpl) UpdateWHOIS(ctx context.Context, pk PrimaryKeyable, check CheckWHOIS) (*Check, error) {
+	return c.Update(ctx, pk, check)
+}
+
+type CheckRDAP struct {
+	Name                      string          `json:"name,omitempty"`
+	ContactGroups             []string        `json:"contact_groups,omitempty"`
+	Locations                 []string        `json:"locations,omitempty"`
+	Tags                      []string        `json:"tags,omitempty"`
+	IsPaused                  bool            `json:"is_paused"`
+	Address                   string          `json:"msp_address"`
+	ExpectString              string          `json:"msp_expect_string,omitempty"`
+	Threshold                 int64           `json:"msp_threshold,omitempty"`
+	NumRetries                int64           `json:"msp_num_retries,omitempty"`
+	UptimeSLA                 decimal.Decimal `json:"msp_uptime_sla,omitempty"`
+	Notes                     string          `json:"msp_notes,omitempty"`
+	SendResolvedNotifications bool            `json:"msp_send_resolved_notifications"`
+}
+
+type checksEndpointRDAPImpl struct {
+	EndpointCreator[CheckRDAP, CheckCreateUpdateResponse, Check]
+	EndpointUpdater[CheckRDAP, CheckCreateUpdateResponse, Check]
+}
+
+func (c checksEndpointRDAPImpl) CreateRDAP(ctx context.Context, check CheckRDAP) (*Check, error) {
+	return c.Create(ctx, check)
+}
+
+func (c checksEndpointRDAPImpl) UpdateRDAP(ctx context.Context, pk PrimaryKeyable, check CheckRDAP) (*Check, error) {
 	return c.Update(ctx, pk, check)
 }
 
