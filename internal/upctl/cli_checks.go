@@ -96,6 +96,7 @@ var (
 	checksCreateUDPFlags         upapi.CheckUDP
 	checksCreateWebhookFlags     upapi.CheckWebhook
 	checksCreateWHOISFlags       upapi.CheckWHOIS
+	checksCreateRDAPFlags        upapi.CheckRDAP
 )
 
 func init() {
@@ -163,6 +164,9 @@ func init() {
 		checksCreateSubcommand("whois", &checksCreateWHOISFlags, func(ctx context.Context) (*upapi.Check, error) {
 			return api.Checks().CreateWHOIS(ctx, checksCreateWHOISFlags)
 		}),
+		checksCreateSubcommand("rdap", &checksCreateRDAPFlags, func(ctx context.Context) (*upapi.Check, error) {
+			return api.Checks().CreateRDAP(ctx, checksCreateRDAPFlags)
+		}),
 	)
 	checksCmd.AddCommand(checksCreateCmd)
 }
@@ -215,6 +219,7 @@ var (
 	updateCreateUDPFlags         upapi.CheckUDP
 	updateCreateWebhookFlags     upapi.CheckWebhook
 	updateCreateWHOISFlags       upapi.CheckWHOIS
+	updateCreateRDAPFlags        upapi.CheckRDAP
 )
 
 func init() {
@@ -281,6 +286,9 @@ func init() {
 		}),
 		checksUpdateSubcommand("whois", &updateCreateWHOISFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
 			return api.Checks().UpdateWHOIS(ctx, upapi.PrimaryKey(pk), updateCreateWHOISFlags)
+		}),
+		checksUpdateSubcommand("rdap", &updateCreateRDAPFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			return api.Checks().UpdateRDAP(ctx, upapi.PrimaryKey(pk), updateCreateRDAPFlags)
 		}),
 	)
 	checksCmd.AddCommand(checksUpdateCmd)
