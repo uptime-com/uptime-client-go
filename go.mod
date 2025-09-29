@@ -1,20 +1,40 @@
-module github.com/uptime-com/uptime-client-go
+module github.com/uptime-com/uptime-client-go/v2
+
+go 1.18
 
 require (
-	github.com/domainr/whois v0.0.0-20220117141512-d1392057429c
-	github.com/google/go-cmp v0.5.2
+	github.com/davecgh/go-spew v1.1.1
+	github.com/gobeam/stringy v0.0.6
 	github.com/google/go-querystring v1.1.0
-	github.com/likexian/whois-parser v1.22.0
+	github.com/hashicorp/go-cleanhttp v0.5.2
+	github.com/mattn/go-colorable v0.1.12
+	github.com/neilotoole/jsoncolor v0.6.0
+	github.com/shopspring/decimal v1.3.1
+	github.com/spf13/cobra v1.6.1
+	github.com/spf13/viper v1.15.0
+	github.com/stretchr/testify v1.8.2
+	golang.org/x/time v0.3.0
 )
 
 require (
-	github.com/PuerkitoBio/goquery v1.8.0 // indirect
-	github.com/andybalholm/cascadia v1.3.1 // indirect
-	github.com/likexian/gokit v0.25.6 // indirect
-	github.com/saintfish/chardet v0.0.0-20120816061221-3af4cd4741ca // indirect
-	github.com/zonedb/zonedb v1.0.3514 // indirect
-	golang.org/x/net v0.0.0-20210928044308-7d9f5e0b762b // indirect
-	golang.org/x/text v0.3.7 // indirect
+	github.com/fsnotify/fsnotify v1.6.0 // indirect
+	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/inconshreveable/mousetrap v1.0.1 // indirect
+	github.com/magiconair/properties v1.8.7 // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
+	github.com/mitchellh/mapstructure v1.5.0 // indirect
+	github.com/pelletier/go-toml/v2 v2.0.6 // indirect
+	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/segmentio/encoding v0.1.14 // indirect
+	github.com/spf13/afero v1.9.3 // indirect
+	github.com/spf13/cast v1.5.0 // indirect
+	github.com/spf13/jwalterweatherman v1.1.0 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/stretchr/objx v0.5.0 // indirect
+	github.com/subosito/gotenv v1.4.2 // indirect
+	golang.org/x/sys v0.3.0 // indirect
+	golang.org/x/term v0.0.0-20210615171337-6886f2dfbf5b // indirect
+	golang.org/x/text v0.5.0 // indirect
+	gopkg.in/ini.v1 v1.67.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-go 1.19
