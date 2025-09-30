@@ -1,12 +1,13 @@
+version: 2
 project_name: upctl
 before:
   hooks:
     - go mod tidy
 
 builds:
-  - id:     upctl
+  - id: upctl
     binary: upctl
-    main:   ./cmd/upctl
+    main: ./cmd/upctl
     goos:
       - darwin
       - linux
@@ -15,31 +16,39 @@ builds:
       - amd64
       - arm64
     ignore:
-      - goos:   windows
+      - goos: windows
         goarch: arm64
     env:
       - CGO_ENABLED=0
     flags:
       - -trimpath
-    ldflags: [ "-s", "-w", "-X", "main.version={{ .Version }}", "-X", "main.commit={{ .Commit }}" ]
+    ldflags:
+      [
+        "-s",
+        "-w",
+        "-X",
+        "main.version={{ .Version }}",
+        "-X",
+        "main.commit={{ .Commit }}",
+      ]
 
 archives:
-  - id:                upctl
-    format:            tar.gz
+  - id: upctl
+    format: tar.gz
     wrap_in_directory: true
 
 kos:
-  - id:         upctl
-    build:      upctl
+  - id: upctl
+    build: upctl
     repository: uptimecom/upctl
-    bare:       true
+    bare: true
     platforms:
       - linux/amd64
       - linux/arm64
     tags:
       - "latest"
       - "{{ .Version }}"
-      - "{{ .Major }}.{{ .Minor }}"
+      - "{{ .Major }}.{{ .Minor }}{{ .Patch }}"
       - "{{ .Major }}"
 
 checksum:
@@ -57,10 +66,7 @@ signs:
       - "${artifact}"
 
 snapshot:
-  name_template: "{{ incminor .Version }}-pre-{{ .ShortCommit }}"
-
-changelog:
-  skip: true
+  name_template: "{{ incpatch .Version }}-pre-{{ .ShortCommit }}"
 
 release:
   prerelease: auto
