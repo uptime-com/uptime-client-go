@@ -13,12 +13,16 @@ type CredentialSecret struct {
 }
 
 type Credential struct {
-	PK             int64            `json:"id,omitempty"`
-	DisplayName    string           `json:"display_name,omitempty"`
-	Description    string           `json:"description,omitempty"`
-	CredentialType string           `json:"credential_type"`
-	Username       string           `json:"username,omitempty"`
-	Secret         CredentialSecret `json:"secret"`
+	PK                   int64            `json:"id,omitempty"`
+	DisplayName          string           `json:"display_name,omitempty"`
+	Description          string           `json:"description,omitempty"`
+	CredentialType       string           `json:"credential_type"`
+	Hint                 string           `json:"hint,omitempty"`
+	Username             string           `json:"username,omitempty"`
+	Version              string           `json:"version,omitempty"`
+	UsedSecretProperties []string         `json:"used_secret_properties,omitempty"`
+	CreatedBy            int64            `json:"created_by,omitempty"`
+	Secret               CredentialSecret `json:"secret"`
 }
 
 func (c Credential) PrimaryKey() PrimaryKey {
