@@ -40,51 +40,51 @@ type CheckGroupConfig struct {
 
 // Check represents a check in Uptime.com.
 type Check struct {
-	PK                     int64           `json:"pk,omitempty"`
-	URL                    string          `json:"url,omitempty"`
-	StatsURL               string          `json:"stats_url,omitempty"`
-	AlertsURL              string          `json:"alerts_url,omitempty"`
-	Name                   string          `json:"name,omitempty"`
-	CachedResponseTime     float64         `json:"cached_response_time,omitempty"`
-	ContactGroups          []string        `json:"contact_groups"`
-	CreatedAt              time.Time       `json:"created_at,omitempty"`
-	ModifiedAt             time.Time       `json:"modified_at,omitempty"`
-	Locations              []string        `json:"locations,omitempty"`
-	Tags                   []string        `json:"tags,omitempty"`
-	CheckType              string          `json:"check_type,omitempty"`
-	Escalations            string          `json:"-,omitempty"` // TODO
-	MonitoringServiceType  string          `json:"monitoring_service_type,omitempty"`
-	IsPaused               bool            `json:"is_paused,omitempty"`
-	IsUnderMaintenance     bool            `json:"is_under_maintenance,omitempty"`
-	StateIsUp              bool            `json:"state_is_up,omitempty"`
-	StateChangedAt         time.Time       `json:"state_changed_at,omitempty"`
-	HeartbeatURL           string          `json:"heartbeat_url,omitempty"`
-	WebhookURL             string          `json:"webhook_url,omitempty"`
-	Protocol               string          `json:"msp_protocol,omitempty"`
-	Interval               int64           `json:"msp_interval,omitempty"`
-	Address                string          `json:"msp_address"`
-	Port                   int64           `json:"msp_port,omitempty"`
-	Username               string          `json:"msp_username,omitempty"`
-	Password               string          `json:"msp_password,omitempty"`
-	Proxy                  string          `json:"msp_proxy,omitempty"`
-	DNSServer              string          `json:"msp_dns_server,omitempty"`
-	DNSRecordType          string          `json:"msp_dns_record_type,omitempty"`
-	StatusCode             string          `json:"msp_status_code,omitempty"`
-	SendString             string          `json:"msp_send_string,omitempty"`
-	ExpectString           string          `json:"msp_expect_string,omitempty"`
-	ExpectStringType       string          `json:"msp_expect_string_type,omitempty"`
-	Encryption             string          `json:"msp_encryption,omitempty"`
-	Threshold              int64           `json:"msp_threshold,omitempty"`
-	Headers                string          `json:"msp_headers,omitempty"`
-	Script                 string          `json:"msp_script,omitempty"`
-	Version                int64           `json:"msp_version,omitempty"`
-	Sensitivity            int64           `json:"msp_sensitivity,omitempty"`
-	NumRetries             int64           `json:"msp_num_retries,omitempty"`
-	UseIPVersion           string          `json:"msp_use_ip_version,omitempty"`
-	UptimeSLA              decimal.Decimal `json:"msp_uptime_sla,omitempty"`
-	ResponseTimeSLA        decimal.Decimal `json:"msp_response_time_sla,omitempty"`
-	Notes                  string          `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool            `json:"msp_include_in_global_metrics,omitempty"`
+	PK                     int64             `json:"pk,omitempty"`
+	URL                    string            `json:"url,omitempty"`
+	StatsURL               string            `json:"stats_url,omitempty"`
+	AlertsURL              string            `json:"alerts_url,omitempty"`
+	Name                   string            `json:"name,omitempty"`
+	CachedResponseTime     float64           `json:"cached_response_time,omitempty"`
+	ContactGroups          []string          `json:"contact_groups"`
+	CreatedAt              time.Time         `json:"created_at,omitempty"`
+	ModifiedAt             time.Time         `json:"modified_at,omitempty"`
+	Locations              []string          `json:"locations,omitempty"`
+	Tags                   []string          `json:"tags,omitempty"`
+	CheckType              string            `json:"check_type,omitempty"`
+	Escalations            []CheckEscalation `json:"escalations,omitempty"`
+	MonitoringServiceType  string            `json:"monitoring_service_type,omitempty"`
+	IsPaused               bool              `json:"is_paused,omitempty"`
+	IsUnderMaintenance     bool              `json:"is_under_maintenance,omitempty"`
+	StateIsUp              bool              `json:"state_is_up,omitempty"`
+	StateChangedAt         time.Time         `json:"state_changed_at,omitempty"`
+	HeartbeatURL           string            `json:"heartbeat_url,omitempty"`
+	WebhookURL             string            `json:"webhook_url,omitempty"`
+	Protocol               string            `json:"msp_protocol,omitempty"`
+	Interval               int64             `json:"msp_interval,omitempty"`
+	Address                string            `json:"msp_address"`
+	Port                   int64             `json:"msp_port,omitempty"`
+	Username               string            `json:"msp_username,omitempty"`
+	Password               string            `json:"msp_password,omitempty"`
+	Proxy                  string            `json:"msp_proxy,omitempty"`
+	DNSServer              string            `json:"msp_dns_server,omitempty"`
+	DNSRecordType          string            `json:"msp_dns_record_type,omitempty"`
+	StatusCode             string            `json:"msp_status_code,omitempty"`
+	SendString             string            `json:"msp_send_string,omitempty"`
+	ExpectString           string            `json:"msp_expect_string,omitempty"`
+	ExpectStringType       string            `json:"msp_expect_string_type,omitempty"`
+	Encryption             string            `json:"msp_encryption,omitempty"`
+	Threshold              int64             `json:"msp_threshold,omitempty"`
+	Headers                string            `json:"msp_headers,omitempty"`
+	Script                 string            `json:"msp_script,omitempty"`
+	Version                int64             `json:"msp_version,omitempty"`
+	Sensitivity            int64             `json:"msp_sensitivity,omitempty"`
+	NumRetries             int64             `json:"msp_num_retries,omitempty"`
+	UseIPVersion           string            `json:"msp_use_ip_version,omitempty"`
+	UptimeSLA              decimal.Decimal   `json:"msp_uptime_sla,omitempty"`
+	ResponseTimeSLA        decimal.Decimal   `json:"msp_response_time_sla,omitempty"`
+	Notes                  string            `json:"msp_notes,omitempty"`
+	IncludeInGlobalMetrics bool              `json:"msp_include_in_global_metrics,omitempty"`
 
 	Maintenance *CheckMaintenance `json:"maintenance,omitempty"`
 
@@ -244,6 +244,9 @@ type ChecksEndpoint interface {
 	UpdatePageSpeed(context.Context, PrimaryKeyable, CheckPageSpeed) (*Check, error)
 
 	UpdateMaintenance(context.Context, PrimaryKeyable, CheckMaintenance) (*Check, error)
+
+	GetEscalations(context.Context, PrimaryKeyable) (*CheckEscalations, error)
+	UpdateEscalations(context.Context, PrimaryKeyable, CheckEscalations) (*CheckEscalations, error)
 }
 
 func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
@@ -349,6 +352,12 @@ func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 				&checksNestedEndpointCBD{CBD: cbd, EndpointSuffix: "maintenance/"}, endpoint,
 			),
 		},
+		checksEndpointEscalationsImpl: checksEndpointEscalationsImpl{
+			getter: NewEndpointGetter[CheckGetResponse, Check](cbd, endpoint),
+			updater: NewEndpointUpdater[CheckEscalations, CheckCreateUpdateResponse, Check](
+				&checksNestedEndpointCBD{CBD: cbd, EndpointSuffix: "escalations/"}, endpoint,
+			),
+		},
 		EndpointLister:  NewEndpointLister[CheckListResponse, Check, CheckListOptions](cbd, endpoint),
 		EndpointGetter:  NewEndpointGetter[CheckGetResponse, Check](cbd, endpoint),
 		EndpointDeleter: NewEndpointDeleter(cbd, endpoint),
@@ -381,6 +390,7 @@ type checksEndpointImpl struct {
 	checksStatsEndpointImpl
 	checksEndpointPageSpeedImpl
 	checksEndpointMaintenanceImpl
+	checksEndpointEscalationsImpl
 	EndpointLister[CheckListResponse, Check, CheckListOptions]
 	EndpointGetter[CheckCreateUpdateResponse, Check]
 	EndpointUpdater[Check, CheckCreateUpdateResponse, Check]
@@ -1122,10 +1132,41 @@ type CheckMaintenance struct {
 	Schedule []CheckMaintenanceSchedule `json:"schedule,omitempty"`
 }
 
+type CheckEscalation struct {
+	WaitTime      int      `json:"wait_time"`
+	NumRepeats    int      `json:"num_repeats"`
+	ContactGroups []string `json:"contact_groups"`
+}
+
+type CheckEscalations struct {
+	Escalations []CheckEscalation `json:"escalations"`
+}
+
 type checksEndpointMaintenanceImpl struct {
 	EndpointUpdater[CheckMaintenance, CheckCreateUpdateResponse, Check]
 }
 
 func (c checksEndpointMaintenanceImpl) UpdateMaintenance(ctx context.Context, pk PrimaryKeyable, maintenance CheckMaintenance) (*Check, error) {
 	return c.Update(ctx, pk, maintenance)
+}
+
+type checksEndpointEscalationsImpl struct {
+	getter  EndpointGetter[CheckGetResponse, Check]
+	updater EndpointUpdater[CheckEscalations, CheckCreateUpdateResponse, Check]
+}
+
+func (c checksEndpointEscalationsImpl) GetEscalations(ctx context.Context, pk PrimaryKeyable) (*CheckEscalations, error) {
+	check, err := c.getter.Get(ctx, pk)
+	if err != nil {
+		return nil, err
+	}
+	return &CheckEscalations{Escalations: check.Escalations}, nil
+}
+
+func (c checksEndpointEscalationsImpl) UpdateEscalations(ctx context.Context, pk PrimaryKeyable, escalations CheckEscalations) (*CheckEscalations, error) {
+	check, err := c.updater.Update(ctx, pk, escalations)
+	if err != nil {
+		return nil, err
+	}
+	return &CheckEscalations{Escalations: check.Escalations}, nil
 }
