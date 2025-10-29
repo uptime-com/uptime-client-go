@@ -25,6 +25,7 @@ type API interface {
 	ScheduledReports() ScheduledReportsEndpoint
 	Credentials() CredentialEndpoint
 	ServiceVariables() ServiceVariablesEndpoint
+	Users() UsersEndpoint
 }
 
 // New returns a new API client instance.
@@ -76,6 +77,7 @@ func New(opts ...Option) (api API, err error) {
 		slaReports:       NewSLAReportsEndpoint(cbd),
 		scheduledReports: NewScheduledReportsEndpoint(cbd),
 		serviceVariables: NewServiceVariablesEndpoint(cbd),
+		users:            NewUsersEndpoint(cbd),
 	}
 	return api, nil
 }
@@ -93,6 +95,7 @@ type apiImpl struct {
 	slaReports       SLAReportsEndpoint
 	scheduledReports ScheduledReportsEndpoint
 	serviceVariables ServiceVariablesEndpoint
+	users            UsersEndpoint
 }
 
 func (api *apiImpl) Checks() ChecksEndpoint {
@@ -141,4 +144,8 @@ func (api *apiImpl) Credentials() CredentialEndpoint {
 
 func (api *apiImpl) ServiceVariables() ServiceVariablesEndpoint {
 	return api.serviceVariables
+}
+
+func (api *apiImpl) Users() UsersEndpoint {
+	return api.users
 }
