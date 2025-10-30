@@ -26,6 +26,7 @@ type API interface {
 	Credentials() CredentialEndpoint
 	ServiceVariables() ServiceVariablesEndpoint
 	Users() UsersEndpoint
+	PushNotifications() PushNotificationsEndpoint
 }
 
 // New returns a new API client instance.
@@ -65,37 +66,39 @@ func New(opts ...Option) (api API, err error) {
 	}
 
 	api = &apiImpl{
-		CBD:              cbd,
-		checks:           NewChecksEndpoint(cbd),
-		contacts:         NewContactsEndpoint(cbd),
-		dashboards:       NewDashboardsEndpoint(cbd),
-		integrations:     NewIntegrationsEndpoint(cbd),
-		tags:             NewTagsEndpoint(cbd),
-		outages:          NewOutagesEndpoint(cbd),
-		probeServers:     NewProbeServersEndpoint(cbd),
-		statusPages:      NewStatusPagesEndpoint(cbd),
-		slaReports:       NewSLAReportsEndpoint(cbd),
-		scheduledReports: NewScheduledReportsEndpoint(cbd),
-		serviceVariables: NewServiceVariablesEndpoint(cbd),
-		users:            NewUsersEndpoint(cbd),
+		CBD:               cbd,
+		checks:            NewChecksEndpoint(cbd),
+		contacts:          NewContactsEndpoint(cbd),
+		dashboards:        NewDashboardsEndpoint(cbd),
+		integrations:      NewIntegrationsEndpoint(cbd),
+		tags:              NewTagsEndpoint(cbd),
+		outages:           NewOutagesEndpoint(cbd),
+		probeServers:      NewProbeServersEndpoint(cbd),
+		statusPages:       NewStatusPagesEndpoint(cbd),
+		slaReports:        NewSLAReportsEndpoint(cbd),
+		scheduledReports:  NewScheduledReportsEndpoint(cbd),
+		serviceVariables:  NewServiceVariablesEndpoint(cbd),
+		users:             NewUsersEndpoint(cbd),
+		pushNotifications: NewPushNotificationsEndpoint(cbd),
 	}
 	return api, nil
 }
 
 type apiImpl struct {
 	CBD
-	checks           ChecksEndpoint
-	contacts         ContactsEndpoint
-	dashboards       DashboardsEndpoint
-	integrations     IntegrationsEndpoint
-	tags             TagsEndpoint
-	outages          OutagesEndpoint
-	probeServers     ProbeServersEndpoint
-	statusPages      StatusPagesEndpoint
-	slaReports       SLAReportsEndpoint
-	scheduledReports ScheduledReportsEndpoint
-	serviceVariables ServiceVariablesEndpoint
-	users            UsersEndpoint
+	checks            ChecksEndpoint
+	contacts          ContactsEndpoint
+	dashboards        DashboardsEndpoint
+	integrations      IntegrationsEndpoint
+	tags              TagsEndpoint
+	outages           OutagesEndpoint
+	probeServers      ProbeServersEndpoint
+	statusPages       StatusPagesEndpoint
+	slaReports        SLAReportsEndpoint
+	scheduledReports  ScheduledReportsEndpoint
+	serviceVariables  ServiceVariablesEndpoint
+	users             UsersEndpoint
+	pushNotifications PushNotificationsEndpoint
 }
 
 func (api *apiImpl) Checks() ChecksEndpoint {
@@ -148,4 +151,8 @@ func (api *apiImpl) ServiceVariables() ServiceVariablesEndpoint {
 
 func (api *apiImpl) Users() UsersEndpoint {
 	return api.users
+}
+
+func (api *apiImpl) PushNotifications() PushNotificationsEndpoint {
+	return api.pushNotifications
 }
