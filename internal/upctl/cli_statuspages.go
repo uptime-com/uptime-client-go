@@ -137,3 +137,91 @@ func statusPagesDelete(ctx context.Context, pkstr string) (*upapi.StatusPage, er
 	}
 	return obj, api.StatusPages().Delete(ctx, upapi.PrimaryKey(pk))
 }
+
+// Current Status Commands
+
+var (
+	statusPagesCurrentStatusCmd = &cobra.Command{
+		Use:     "current-status <status-page-pk>",
+		Aliases: []string{"status", "cs"},
+		Short:   "Get current status of a status page",
+		Args:    cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return output(statusPagesCurrentStatus(cmd.Context(), args[0]))
+		},
+	}
+)
+
+func init() {
+	statusPagesCmd.AddCommand(statusPagesCurrentStatusCmd)
+}
+
+func statusPagesCurrentStatus(ctx context.Context, pkstr string) (*upapi.StatusPageCurrentStatus, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
+	}
+	return api.StatusPages().CurrentStatus(upapi.PrimaryKey(pk)).Get(ctx)
+}
+
+// Status History Commands
+
+var (
+	statusPagesStatusHistoryListFlags = upapi.StatusPageStatusHistoryListOptions{
+		Page:     1,
+		PageSize: 100,
+		Ordering: "-created_at",
+	}
+	statusPagesStatusHistoryListCmd = &cobra.Command{
+		Use:     "status-history <status-page-pk>",
+		Aliases: []string{"history", "sh"},
+		Short:   "List status history for a status page",
+		Args:    cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return output(statusPagesStatusHistoryList(cmd.Context(), args[0]))
+		},
+	}
+)
+
+func init() {
+	err := Bind(statusPagesStatusHistoryListCmd.Flags(), &statusPagesStatusHistoryListFlags)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	statusPagesCmd.AddCommand(statusPagesStatusHistoryListCmd)
+}
+
+func statusPagesStatusHistoryList(ctx context.Context, pkstr string) ([]upapi.StatusPageStatusHistory, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
+	}
+	return api.StatusPages().StatusHistory(upapi.PrimaryKey(pk)).List(ctx, statusPagesStatusHistoryListFlags)
+}
+
+var (
+	statusPagesStatusHistoryGetCmd = &cobra.Command{
+		Use:   "status-history-get <status-page-pk> <history-pk>",
+		Short: "Get a specific status history entry",
+		Args:  cobra.ExactArgs(2),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return output(statusPagesStatusHistoryGet(cmd.Context(), args[0], args[1]))
+		},
+	}
+)
+
+func init() {
+	statusPagesCmd.AddCommand(statusPagesStatusHistoryGetCmd)
+}
+
+func statusPagesStatusHistoryGet(ctx context.Context, statusPagePKStr, historyPKStr string) (*upapi.StatusPageStatusHistory, error) {
+	statusPagePK, err := parsePK(statusPagePKStr)
+	if err != nil {
+		return nil, err
+	}
+	historyPK, err := parsePK(historyPKStr)
+	if err != nil {
+		return nil, err
+	}
+	return api.StatusPages().StatusHistory(upapi.PrimaryKey(statusPagePK)).Get(ctx, upapi.PrimaryKey(historyPK))
+}

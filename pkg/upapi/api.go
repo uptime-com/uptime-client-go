@@ -13,6 +13,7 @@ const (
 
 // API manages communication with the Uptime.com API.
 type API interface {
+	Alerts() AlertsEndpoint
 	Checks() ChecksEndpoint
 	Contacts() ContactsEndpoint
 	Dashboards() DashboardsEndpoint
@@ -67,6 +68,7 @@ func New(opts ...Option) (api API, err error) {
 
 	api = &apiImpl{
 		CBD:               cbd,
+		alerts:            NewAlertsEndpoint(cbd),
 		checks:            NewChecksEndpoint(cbd),
 		contacts:          NewContactsEndpoint(cbd),
 		dashboards:        NewDashboardsEndpoint(cbd),
@@ -86,6 +88,7 @@ func New(opts ...Option) (api API, err error) {
 
 type apiImpl struct {
 	CBD
+	alerts            AlertsEndpoint
 	checks            ChecksEndpoint
 	contacts          ContactsEndpoint
 	dashboards        DashboardsEndpoint
@@ -99,6 +102,10 @@ type apiImpl struct {
 	serviceVariables  ServiceVariablesEndpoint
 	users             UsersEndpoint
 	pushNotifications PushNotificationsEndpoint
+}
+
+func (api *apiImpl) Alerts() AlertsEndpoint {
+	return api.alerts
 }
 
 func (api *apiImpl) Checks() ChecksEndpoint {
