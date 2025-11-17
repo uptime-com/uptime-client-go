@@ -3,16 +3,17 @@ package upapi
 import (
 	"context"
 	"fmt"
+	"net/http"
 )
 
 // StatusPageCurrentStatus represents the current operational status of a status page
 type StatusPageCurrentStatus struct {
-	StatusPage              // Embed StatusPage to inherit all its fields
-	GlobalIsOperational     bool                              `json:"global_is_operational"`
-	ActiveIncidents         []interface{}                     `json:"active_incidents,omitempty"`
-	UpcomingMaintenance     []interface{}                     `json:"upcoming_maintenance,omitempty"`
-	Components              []StatusPageCurrentStatusComponent `json:"components,omitempty"`
-	Metrics                 []interface{}                     `json:"metrics,omitempty"`
+	StatusPage                                             // Embed StatusPage to inherit all its fields
+	GlobalIsOperational bool                               `json:"global_is_operational"`
+	ActiveIncidents     []interface{}                      `json:"active_incidents,omitempty"`
+	UpcomingMaintenance []interface{}                      `json:"upcoming_maintenance,omitempty"`
+	Components          []StatusPageCurrentStatusComponent `json:"components,omitempty"`
+	Metrics             []interface{}                      `json:"metrics,omitempty"`
 }
 
 // StatusPageCurrentStatusComponent represents the current status of a component
@@ -57,6 +58,10 @@ func (e *statusPageCurrentStatusEndpointImpl) Get(ctx context.Context) (*StatusP
 	rs, err := e.Do(rq)
 	if err != nil {
 		return nil, err
+	}
+	defer rs.Body.Close()
+	if rs.StatusCode != http.StatusOK {
+		return nil, ErrorFromResponse(rs)
 	}
 	var resp StatusPageCurrentStatusResponse
 	if err := e.DecodeResponse(rs, &resp); err != nil {

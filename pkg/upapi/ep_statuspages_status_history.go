@@ -33,7 +33,7 @@ type StatusPageStatusHistoryListOptions struct {
 
 // StatusPageStatusHistoryListResponse wraps the list response
 type StatusPageStatusHistoryListResponse struct {
-	Count   int64                      `json:"count,omitempty"`
+	Count   int64                     `json:"count,omitempty"`
 	Results []StatusPageStatusHistory `json:"results,omitempty"`
 }
 

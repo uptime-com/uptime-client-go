@@ -10,15 +10,18 @@ import (
 )
 
 type CheckSSLCertConfig struct {
-	Protocol         string `json:"ssl_cert_protocol,omitempty" flag:"sslcert.protocol"`
-	CRL              bool   `json:"ssl_cert_crl" flag:"sslcert.crl"`
-	FirstElementOnly bool   `json:"ssl_cert_first_element_only" flag:"sslcert.first-element-only"`
-	Match            string `json:"ssl_cert_match,omitempty" flag:"sslcert.match"`
-	Issuer           string `json:"ssl_cert_issuer,omitempty" flag:"sslcert.issuer"`
-	MinVersion       string `json:"ssl_cert_minimum_ssl_tls_version,omitempty" flag:"sslcert.min-version"`
-	Fingerprint      string `json:"ssl_cert_fingerprint,omitempty" flag:"sslcert.fingerprint"`
-	SelfSigned       bool   `json:"ssl_cert_selfsigned,omitempty" flag:"sslcert.self-signed"`
-	URL              string `json:"ssl_cert_file,omitempty" flag:"sslcert.url"`
+	Protocol                string `json:"ssl_cert_protocol,omitempty" flag:"sslcert.protocol"`
+	CRL                     bool   `json:"ssl_cert_crl" flag:"sslcert.crl"`
+	FirstElementOnly        bool   `json:"ssl_cert_first_element_only" flag:"sslcert.first-element-only"`
+	Match                   string `json:"ssl_cert_match,omitempty" flag:"sslcert.match"`
+	Issuer                  string `json:"ssl_cert_issuer,omitempty" flag:"sslcert.issuer"`
+	MinVersion              string `json:"ssl_cert_minimum_ssl_tls_version,omitempty" flag:"sslcert.min-version"`
+	Fingerprint             string `json:"ssl_cert_fingerprint,omitempty" flag:"sslcert.fingerprint"`
+	SelfSigned              bool   `json:"ssl_cert_selfsigned,omitempty" flag:"sslcert.self-signed"`
+	URL                     string `json:"ssl_cert_file,omitempty" flag:"sslcert.url"`
+	Resolve                 string `json:"ssl_cert_resolve,omitempty" flag:"sslcert.resolve"`
+	IgnoreAuthorityWarnings bool   `json:"ssl_ignore_authority_warnings,omitempty" flag:"sslcert.ignore-authority-warnings"`
+	IgnoreSCT               bool   `json:"ssl_ignore_sct,omitempty" flag:"sslcert.ignore-sct"`
 }
 
 type CheckPageSpeedConfig struct {

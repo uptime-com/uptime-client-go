@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"net/http"
 	"time"
 )
 
@@ -116,7 +117,7 @@ func (e *alertsEndpointImpl) RootCause(ctx context.Context, pk PrimaryKeyable) (
 		return nil, err
 	}
 	defer rs.Body.Close()
-	if rs.StatusCode != 200 {
+	if rs.StatusCode != http.StatusOK {
 		return nil, ErrorFromResponse(rs)
 	}
 	var resp AlertRootCause
@@ -138,7 +139,7 @@ func (e *alertsEndpointImpl) Ignore(ctx context.Context, pk PrimaryKeyable) (*Al
 		return nil, err
 	}
 	defer rs.Body.Close()
-	if rs.StatusCode != 200 {
+	if rs.StatusCode != http.StatusOK {
 		return nil, ErrorFromResponse(rs)
 	}
 	var resp AlertResponse
