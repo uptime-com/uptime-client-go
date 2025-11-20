@@ -100,6 +100,8 @@ type StatusPagesEndpoint interface {
 	SubscriptionDomainAllowList(PrimaryKeyable) StatusPageSubsDomainAllowListEndpoint
 	SubscriptionDomainBlockList(PrimaryKeyable) StatusPageSubsDomainBlockListEndpoint
 	Users(PrimaryKeyable) StatusPageUserEndpoint
+	CurrentStatus(PrimaryKeyable) StatusPageCurrentStatusEndpoint
+	StatusHistory(PrimaryKeyable) StatusPageStatusHistoryEndpoint
 }
 
 func NewStatusPagesEndpoint(cbd CBD) StatusPagesEndpoint {
@@ -199,4 +201,12 @@ func (c *statusPagesEndpointImpl) Users(pk PrimaryKeyable) StatusPageUserEndpoin
 		EndpointGetter:  NewEndpointGetter[StatusPageUserResponse](c.cbd, endpoint),
 		EndpointDeleter: NewEndpointDeleter(c.cbd, endpoint),
 	}
+}
+
+func (c *statusPagesEndpointImpl) CurrentStatus(pk PrimaryKeyable) StatusPageCurrentStatusEndpoint {
+	return NewStatusPageCurrentStatusEndpoint(c.cbd, pk)
+}
+
+func (c *statusPagesEndpointImpl) StatusHistory(pk PrimaryKeyable) StatusPageStatusHistoryEndpoint {
+	return NewStatusPageStatusHistoryEndpoint(c.cbd, pk)
 }
