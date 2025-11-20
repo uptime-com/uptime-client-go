@@ -16,7 +16,7 @@ type Outage struct {
 	IgnoreAlertURL             string    `json:"ignore_alert_url,omitempty"`
 	CheckPK                    int64     `json:"check_pk,omitempty"`
 	CheckURL                   string    `json:"check_url,omitempty"`
-	CheckAddresss              string    `json:"check_address,omitempty"`
+	CheckAddress               string    `json:"check_address,omitempty"`
 	CheckName                  string    `json:"check_name,omitempty"`
 	CheckMonitoringServiceType string    `json:"check_monitoring_service_type,omitempty"`
 	StateIsUp                  bool      `json:"state_is_up,omitempty"`
