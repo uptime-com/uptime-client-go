@@ -50,6 +50,30 @@ func integrationsList(ctx context.Context) ([]upapi.Integration, error) {
 }
 
 var (
+	integrationsGetCmd = &cobra.Command{
+		Use:     "get <pk>",
+		Aliases: []string{"show"},
+		Short:   "Get an integration by ID",
+		Args:    cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return output(integrationsGet(cmd.Context(), args[0]))
+		},
+	}
+)
+
+func init() {
+	integrationsCmd.AddCommand(integrationsGetCmd)
+}
+
+func integrationsGet(ctx context.Context, pkstr string) (*upapi.Integration, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
+	}
+	return api.Integrations().Get(ctx, upapi.PrimaryKey(pk))
+}
+
+var (
 	integrationsCreateCmd = &cobra.Command{
 		Use:     "create",
 		Aliases: []string{"add"},
@@ -157,6 +181,119 @@ func init() {
 		}),
 	)
 	integrationsCmd.AddCommand(integrationsCreateCmd)
+}
+
+func integrationsUpdateSubcommand(name string, flags any, fn func(context.Context, int64) (*upapi.Integration, error)) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   name + " <pk>",
+		Short: "Update " + name + " integration",
+		Args:  cobra.ExactArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			pk, err := parsePK(args[0])
+			if err != nil {
+				return err
+			}
+			return output(fn(cmd.Context(), pk))
+		},
+	}
+	err := Bind(cmd.Flags(), flags)
+	if err != nil {
+		panic(err)
+	}
+	return cmd
+}
+
+var (
+	integrationsUpdateCmd = &cobra.Command{
+		Use:     "update",
+		Aliases: []string{"up"},
+		Short:   "Update an integration",
+	}
+)
+
+var (
+	integrationsUpdateCachetFlags          upapi.IntegrationCachet
+	integrationsUpdateDatadogFlags         upapi.IntegrationDatadog
+	integrationsUpdateGeckoboardFlags      upapi.IntegrationGeckoboard
+	integrationsUpdateJiraServicedeskFlags upapi.IntegrationJiraServicedesk
+	integrationsUpdateKlipfolioFlags       upapi.IntegrationKlipfolio
+	integrationsUpdateLibratoFlags         upapi.IntegrationLibrato
+	integrationsUpdateMicrosoftTeamsFlags  upapi.IntegrationMicrosoftTeams
+	integrationsUpdateOpsgenieFlags        upapi.IntegrationOpsgenie
+	integrationsUpdatePagerdutyFlags       upapi.IntegrationPagerduty
+	integrationsUpdatePushbulletFlags      upapi.IntegrationPushbullet
+	integrationsUpdatePushoverFlags        upapi.IntegrationPushover
+	integrationsUpdateSlackFlags           upapi.IntegrationSlack
+	integrationsUpdateStatusFlags          upapi.IntegrationStatus
+	integrationsUpdateStatuspageFlags      upapi.IntegrationStatuspage
+	integrationsUpdateTwitterFlags         upapi.IntegrationTwitter
+	integrationsUpdateVictoropsFlags       upapi.IntegrationVictorops
+	integrationsUpdateWavefrontFlags       upapi.IntegrationWavefront
+	integrationsUpdateWebhookFlags         upapi.IntegrationWebhook
+	integrationsUpdateZapierFlags          upapi.IntegrationZapier
+)
+
+func init() {
+	integrationsUpdateCmd.AddCommand(
+		integrationsUpdateSubcommand("cachet", &integrationsUpdateCachetFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateCachet(ctx, upapi.PrimaryKey(pk), integrationsUpdateCachetFlags)
+		}),
+		integrationsUpdateSubcommand("datadog", &integrationsUpdateDatadogFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateDatadog(ctx, upapi.PrimaryKey(pk), integrationsUpdateDatadogFlags)
+		}),
+		integrationsUpdateSubcommand("geckoboard", &integrationsUpdateGeckoboardFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateGeckoboard(ctx, upapi.PrimaryKey(pk), integrationsUpdateGeckoboardFlags)
+		}),
+		integrationsUpdateSubcommand("jira-servicedesk", &integrationsUpdateJiraServicedeskFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateJiraServiceDesk(ctx, upapi.PrimaryKey(pk), integrationsUpdateJiraServicedeskFlags)
+		}),
+		integrationsUpdateSubcommand("klipfolio", &integrationsUpdateKlipfolioFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateKlipfolio(ctx, upapi.PrimaryKey(pk), integrationsUpdateKlipfolioFlags)
+		}),
+		integrationsUpdateSubcommand("librato", &integrationsUpdateLibratoFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateLibrato(ctx, upapi.PrimaryKey(pk), integrationsUpdateLibratoFlags)
+		}),
+		integrationsUpdateSubcommand("microsoft-teams", &integrationsUpdateMicrosoftTeamsFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateMicrosoftTeams(ctx, upapi.PrimaryKey(pk), integrationsUpdateMicrosoftTeamsFlags)
+		}),
+		integrationsUpdateSubcommand("opsgenie", &integrationsUpdateOpsgenieFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateOpsgenie(ctx, upapi.PrimaryKey(pk), integrationsUpdateOpsgenieFlags)
+		}),
+		integrationsUpdateSubcommand("pagerduty", &integrationsUpdatePagerdutyFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdatePagerduty(ctx, upapi.PrimaryKey(pk), integrationsUpdatePagerdutyFlags)
+		}),
+		integrationsUpdateSubcommand("pushbullet", &integrationsUpdatePushbulletFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdatePushbullet(ctx, upapi.PrimaryKey(pk), integrationsUpdatePushbulletFlags)
+		}),
+		integrationsUpdateSubcommand("pushover", &integrationsUpdatePushoverFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdatePushover(ctx, upapi.PrimaryKey(pk), integrationsUpdatePushoverFlags)
+		}),
+		integrationsUpdateSubcommand("slack", &integrationsUpdateSlackFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateSlack(ctx, upapi.PrimaryKey(pk), integrationsUpdateSlackFlags)
+		}),
+		integrationsUpdateSubcommand("status", &integrationsUpdateStatusFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateStatus(ctx, upapi.PrimaryKey(pk), integrationsUpdateStatusFlags)
+		}),
+		integrationsUpdateSubcommand("statuspage", &integrationsUpdateStatuspageFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateStatuspage(ctx, upapi.PrimaryKey(pk), integrationsUpdateStatuspageFlags)
+		}),
+		integrationsUpdateSubcommand("twitter", &integrationsUpdateTwitterFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateTwitter(ctx, upapi.PrimaryKey(pk), integrationsUpdateTwitterFlags)
+		}),
+		integrationsUpdateSubcommand("victorops", &integrationsUpdateVictoropsFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateVictorops(ctx, upapi.PrimaryKey(pk), integrationsUpdateVictoropsFlags)
+		}),
+		integrationsUpdateSubcommand("wavefront", &integrationsUpdateWavefrontFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateWavefront(ctx, upapi.PrimaryKey(pk), integrationsUpdateWavefrontFlags)
+		}),
+		integrationsUpdateSubcommand("webhook", &integrationsUpdateWebhookFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateWebhook(ctx, upapi.PrimaryKey(pk), integrationsUpdateWebhookFlags)
+		}),
+		integrationsUpdateSubcommand("zapier", &integrationsUpdateZapierFlags, func(ctx context.Context, pk int64) (*upapi.Integration, error) {
+			return api.Integrations().UpdateZapier(ctx, upapi.PrimaryKey(pk), integrationsUpdateZapierFlags)
+		}),
+	)
+	integrationsCmd.AddCommand(integrationsUpdateCmd)
 }
 
 var (
