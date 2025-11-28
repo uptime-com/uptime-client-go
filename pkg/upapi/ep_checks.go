@@ -49,7 +49,7 @@ type Check struct {
 	AlertsURL              string            `json:"alerts_url,omitempty"`
 	Name                   string            `json:"name,omitempty"`
 	CachedResponseTime     float64           `json:"cached_response_time,omitempty"`
-	ContactGroups          []string          `json:"contact_groups"`
+	ContactGroups          *[]string         `json:"contact_groups,omitempty"`
 	CreatedAt              time.Time         `json:"created_at,omitempty"`
 	ModifiedAt             time.Time         `json:"modified_at,omitempty"`
 	Locations              []string          `json:"locations,omitempty"`
@@ -429,7 +429,7 @@ func (c checksNestedEndpointCBD) BuildRequest(ctx context.Context, method string
 
 type CheckAPI struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -460,7 +460,7 @@ func (c checksEndpointAPIImpl) UpdateAPI(ctx context.Context, pk PrimaryKeyable,
 
 type CheckBlacklist struct {
 	Name          string          `json:"name,omitempty"`
-	ContactGroups []string        `json:"contact_groups,omitempty"`
+	ContactGroups *[]string       `json:"contact_groups,omitempty"`
 	Locations     []string        `json:"locations,omitempty"`
 	Tags          []string        `json:"tags,omitempty"`
 	IsPaused      bool            `json:"is_paused"`
@@ -485,7 +485,7 @@ func (c checksEndpointBlacklistImpl) UpdateBlacklist(ctx context.Context, pk Pri
 
 type CheckDNS struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -518,7 +518,7 @@ func (c checksEndpointDNSImpl) UpdateDNS(ctx context.Context, pk PrimaryKeyable,
 
 type CheckGroup struct {
 	Name                   string           `json:"name,omitempty"`
-	ContactGroups          []string         `json:"contact_groups"`
+	ContactGroups          *[]string        `json:"contact_groups,omitempty"`
 	Locations              []string         `json:"locations,omitempty"`
 	Tags                   []string         `json:"tags,omitempty"`
 	IsPaused               bool             `json:"is_paused"`
@@ -544,7 +544,7 @@ func (c checksEndpointGroupImpl) UpdateGroup(ctx context.Context, pk PrimaryKeya
 
 type CheckHeartbeat struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
 	Interval               int64           `json:"msp_interval,omitempty"`
@@ -570,7 +570,7 @@ func (c checksEndpointHeartbeatImpl) UpdateHeartbeat(ctx context.Context, pk Pri
 
 type CheckHTTP struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -612,7 +612,7 @@ func (c checksEndpointHTTPImpl) UpdateHTTP(ctx context.Context, pk PrimaryKeyabl
 
 type CheckICMP struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -642,7 +642,7 @@ func (c checksEndpointICMPImpl) UpdateICMP(ctx context.Context, pk PrimaryKeyabl
 
 type CheckIMAP struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -675,7 +675,7 @@ func (c checksEndpointIMAPImpl) UpdateIMAP(ctx context.Context, pk PrimaryKeyabl
 
 type CheckMalware struct {
 	Name          string          `json:"name,omitempty"`
-	ContactGroups []string        `json:"contact_groups,omitempty"`
+	ContactGroups *[]string       `json:"contact_groups,omitempty"`
 	Locations     []string        `json:"locations,omitempty"`
 	Tags          []string        `json:"tags,omitempty"`
 	IsPaused      bool            `json:"is_paused"`
@@ -700,7 +700,7 @@ func (c checksEndpointMalwareImpl) UpdateMalware(ctx context.Context, pk Primary
 
 type CheckNTP struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -732,7 +732,7 @@ func (c checksEndpointNTPImpl) UpdateNTP(ctx context.Context, pk PrimaryKeyable,
 
 type CheckPOP struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -765,7 +765,7 @@ func (c checksEndpointPOPImpl) UpdatePOP(ctx context.Context, pk PrimaryKeyable,
 
 type CheckRUM struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -791,7 +791,7 @@ func (c checksEndpointRUMImpl) UpdateRUM(ctx context.Context, pk PrimaryKeyable,
 
 type CheckRUM2 struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -817,7 +817,7 @@ func (c checksEndpointRUM2Impl) UpdateRUM2(ctx context.Context, pk PrimaryKeyabl
 
 type CheckSMTP struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -852,7 +852,7 @@ func (c checksEndpointSMTPImpl) UpdateSMTP(ctx context.Context, pk PrimaryKeyabl
 
 type CheckSSH struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -883,7 +883,7 @@ func (c checksEndpointSSHImpl) UpdateSSH(ctx context.Context, pk PrimaryKeyable,
 
 type CheckSSLCert struct {
 	Name          string             `json:"name,omitempty"`
-	ContactGroups []string           `json:"contact_groups,omitempty"`
+	ContactGroups *[]string          `json:"contact_groups,omitempty"`
 	Locations     []string           `json:"locations,omitempty"`
 	Tags          []string           `json:"tags,omitempty"`
 	IsPaused      bool               `json:"is_paused"`
@@ -912,7 +912,7 @@ func (c checksEndpointSSLCertImpl) UpdateSSLCert(ctx context.Context, pk Primary
 
 type CheckTCP struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -946,7 +946,7 @@ func (c checksEndpointTCPImpl) UpdateTCP(ctx context.Context, pk PrimaryKeyable,
 
 type CheckTransaction struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -976,7 +976,7 @@ func (c checksEndpointTransactionImpl) UpdateTransaction(ctx context.Context, pk
 
 type CheckUDP struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -1009,7 +1009,7 @@ func (c checksEndpointUDPImpl) UpdateUDP(ctx context.Context, pk PrimaryKeyable,
 
 type CheckWebhook struct {
 	Name                   string          `json:"name,omitempty"`
-	ContactGroups          []string        `json:"contact_groups,omitempty"`
+	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
 	IsPaused               bool            `json:"is_paused"`
@@ -1035,7 +1035,7 @@ func (c checksEndpointWebhookImpl) UpdateWebhook(ctx context.Context, pk Primary
 
 type CheckWHOIS struct {
 	Name          string          `json:"name,omitempty"`
-	ContactGroups []string        `json:"contact_groups,omitempty"`
+	ContactGroups *[]string       `json:"contact_groups,omitempty"`
 	Locations     []string        `json:"locations,omitempty"`
 	Tags          []string        `json:"tags,omitempty"`
 	IsPaused      bool            `json:"is_paused"`
@@ -1062,7 +1062,7 @@ func (c checksEndpointWHOISImpl) UpdateWHOIS(ctx context.Context, pk PrimaryKeya
 
 type CheckRDAP struct {
 	Name                      string          `json:"name,omitempty"`
-	ContactGroups             []string        `json:"contact_groups,omitempty"`
+	ContactGroups             *[]string       `json:"contact_groups,omitempty"`
 	Locations                 []string        `json:"locations,omitempty"`
 	Tags                      []string        `json:"tags,omitempty"`
 	IsPaused                  bool            `json:"is_paused"`
@@ -1090,7 +1090,7 @@ func (c checksEndpointRDAPImpl) UpdateRDAP(ctx context.Context, pk PrimaryKeyabl
 
 type CheckPageSpeed struct {
 	Name          string               `json:"name,omitempty"`
-	ContactGroups []string             `json:"contact_groups,omitempty"`
+	ContactGroups *[]string            `json:"contact_groups,omitempty"`
 	Locations     []string             `json:"locations,omitempty"`
 	Tags          []string             `json:"tags,omitempty"`
 	IsPaused      bool                 `json:"is_paused"`
@@ -1138,7 +1138,7 @@ type CheckMaintenance struct {
 type CheckEscalation struct {
 	WaitTime      int      `json:"wait_time"`
 	NumRepeats    int      `json:"num_repeats"`
-	ContactGroups []string `json:"contact_groups"`
+	ContactGroups *[]string `json:"contact_groups,omitempty"`
 }
 
 type CheckEscalations struct {
