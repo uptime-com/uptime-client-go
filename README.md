@@ -2,6 +2,35 @@
 
 A Go client library for Uptime.com
 
+## Breaking Changes
+
+### v2.5.0
+
+The `ContactGroups` field type has changed from `[]string` to `*[]string` across all check types to properly support PATCH requests.
+
+**Migration:**
+```go
+// Before (v2.4.x and earlier)
+check := upapi.CheckHTTP{
+    ContactGroups: []string{"Default"},
+}
+
+// After (v2.5.0+)
+check := upapi.CheckHTTP{
+    ContactGroups: &[]string{"Default"},
+}
+
+// To explicitly set empty contact groups (clears the field)
+check := upapi.CheckHTTP{
+    ContactGroups: &[]string{},
+}
+
+// To omit the field (useful for PATCH - won't update the field)
+check := upapi.CheckHTTP{
+    ContactGroups: nil,
+}
+```
+
 ## Supported resources:
 
 * Checks

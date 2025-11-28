@@ -30,7 +30,17 @@ func Bind(fs FlagSet, obj any) error {
 			continue
 		}
 		vf := v.FieldByName(tf.Name)
-		if tf.Type.Kind() == reflect.Ptr && vf.IsNil() {
+		// Handle *[]string specially - initialize and bind to the inner slice
+		if tf.Type.Kind() == reflect.Ptr && tf.Type.Elem().Kind() == reflect.Slice && tf.Type.Elem().Elem().Kind() == reflect.String {
+			// Initialize the pointer to an empty slice if nil
+			if vf.IsNil() {
+				// Create pointer and set to empty slice (not nil slice)
+				newPtr := reflect.New(tf.Type.Elem())
+				newPtr.Elem().Set(reflect.MakeSlice(tf.Type.Elem(), 0, 0))
+				vf.Set(newPtr)
+			}
+			// Fall through to bind the slice
+		} else if tf.Type.Kind() == reflect.Ptr && vf.IsNil() {
 			continue
 		}
 		flag, short, usage := tf.Tag.Get("flag"), tf.Tag.Get("short"), tf.Tag.Get("usage")
@@ -66,6 +76,15 @@ func Bind(fs FlagSet, obj any) error {
 			fs.BoolVarP(ptr, flag, short, val, usage)
 		case t.Field(i).Type.Kind() == reflect.Slice && t.Field(i).Type.Elem().Kind() == reflect.String:
 			ptr, val := ptrVal[[]string](vf)
+			fs.StringSliceVarP(ptr, flag, short, val, usage)
+		// Handle *[]string - pointer to string slice (already initialized above)
+		case t.Field(i).Type.Kind() == reflect.Ptr && t.Field(i).Type.Elem().Kind() == reflect.Slice && t.Field(i).Type.Elem().Elem().Kind() == reflect.String:
+			innerSlice := vf.Elem()
+			ptr := innerSlice.Addr().Interface().(*[]string)
+			var val []string
+			if !innerSlice.IsNil() {
+				val = innerSlice.Interface().([]string)
+			}
 			fs.StringSliceVarP(ptr, flag, short, val, usage)
 		// recurse into structs and pointers
 		case t.Field(i).Type.Kind() == reflect.Ptr:
