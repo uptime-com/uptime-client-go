@@ -185,3 +185,58 @@ func TestWithSubaccountIgnoreEmpty(t *testing.T) {
 
 	cbdm.AssertExpectations(t)
 }
+
+func TestWithRetryPreservesBody(t *testing.T) {
+	const bodyContent = `{"name":"test-check"}`
+
+	var capturedBodies []string
+	cbdm := new(cbdMock)
+
+	// First call returns 429
+	cbdm.
+		On("Do", mock.Anything).
+		Once().
+		Run(func(args mock.Arguments) {
+			rq := args.Get(0).(*http.Request)
+			body, err := io.ReadAll(rq.Body)
+			require.NoError(t, err)
+			capturedBodies = append(capturedBodies, string(body))
+		}).
+		Return(&http.Response{
+			StatusCode: http.StatusTooManyRequests,
+			Header:     http.Header{"Retry-After": []string{"0"}},
+			Body:       io.NopCloser(strings.NewReader("")),
+		}, nil)
+
+	// Second call returns 200
+	cbdm.
+		On("Do", mock.Anything).
+		Once().
+		Run(func(args mock.Arguments) {
+			rq := args.Get(0).(*http.Request)
+			body, err := io.ReadAll(rq.Body)
+			require.NoError(t, err)
+			capturedBodies = append(capturedBodies, string(body))
+		}).
+		Return(&http.Response{
+			StatusCode: http.StatusOK,
+			Body:       io.NopCloser(strings.NewReader("{}")),
+		}, nil)
+
+	cbd, err := WithRetry(3, time.Second, nil)(cbdm)
+	require.NoError(t, err)
+
+	rq, err := http.NewRequest(http.MethodPost, "/", strings.NewReader(bodyContent))
+	require.NoError(t, err)
+
+	rs, err := cbd.Do(rq)
+	require.NoError(t, err)
+	require.Equal(t, http.StatusOK, rs.StatusCode)
+
+	// Verify the body was preserved on both attempts
+	require.Len(t, capturedBodies, 2, "expected 2 attempts")
+	require.Equal(t, bodyContent, capturedBodies[0], "first attempt body should match")
+	require.Equal(t, bodyContent, capturedBodies[1], "retry attempt body should match (was previously empty due to bug)")
+
+	cbdm.AssertExpectations(t)
+}

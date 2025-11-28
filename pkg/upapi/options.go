@@ -209,6 +209,21 @@ type autoRetryCBD struct {
 }
 
 func (r *autoRetryCBD) Do(rq *http.Request) (*http.Response, error) {
+	var bodyBytes []byte
+	if rq.Body != nil {
+		var err error
+		bodyBytes, err = io.ReadAll(rq.Body)
+		if err != nil {
+			return nil, err
+		}
+		rq.Body.Close()
+		rq.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+	}
+
+	return r.doWithRetry(rq, bodyBytes)
+}
+
+func (r *autoRetryCBD) doWithRetry(rq *http.Request, bodyBytes []byte) (*http.Response, error) {
 	rs, err := r.CBD.Do(rq)
 	if err != nil {
 		return nil, err
@@ -238,8 +253,12 @@ func (r *autoRetryCBD) Do(rq *http.Request) (*http.Response, error) {
 
 	r.log.Printf("proceeding, %d attempts left", r.countdown)
 
+	if bodyBytes != nil {
+		rq.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+	}
+
 	r.countdown--
-	return r.Do(rq)
+	return r.doWithRetry(rq, bodyBytes)
 }
 
 type withSubaccountCBD struct {
