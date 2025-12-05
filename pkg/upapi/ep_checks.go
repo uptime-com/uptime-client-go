@@ -1131,8 +1131,9 @@ type CheckMaintenanceSchedule struct {
 }
 
 type CheckMaintenance struct {
-	State    string                     `json:"state,omitempty"`
-	Schedule []CheckMaintenanceSchedule `json:"schedule,omitempty"`
+	State                       string                     `json:"state,omitempty"`
+	Schedule                    []CheckMaintenanceSchedule `json:"schedule,omitempty"`
+	PauseOnScheduledMaintenance *bool                      `json:"pause_on_scheduled_maintenance,omitempty"`
 }
 
 type CheckEscalation struct {
