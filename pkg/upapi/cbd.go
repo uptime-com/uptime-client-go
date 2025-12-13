@@ -32,7 +32,7 @@ type CBD interface {
 type requestBuilderImpl struct{}
 
 func (r *requestBuilderImpl) BuildRequest(ctx context.Context, method string, endpoint string, args any, data any) (*http.Request, error) {
-	var body io.ReadCloser
+	var body io.Reader
 	if data != nil {
 		buf := bytes.NewBuffer(nil)
 		enc := json.NewEncoder(buf)
@@ -41,7 +41,7 @@ func (r *requestBuilderImpl) BuildRequest(ctx context.Context, method string, en
 		if err != nil {
 			return nil, err
 		}
-		body = io.NopCloser(buf)
+		body = bytes.NewReader(buf.Bytes())
 	}
 	rq, err := http.NewRequestWithContext(ctx, method, endpoint, body)
 	if err != nil {
