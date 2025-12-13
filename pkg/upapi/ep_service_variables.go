@@ -43,6 +43,10 @@ func (r ServiceVariableListResponse) List() []ServiceVariable {
 	return r.Results
 }
 
+func (r ServiceVariableListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type ServiceVariableListOptions struct {
 	Page     int64  `url:"page,omitempty"`
 	PageSize int64  `url:"page_size,omitempty"`
@@ -81,7 +85,7 @@ type ServiceVariableUpdateRequest struct {
 }
 
 type ServiceVariablesEndpoint interface {
-	List(context.Context, ServiceVariableListOptions) ([]ServiceVariable, error)
+	List(context.Context, ServiceVariableListOptions) (*ListResult[ServiceVariable], error)
 	Create(context.Context, ServiceVariableCreateRequest) (*ServiceVariable, error)
 	Get(context.Context, PrimaryKeyable) (*ServiceVariable, error)
 	Update(context.Context, PrimaryKeyable, ServiceVariableUpdateRequest) (*ServiceVariable, error)

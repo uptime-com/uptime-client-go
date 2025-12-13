@@ -25,5 +25,9 @@ func init() {
 }
 
 func probeservers(ctx context.Context) ([]upapi.ProbeServer, error) {
-	return api.ProbeServers().List(ctx)
+	result, err := api.ProbeServers().List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }

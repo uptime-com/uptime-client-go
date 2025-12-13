@@ -43,7 +43,11 @@ func init() {
 }
 
 func credentialsList(ctx context.Context) ([]upapi.Credential, error) {
-	return api.Credentials().List(ctx, credentialsListFlags)
+	result, err := api.Credentials().List(ctx, credentialsListFlags)
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }
 
 var (

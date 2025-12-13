@@ -36,6 +36,10 @@ func (r ContactListResponse) List() []Contact {
 	return r.Results
 }
 
+func (r ContactListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type ContactResponse Contact
 
 func (r ContactResponse) Item() Contact {
@@ -51,7 +55,7 @@ func (r ContactCreateUpdateResponse) Item() Contact {
 }
 
 type ContactsEndpoint interface {
-	List(context.Context, ContactListOptions) ([]Contact, error)
+	List(context.Context, ContactListOptions) (*ListResult[Contact], error)
 	Create(context.Context, Contact) (*Contact, error)
 	Update(context.Context, PrimaryKeyable, Contact) (*Contact, error)
 	Get(context.Context, PrimaryKeyable) (*Contact, error)

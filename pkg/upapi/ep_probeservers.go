@@ -19,8 +19,12 @@ func (r ProbeServerListResponse) List() []ProbeServer {
 	return r
 }
 
+func (r ProbeServerListResponse) CountItems() int64 {
+	return int64(len(r))
+}
+
 type ProbeServersEndpoint interface {
-	List(ctx context.Context) ([]ProbeServer, error)
+	List(ctx context.Context) (*ListResult[ProbeServer], error)
 }
 
 func NewProbeServersEndpoint(cbd CBD) ProbeServersEndpoint {
@@ -33,6 +37,6 @@ type probeServersEndpointImpl struct {
 	EndpointLister[ProbeServerListResponse, ProbeServer, ProbeServerListOptions]
 }
 
-func (p probeServersEndpointImpl) List(ctx context.Context) ([]ProbeServer, error) {
+func (p probeServersEndpointImpl) List(ctx context.Context) (*ListResult[ProbeServer], error) {
 	return p.EndpointLister.List(ctx, ProbeServerListOptions{})
 }

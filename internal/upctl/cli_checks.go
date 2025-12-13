@@ -47,7 +47,11 @@ func init() {
 }
 
 func checksList(ctx context.Context) ([]upapi.Check, error) {
-	return api.Checks().List(ctx, checksListFlags)
+	result, err := api.Checks().List(ctx, checksListFlags)
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }
 
 var (
@@ -347,5 +351,9 @@ func checksStats(ctx context.Context, pkstr string) ([]upapi.CheckStats, error) 
 	if err != nil {
 		return nil, err
 	}
-	return api.Checks().Stats(ctx, upapi.PrimaryKey(pk), checksStatsFlags)
+	result, err := api.Checks().Stats(ctx, upapi.PrimaryKey(pk), checksStatsFlags)
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }

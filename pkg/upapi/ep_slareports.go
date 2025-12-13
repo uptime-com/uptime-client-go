@@ -84,6 +84,10 @@ func (r SLAReportListResponse) List() []SLAReport {
 	return r.Results
 }
 
+func (r SLAReportListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type SLAReportResponse SLAReport
 
 func (r SLAReportResponse) Item() SLAReport {
@@ -99,7 +103,7 @@ func (r SLAReportCreateUpdateResponse) Item() SLAReport {
 }
 
 type SLAReportsEndpoint interface {
-	List(context.Context, SLAReportListOptions) ([]SLAReport, error)
+	List(context.Context, SLAReportListOptions) (*ListResult[SLAReport], error)
 	Create(context.Context, SLAReport) (*SLAReport, error)
 	Update(context.Context, PrimaryKeyable, SLAReport) (*SLAReport, error)
 	Get(context.Context, PrimaryKeyable) (*SLAReport, error)

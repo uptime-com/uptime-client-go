@@ -46,7 +46,11 @@ func init() {
 }
 
 func serviceVariablesList(ctx context.Context) ([]upapi.ServiceVariable, error) {
-	return api.ServiceVariables().List(ctx, serviceVariablesListFlags)
+	result, err := api.ServiceVariables().List(ctx, serviceVariablesListFlags)
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }
 
 var (

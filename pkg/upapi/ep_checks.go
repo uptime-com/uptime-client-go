@@ -115,6 +115,10 @@ func (r CheckListResponse) List() []Check {
 	return r.Results
 }
 
+func (r CheckListResponse) CountItems() int64 {
+	return r.Count
+}
+
 // CheckListOptions specifies the optional parameters to the CheckService.List method.
 type CheckListOptions struct {
 	Page                  int64    `url:"page,omitempty"`
@@ -162,6 +166,10 @@ func (c CheckStatsResponse) List() []CheckStats {
 	return c.Statistics
 }
 
+func (c CheckStatsResponse) CountItems() int64 {
+	return int64(len(c.Statistics))
+}
+
 type CheckStats struct {
 	Date                   string   `json:"date"`
 	Outages                int64    `json:"outages"`
@@ -172,10 +180,10 @@ type CheckStats struct {
 }
 
 type ChecksEndpoint interface {
-	List(context.Context, CheckListOptions) ([]Check, error)
+	List(context.Context, CheckListOptions) (*ListResult[Check], error)
 	Get(context.Context, PrimaryKeyable) (*Check, error)
 	Delete(context.Context, PrimaryKeyable) error
-	Stats(context.Context, PrimaryKeyable, CheckStatsOptions) ([]CheckStats, error)
+	Stats(context.Context, PrimaryKeyable, CheckStatsOptions) (*ListResult[CheckStats], error)
 
 	CreateAPI(context.Context, CheckAPI) (*Check, error)
 	UpdateAPI(context.Context, PrimaryKeyable, CheckAPI) (*Check, error)
@@ -406,7 +414,7 @@ type checksStatsEndpointImpl struct {
 	endpoint EndpointLister[CheckStatsResponse, CheckStats, CheckStatsOptions]
 }
 
-func (c *checksEndpointImpl) Stats(ctx context.Context, pk PrimaryKeyable, opts CheckStatsOptions) ([]CheckStats, error) {
+func (c *checksEndpointImpl) Stats(ctx context.Context, pk PrimaryKeyable, opts CheckStatsOptions) (*ListResult[CheckStats], error) {
 	ctx = context.WithValue(ctx, checksPKCtxKey{}, pk)
 	return c.endpoint.List(ctx, opts)
 }

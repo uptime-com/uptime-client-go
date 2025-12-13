@@ -45,8 +45,12 @@ func init() {
 }
 
 func outagesList(ctx context.Context) ([]upapi.Outage, error) {
-	return api.Outages().List(ctx, upapi.OutageListOptions{
+	result, err := api.Outages().List(ctx, upapi.OutageListOptions{
 		PageSize: 100,
 		Page:     outagesListFlags.Page,
 	})
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }

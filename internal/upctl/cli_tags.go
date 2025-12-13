@@ -46,10 +46,14 @@ func init() {
 }
 
 func tagsList(ctx context.Context) ([]upapi.Tag, error) {
-	return api.Tags().List(ctx, upapi.TagListOptions{
+	result, err := api.Tags().List(ctx, upapi.TagListOptions{
 		PageSize: 100,
 		Page:     tagsListFlags.Page,
 	})
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }
 
 var (

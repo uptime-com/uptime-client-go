@@ -48,6 +48,10 @@ func (r DashboardListResponse) List() []Dashboard {
 	return r.Results
 }
 
+func (r DashboardListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type DashboardResponse Dashboard
 
 func (d DashboardResponse) Item() Dashboard {
@@ -63,7 +67,7 @@ func (r DashboardCreateUpdateResponse) Item() Dashboard {
 }
 
 type DashboardsEndpoint interface {
-	List(context.Context, DashboardListOptions) ([]Dashboard, error)
+	List(context.Context, DashboardListOptions) (*ListResult[Dashboard], error)
 	Create(context.Context, Dashboard) (*Dashboard, error)
 	Update(context.Context, PrimaryKeyable, Dashboard) (*Dashboard, error)
 	Get(context.Context, PrimaryKeyable) (*Dashboard, error)

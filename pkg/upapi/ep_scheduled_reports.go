@@ -38,6 +38,10 @@ func (r ScheduledReportListResponse) List() []ScheduledReport {
 	return r.Results
 }
 
+func (r ScheduledReportListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type ScheduledReportResponse ScheduledReport
 
 func (r ScheduledReportResponse) Item() ScheduledReport {
@@ -53,7 +57,7 @@ func (r ScheduledReportCreateUpdateResponse) Item() ScheduledReport {
 }
 
 type ScheduledReportsEndpoint interface {
-	List(context.Context, ScheduledReportListOptions) ([]ScheduledReport, error)
+	List(context.Context, ScheduledReportListOptions) (*ListResult[ScheduledReport], error)
 	Create(context.Context, ScheduledReport) (*ScheduledReport, error)
 	Update(context.Context, PrimaryKeyable, ScheduledReport) (*ScheduledReport, error)
 	Get(context.Context, PrimaryKeyable) (*ScheduledReport, error)

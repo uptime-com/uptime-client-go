@@ -73,6 +73,10 @@ func (r StatusPageListResponse) List() []StatusPage {
 	return r.Results
 }
 
+func (r StatusPageListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type StatusPageResponse StatusPage
 
 func (r StatusPageResponse) Item() StatusPage {
@@ -88,7 +92,7 @@ func (r StatusPageCreateUpdateResponse) Item() StatusPage {
 }
 
 type StatusPagesEndpoint interface {
-	List(context.Context, StatusPageListOptions) ([]StatusPage, error)
+	List(context.Context, StatusPageListOptions) (*ListResult[StatusPage], error)
 	Create(context.Context, StatusPage) (*StatusPage, error)
 	Update(context.Context, PrimaryKeyable, StatusPage) (*StatusPage, error)
 	Get(context.Context, PrimaryKeyable) (*StatusPage, error)
