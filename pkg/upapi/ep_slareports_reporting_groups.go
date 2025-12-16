@@ -23,6 +23,10 @@ func (r SLAReportGroupListResponse) List() []SLAReportGroup {
 	return r.Results
 }
 
+func (r SLAReportGroupListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type SLAReportGroupResponse SLAReportGroup
 
 func (r SLAReportGroupResponse) Item() SLAReportGroup {
@@ -54,7 +58,7 @@ type SLAReportGroupListOptions struct {
 
 type SLAReportsGroupsEndpoint interface {
 	Create(context.Context, SLAReportGroup) (*SLAReportGroup, error)
-	List(context.Context, SLAReportGroupListOptions) ([]SLAReportGroup, error)
+	List(context.Context, SLAReportGroupListOptions) (*ListResult[SLAReportGroup], error)
 	Get(context.Context, PrimaryKeyable) (*SLAReportGroup, error)
 	Delete(context.Context, PrimaryKeyable) error
 }

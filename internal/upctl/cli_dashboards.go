@@ -43,7 +43,11 @@ func init() {
 }
 
 func dashboardsList(ctx context.Context) ([]upapi.Dashboard, error) {
-	return api.Dashboards().List(ctx, dashboardsListFlags)
+	result, err := api.Dashboards().List(ctx, dashboardsListFlags)
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }
 
 var (

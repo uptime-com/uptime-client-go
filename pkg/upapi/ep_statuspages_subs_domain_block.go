@@ -22,6 +22,10 @@ func (r StatusPageSubsDomainBlockListListResponse) List() []StatusPageSubsDomain
 	return r.Results
 }
 
+func (r StatusPageSubsDomainBlockListListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type StatusPageSubsDomainBlockListResponse StatusPageSubsDomainBlockList
 
 func (r StatusPageSubsDomainBlockListResponse) Item() StatusPageSubsDomainBlockList {
@@ -45,7 +49,7 @@ type StatusPageSubsDomainBlockListListOptions struct {
 
 type StatusPageSubsDomainBlockListEndpoint interface {
 	Create(context.Context, StatusPageSubsDomainBlockList) (*StatusPageSubsDomainBlockList, error)
-	List(context.Context, StatusPageSubsDomainBlockListListOptions) ([]StatusPageSubsDomainBlockList, error)
+	List(context.Context, StatusPageSubsDomainBlockListListOptions) (*ListResult[StatusPageSubsDomainBlockList], error)
 	Update(context.Context, PrimaryKeyable, StatusPageSubsDomainBlockList) (*StatusPageSubsDomainBlockList, error)
 	Get(context.Context, PrimaryKeyable) (*StatusPageSubsDomainBlockList, error)
 	Delete(context.Context, PrimaryKeyable) error

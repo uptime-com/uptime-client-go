@@ -46,6 +46,10 @@ func (r UserListResponse) List() []User {
 	return r.Results
 }
 
+func (r UserListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type UserListOptions struct {
 	Page        int64  `url:"page,omitempty"`
 	PageSize    int64  `url:"page_size,omitempty"`
@@ -97,7 +101,7 @@ type UserUpdateRequest struct {
 }
 
 type UsersEndpoint interface {
-	List(context.Context, UserListOptions) ([]User, error)
+	List(context.Context, UserListOptions) (*ListResult[User], error)
 	Create(context.Context, UserCreateRequest) (*User, error)
 	Get(context.Context, PrimaryKeyable) (*User, error)
 	Update(context.Context, PrimaryKeyable, UserUpdateRequest) (*User, error)

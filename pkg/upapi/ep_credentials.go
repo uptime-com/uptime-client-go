@@ -46,6 +46,10 @@ func (r CredentialListResponse) List() []Credential {
 	return r.Results
 }
 
+func (r CredentialListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type CredentialResponse Credential
 
 func (r CredentialResponse) Item() Credential {
@@ -61,7 +65,7 @@ func (r CredentialCreateUpdateResponse) Item() Credential {
 }
 
 type CredentialEndpoint interface {
-	List(context.Context, CredentialListOptions) ([]Credential, error)
+	List(context.Context, CredentialListOptions) (*ListResult[Credential], error)
 	Create(context.Context, Credential) (*Credential, error)
 	Update(context.Context, PrimaryKeyable, Credential) (*Credential, error)
 	Get(context.Context, PrimaryKeyable) (*Credential, error)

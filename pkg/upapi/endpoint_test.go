@@ -36,6 +36,10 @@ func (r testListResponse) List() []testItem {
 	return r.Results
 }
 
+func (r testListResponse) CountItems() int64 {
+	return int64(r.Count)
+}
+
 type testOptions struct {
 	Page int `url:"page,omitempty"`
 }
@@ -91,11 +95,12 @@ func TestEndpointLister(t *testing.T) {
 
 	ep := NewEndpointLister[testListResponse, testItem, testOptions](c, "items")
 
-	list, err := ep.List(ctx, testOptions{Page: 100500})
+	result, err := ep.List(ctx, testOptions{Page: 100500})
 	require.NoError(t, err)
-	require.Len(t, list, 2)
-	require.Equal(t, testItem{"foo1", 1, true}, list[0])
-	require.Equal(t, testItem{"foo2", 2, false}, list[1])
+	require.Equal(t, int64(2), result.TotalCount)
+	require.Len(t, result.Items, 2)
+	require.Equal(t, testItem{"foo1", 1, true}, result.Items[0])
+	require.Equal(t, testItem{"foo2", 2, false}, result.Items[1])
 }
 
 func TestEndpointCreator(t *testing.T) {

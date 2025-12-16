@@ -46,10 +46,14 @@ func init() {
 }
 
 func scheduledReportsList(ctx context.Context) ([]upapi.ScheduledReport, error) {
-	return api.ScheduledReports().List(ctx, upapi.ScheduledReportListOptions{
+	result, err := api.ScheduledReports().List(ctx, upapi.ScheduledReportListOptions{
 		PageSize: 100,
 		Page:     scheduledReportsListFlags.Page,
 	})
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }
 
 var (

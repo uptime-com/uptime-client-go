@@ -22,6 +22,10 @@ func (r StatusPageSubsDomainAllowListListResponse) List() []StatusPageSubsDomain
 	return r.Results
 }
 
+func (r StatusPageSubsDomainAllowListListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type StatusPageSubsDomainAllowListResponse StatusPageSubsDomainAllowList
 
 func (r StatusPageSubsDomainAllowListResponse) Item() StatusPageSubsDomainAllowList {
@@ -45,7 +49,7 @@ type StatusPageSubsDomainAllowListListOptions struct {
 
 type StatusPageSubsDomainAllowListEndpoint interface {
 	Create(context.Context, StatusPageSubsDomainAllowList) (*StatusPageSubsDomainAllowList, error)
-	List(context.Context, StatusPageSubsDomainAllowListListOptions) ([]StatusPageSubsDomainAllowList, error)
+	List(context.Context, StatusPageSubsDomainAllowListListOptions) (*ListResult[StatusPageSubsDomainAllowList], error)
 	Update(context.Context, PrimaryKeyable, StatusPageSubsDomainAllowList) (*StatusPageSubsDomainAllowList, error)
 	Get(context.Context, PrimaryKeyable) (*StatusPageSubsDomainAllowList, error)
 	Delete(context.Context, PrimaryKeyable) error

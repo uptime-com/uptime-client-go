@@ -46,7 +46,11 @@ func init() {
 }
 
 func integrationsList(ctx context.Context) ([]upapi.Integration, error) {
-	return api.Integrations().List(ctx, integrationsListFlags)
+	result, err := api.Integrations().List(ctx, integrationsListFlags)
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }
 
 var (

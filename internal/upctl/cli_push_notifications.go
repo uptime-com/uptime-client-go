@@ -46,7 +46,11 @@ func init() {
 }
 
 func pushNotificationsList(ctx context.Context) ([]upapi.PushNotificationProfile, error) {
-	return api.PushNotifications().List(ctx, pushNotificationsListFlags)
+	result, err := api.PushNotifications().List(ctx, pushNotificationsListFlags)
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }
 
 var (

@@ -12,6 +12,13 @@ type Itemable[Item any] interface {
 
 type Listable[Item any] interface {
 	List() []Item
+	CountItems() int64
+}
+
+// ListResult contains items and total count from list responses.
+type ListResult[Item any] struct {
+	Items      []Item
+	TotalCount int64
 }
 
 type PrimaryKeyable interface {
@@ -62,7 +69,7 @@ func (p *endpointGetterImpl[ResponseType, ItemType]) Get(ctx context.Context, pk
 
 // EndpointLister is a generic interface for listing items from an endpoint.
 type EndpointLister[ResponseType Listable[ItemType], ItemType any, OptionsType any] interface {
-	List(ctx context.Context, opts OptionsType) ([]ItemType, error)
+	List(ctx context.Context, opts OptionsType) (*ListResult[ItemType], error)
 }
 
 func NewEndpointLister[ResponseType Listable[ItemType], ItemType any, OptionsType any](cbd CBD, endpoint string) EndpointLister[Listable[ItemType], ItemType, OptionsType] {
@@ -74,7 +81,7 @@ type endpointListerImpl[ResponseType Listable[ItemType], ItemType any, OptionsTy
 	endpoint string
 }
 
-func (p *endpointListerImpl[ResponseType, ItemType, OptionsType]) List(ctx context.Context, opts OptionsType) ([]ItemType, error) {
+func (p *endpointListerImpl[ResponseType, ItemType, OptionsType]) List(ctx context.Context, opts OptionsType) (*ListResult[ItemType], error) {
 	rq, err := p.BuildRequest(ctx, http.MethodGet, fmt.Sprintf("%s/", p.endpoint), opts, nil)
 	if err != nil {
 		return nil, err
@@ -92,7 +99,10 @@ func (p *endpointListerImpl[ResponseType, ItemType, OptionsType]) List(ctx conte
 	if err != nil {
 		return nil, err
 	}
-	return data.List(), nil
+	return &ListResult[ItemType]{
+		Items:      data.List(),
+		TotalCount: data.CountItems(),
+	}, nil
 }
 
 // EndpointCreator is a generic interface for creating an item from an endpoint.

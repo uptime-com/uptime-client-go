@@ -45,7 +45,11 @@ func init() {
 }
 
 func contactsList(ctx context.Context) ([]upapi.Contact, error) {
-	return api.Contacts().List(ctx, contactsListFlags)
+	result, err := api.Contacts().List(ctx, contactsListFlags)
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }
 
 var (

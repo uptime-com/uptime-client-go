@@ -31,6 +31,10 @@ func (r PushNotificationProfileListResponse) List() []PushNotificationProfile {
 	return r.Results
 }
 
+func (r PushNotificationProfileListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type PushNotificationProfileListOptions struct {
 	Page     int64  `url:"page,omitempty"`
 	PageSize int64  `url:"page_size,omitempty"`
@@ -67,7 +71,7 @@ type PushNotificationProfileUpdateRequest struct {
 }
 
 type PushNotificationsEndpoint interface {
-	List(context.Context, PushNotificationProfileListOptions) ([]PushNotificationProfile, error)
+	List(context.Context, PushNotificationProfileListOptions) (*ListResult[PushNotificationProfile], error)
 	Create(context.Context, PushNotificationProfileCreateRequest) (*PushNotificationProfile, error)
 	Get(context.Context, PrimaryKeyable) (*PushNotificationProfile, error)
 	Update(context.Context, PrimaryKeyable, PushNotificationProfileUpdateRequest) (*PushNotificationProfile, error)

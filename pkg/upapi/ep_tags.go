@@ -26,6 +26,10 @@ func (r TagListResponse) List() []Tag {
 	return r.Results
 }
 
+func (r TagListResponse) CountItems() int64 {
+	return r.Count
+}
+
 // TagListOptions specifies the optional parameters to tag listing API call.
 type TagListOptions struct {
 	Page     int64  `url:"page,omitempty"`
@@ -51,7 +55,7 @@ func (t TagCreateUpdateResponse) Item() Tag {
 }
 
 type TagsEndpoint interface {
-	List(context.Context, TagListOptions) ([]Tag, error)
+	List(context.Context, TagListOptions) (*ListResult[Tag], error)
 	Create(context.Context, Tag) (*Tag, error)
 	Get(context.Context, PrimaryKeyable) (*Tag, error)
 	Update(context.Context, PrimaryKeyable, Tag) (*Tag, error)

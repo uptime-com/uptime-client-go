@@ -41,6 +41,10 @@ func (r StatusPageStatusHistoryListResponse) List() []StatusPageStatusHistory {
 	return r.Results
 }
 
+func (r StatusPageStatusHistoryListResponse) CountItems() int64 {
+	return r.Count
+}
+
 // StatusPageStatusHistoryResponse wraps a single status history item
 type StatusPageStatusHistoryResponse StatusPageStatusHistory
 
@@ -50,7 +54,7 @@ func (r StatusPageStatusHistoryResponse) Item() StatusPageStatusHistory {
 
 // StatusPageStatusHistoryEndpoint provides access to status page status history
 type StatusPageStatusHistoryEndpoint interface {
-	List(context.Context, StatusPageStatusHistoryListOptions) ([]StatusPageStatusHistory, error)
+	List(context.Context, StatusPageStatusHistoryListOptions) (*ListResult[StatusPageStatusHistory], error)
 	Get(context.Context, PrimaryKeyable) (*StatusPageStatusHistory, error)
 }
 

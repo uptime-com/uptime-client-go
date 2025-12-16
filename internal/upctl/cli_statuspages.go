@@ -46,10 +46,14 @@ func init() {
 }
 
 func statusPagesList(ctx context.Context) ([]upapi.StatusPage, error) {
-	return api.StatusPages().List(ctx, upapi.StatusPageListOptions{
+	result, err := api.StatusPages().List(ctx, upapi.StatusPageListOptions{
 		PageSize: 100,
 		Page:     statusPagesListFlags.Page,
 	})
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }
 
 var (
@@ -196,7 +200,11 @@ func statusPagesStatusHistoryList(ctx context.Context, pkstr string) ([]upapi.St
 	if err != nil {
 		return nil, err
 	}
-	return api.StatusPages().StatusHistory(upapi.PrimaryKey(pk)).List(ctx, statusPagesStatusHistoryListFlags)
+	result, err := api.StatusPages().StatusHistory(upapi.PrimaryKey(pk)).List(ctx, statusPagesStatusHistoryListFlags)
+	if err != nil {
+		return nil, err
+	}
+	return result.Items, nil
 }
 
 var (

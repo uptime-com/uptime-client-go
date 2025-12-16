@@ -24,6 +24,10 @@ func (r StatusPageSubscriberListResponse) List() []StatusPageSubscriber {
 	return r.Results
 }
 
+func (r StatusPageSubscriberListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type StatusPageSubscriberResponse StatusPageSubscriber
 
 func (r StatusPageSubscriberResponse) Item() StatusPageSubscriber {
@@ -47,7 +51,7 @@ type StatusPageSubscriberListOptions struct {
 
 type StatusPageSubscriberEndpoint interface {
 	Create(context.Context, StatusPageSubscriber) (*StatusPageSubscriber, error)
-	List(context.Context, StatusPageSubscriberListOptions) ([]StatusPageSubscriber, error)
+	List(context.Context, StatusPageSubscriberListOptions) (*ListResult[StatusPageSubscriber], error)
 	Get(context.Context, PrimaryKeyable) (*StatusPageSubscriber, error)
 	Delete(context.Context, PrimaryKeyable) error
 }

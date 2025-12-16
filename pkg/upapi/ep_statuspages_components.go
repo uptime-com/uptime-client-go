@@ -30,6 +30,10 @@ func (r StatusPageComponentListResponse) List() []StatusPageComponent {
 	return r.Results
 }
 
+func (r StatusPageComponentListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type StatusPageComponentResponse StatusPageComponent
 
 func (r StatusPageComponentResponse) Item() StatusPageComponent {
@@ -54,7 +58,7 @@ type StatusPageComponentListOptions struct {
 type StatusPageComponentEndpoint interface {
 	Create(context.Context, StatusPageComponent) (*StatusPageComponent, error)
 	Update(context.Context, PrimaryKeyable, StatusPageComponent) (*StatusPageComponent, error)
-	List(context.Context, StatusPageComponentListOptions) ([]StatusPageComponent, error)
+	List(context.Context, StatusPageComponentListOptions) (*ListResult[StatusPageComponent], error)
 	Get(context.Context, PrimaryKeyable) (*StatusPageComponent, error)
 	Delete(context.Context, PrimaryKeyable) error
 }

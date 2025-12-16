@@ -50,6 +50,10 @@ func (o OutageListResponse) List() []Outage {
 	return o.Results
 }
 
+func (o OutageListResponse) CountItems() int64 {
+	return o.Count
+}
+
 type OutageResponse Outage
 
 func (o OutageResponse) Item() Outage {
@@ -67,7 +71,7 @@ type OutageListOptions struct {
 }
 
 type OutagesEndpoint interface {
-	List(context.Context, OutageListOptions) ([]Outage, error)
+	List(context.Context, OutageListOptions) (*ListResult[Outage], error)
 	Get(context.Context, PrimaryKeyable) (*Outage, error)
 }
 

@@ -60,6 +60,10 @@ func (r StatusPageIncidentListResponse) List() []StatusPageIncident {
 	return r.Results
 }
 
+func (r StatusPageIncidentListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type StatusPageIncidentResponse StatusPageIncident
 
 func (r StatusPageIncidentResponse) Item() StatusPageIncident {
@@ -84,7 +88,7 @@ type StatusPageIncidentListOptions struct {
 type StatusPageIncidentEndpoint interface {
 	Create(context.Context, StatusPageIncident) (*StatusPageIncident, error)
 	Update(context.Context, PrimaryKeyable, StatusPageIncident) (*StatusPageIncident, error)
-	List(context.Context, StatusPageIncidentListOptions) ([]StatusPageIncident, error)
+	List(context.Context, StatusPageIncidentListOptions) (*ListResult[StatusPageIncident], error)
 	Get(context.Context, PrimaryKeyable) (*StatusPageIncident, error)
 	Delete(context.Context, PrimaryKeyable) error
 }

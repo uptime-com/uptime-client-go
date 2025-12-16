@@ -45,6 +45,10 @@ func (r AlertListResponse) List() []AlertItem {
 	return r.Results
 }
 
+func (r AlertListResponse) CountItems() int64 {
+	return r.Count
+}
+
 // AlertListOptions specifies the optional parameters for listing alerts.
 type AlertListOptions struct {
 	Page                       int64  `url:"page,omitempty"`
@@ -81,7 +85,7 @@ type AlertRootCause struct {
 
 // AlertsEndpoint defines the interface for interacting with alert resources.
 type AlertsEndpoint interface {
-	List(context.Context, AlertListOptions) ([]AlertItem, error)
+	List(context.Context, AlertListOptions) (*ListResult[AlertItem], error)
 	Get(context.Context, PrimaryKeyable) (*AlertItem, error)
 	RootCause(context.Context, PrimaryKeyable) (*AlertRootCause, error)
 	Ignore(context.Context, PrimaryKeyable) (*AlertItem, error)

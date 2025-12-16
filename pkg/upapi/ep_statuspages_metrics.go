@@ -25,6 +25,10 @@ func (r StatusPageMetricListResponse) List() []StatusPageMetric {
 	return r.Results
 }
 
+func (r StatusPageMetricListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type StatusPageMetricResponse StatusPageMetric
 
 func (r StatusPageMetricResponse) Item() StatusPageMetric {
@@ -49,7 +53,7 @@ type StatusPageMetricListOptions struct {
 type StatusPageMetricEndpoint interface {
 	Create(context.Context, StatusPageMetric) (*StatusPageMetric, error)
 	Update(context.Context, PrimaryKeyable, StatusPageMetric) (*StatusPageMetric, error)
-	List(context.Context, StatusPageMetricListOptions) ([]StatusPageMetric, error)
+	List(context.Context, StatusPageMetricListOptions) (*ListResult[StatusPageMetric], error)
 	Get(context.Context, PrimaryKeyable) (*StatusPageMetric, error)
 	Delete(context.Context, PrimaryKeyable) error
 }

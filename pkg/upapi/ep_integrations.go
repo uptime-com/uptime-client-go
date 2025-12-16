@@ -44,6 +44,10 @@ func (r IntegrationListResponse) List() []Integration {
 	return r.Results
 }
 
+func (r IntegrationListResponse) CountItems() int64 {
+	return r.Count
+}
+
 type IntegrationListOptions struct {
 	Page     int64  `url:"page,omitempty"`
 	PageSize int64  `url:"page_size,omitempty"`
@@ -61,7 +65,7 @@ func (r IntegrationResponse) Item() Integration {
 }
 
 type IntegrationsEndpoint interface {
-	List(context.Context, IntegrationListOptions) ([]Integration, error)
+	List(context.Context, IntegrationListOptions) (*ListResult[Integration], error)
 	Get(context.Context, PrimaryKeyable) (*Integration, error)
 	Delete(context.Context, PrimaryKeyable) error
 	CreateCachet(context.Context, IntegrationCachet) (*Integration, error)
