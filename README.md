@@ -4,6 +4,34 @@ A Go client library for Uptime.com
 
 ## Breaking Changes
 
+### v2.6.0
+
+The `List()` methods on all endpoints now return `*ListResult[Item]` instead of `[]Item` to expose pagination metadata (total count) from API responses.
+
+**Migration:**
+```go
+// Before (v2.5.x and earlier)
+checks, err := api.Checks().List(ctx, upapi.CheckListOptions{})
+if err != nil {
+    return err
+}
+for _, check := range checks {
+    fmt.Println(check.Name)
+}
+
+// After (v2.6.0+)
+result, err := api.Checks().List(ctx, upapi.CheckListOptions{})
+if err != nil {
+    return err
+}
+for _, check := range result.Items {
+    fmt.Println(check.Name)
+}
+
+// Access total count for pagination
+fmt.Printf("Showing %d of %d checks\n", len(result.Items), result.TotalCount)
+```
+
 ### v2.5.0
 
 The `ContactGroups` field type has changed from `[]string` to `*[]string` across all check types to properly support PATCH requests.
