@@ -212,6 +212,7 @@ type ChecksEndpoint interface {
 	Get(context.Context, PrimaryKeyable) (*Check, error)
 	Delete(context.Context, PrimaryKeyable) error
 	Stats(context.Context, PrimaryKeyable, CheckStatsOptions) (*ListResult[CheckStats], error)
+	ListLocations(context.Context) (*ListResult[string], error)
 
 	CreateAPI(context.Context, CheckAPI) (*Check, error)
 	UpdateAPI(context.Context, PrimaryKeyable, CheckAPI) (*Check, error)
@@ -391,6 +392,9 @@ func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 				&checksNestedEndpointCBD{CBD: cbd, EndpointSuffix: "maintenance/"}, endpoint,
 			),
 		},
+		checksEndpointLocationsImpl: checksEndpointLocationsImpl{
+			EndpointLister: NewEndpointLister[CheckLocationListResponse, string, CheckLocationListOptions](cbd, endpoint+"/locations"),
+		},
 		checksEndpointEscalationsImpl: checksEndpointEscalationsImpl{
 			getter: NewEndpointGetter[CheckGetResponse, Check](cbd, endpoint),
 			updater: NewEndpointUpdater[CheckEscalations, CheckCreateUpdateResponse, Check](
@@ -429,6 +433,7 @@ type checksEndpointImpl struct {
 	checksStatsEndpointImpl
 	checksEndpointPageSpeedImpl
 	checksEndpointMaintenanceImpl
+	checksEndpointLocationsImpl
 	checksEndpointEscalationsImpl
 	EndpointLister[CheckListResponse, Check, CheckListOptions]
 	EndpointGetter[CheckCreateUpdateResponse, Check]
