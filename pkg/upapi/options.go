@@ -84,6 +84,26 @@ func (s *withTokenCBD) BuildRequest(ctx context.Context, method string, endpoint
 	return req, nil
 }
 
+func WithBearerToken(token string) Option {
+	return func(cbd CBD) (CBD, error) {
+		return &withBearerTokenCBD{cbd, token}, nil
+	}
+}
+
+type withBearerTokenCBD struct {
+	CBD
+	token string
+}
+
+func (s *withBearerTokenCBD) BuildRequest(ctx context.Context, method string, endpoint string, opts any, data any) (*http.Request, error) {
+	req, err := s.CBD.BuildRequest(ctx, method, endpoint, opts, data)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", "Bearer "+s.token)
+	return req, nil
+}
+
 func WithRateLimit(rateLimit float64) Option {
 	return func(cbd CBD) (CBD, error) {
 		return &withRateLimitCBD{cbd, rate.NewLimiter(rate.Limit(rateLimit), 1)}, nil
