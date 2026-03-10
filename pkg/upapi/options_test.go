@@ -33,6 +33,26 @@ func TestWithAPIToken(t *testing.T) {
 	cbdm.AssertExpectations(t)
 }
 
+func TestWithBearerToken(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	cbdm := new(cbdMock)
+	cbdm.
+		On("BuildRequest", ctx, http.MethodGet, "/", nil, nil).
+		Return(http.NewRequestWithContext(ctx, http.MethodGet, "/", nil)).
+		Once()
+
+	cbd, err := WithBearerToken("oauth2-access-token")(cbdm)
+	require.NoError(t, err)
+
+	rq, err := cbd.BuildRequest(ctx, http.MethodGet, "/", nil, nil)
+	require.NoError(t, err)
+	require.Equal(t, "Bearer oauth2-access-token", rq.Header.Get("Authorization"))
+
+	cbdm.AssertExpectations(t)
+}
+
 func TestWithUserAgent(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
