@@ -7,8 +7,8 @@ type CheckPageSpeed struct {
 	ContactGroups *[]string            `json:"contact_groups,omitempty"`
 	Locations     []string             `json:"locations,omitempty"`
 	Tags          []string             `json:"tags,omitempty"`
-	IsPaused      bool                 `json:"is_paused"`
-	Address       string               `json:"msp_address"`
+	IsPaused      *bool                `json:"is_paused,omitempty"`
+	Address       string               `json:"msp_address,omitempty"`
 	Interval      int64                `json:"msp_interval,omitempty"`
 	Username      string               `json:"msp_username,omitempty"`
 	Password      string               `json:"msp_password,omitempty"`

@@ -11,14 +11,14 @@ type CheckRDAP struct {
 	ContactGroups             *[]string       `json:"contact_groups,omitempty"`
 	Locations                 []string        `json:"locations,omitempty"`
 	Tags                      []string        `json:"tags,omitempty"`
-	IsPaused                  bool            `json:"is_paused"`
-	Address                   string          `json:"msp_address"`
+	IsPaused                  *bool           `json:"is_paused,omitempty"`
+	Address                   string          `json:"msp_address,omitempty"`
 	ExpectString              string          `json:"msp_expect_string,omitempty"`
 	Threshold                 int64           `json:"msp_threshold,omitempty"`
 	NumRetries                int64           `json:"msp_num_retries,omitempty"`
 	UptimeSLA                 decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	Notes                     string          `json:"msp_notes,omitempty"`
-	SendResolvedNotifications bool            `json:"msp_send_resolved_notifications"`
+	SendResolvedNotifications *bool           `json:"msp_send_resolved_notifications,omitempty"`
 }
 
 type checksEndpointRDAPImpl struct {

@@ -11,11 +11,11 @@ type CheckWebhook struct {
 	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
-	IsPaused               bool            `json:"is_paused"`
+	IsPaused               *bool           `json:"is_paused,omitempty"`
 	UptimeSLA              decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string          `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool            `json:"msp_include_in_global_metrics"`
+	IncludeInGlobalMetrics *bool           `json:"msp_include_in_global_metrics,omitempty"`
 	WebhookUrl             string          `json:"webhook_url,omitempty"`
 }
 

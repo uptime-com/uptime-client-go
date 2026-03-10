@@ -11,9 +11,9 @@ type CheckPOP struct {
 	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
-	IsPaused               bool            `json:"is_paused"`
+	IsPaused               *bool           `json:"is_paused,omitempty"`
 	Interval               int64           `json:"msp_interval,omitempty"`
-	Address                string          `json:"msp_address"`
+	Address                string          `json:"msp_address,omitempty"`
 	Port                   int64           `json:"msp_port,omitempty"`
 	ExpectString           string          `json:"msp_expect_string,omitempty"`
 	Encryption             string          `json:"msp_encryption,omitempty"`
@@ -23,7 +23,7 @@ type CheckPOP struct {
 	UptimeSLA              decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string          `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool            `json:"msp_include_in_global_metrics"`
+	IncludeInGlobalMetrics *bool           `json:"msp_include_in_global_metrics,omitempty"`
 }
 
 type checksEndpointPOPImpl struct {

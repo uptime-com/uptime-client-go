@@ -11,7 +11,7 @@ type CheckTransaction struct {
 	ContactGroups          *[]string       `json:"contact_groups,omitempty"`
 	Locations              []string        `json:"locations,omitempty"`
 	Tags                   []string        `json:"tags,omitempty"`
-	IsPaused               bool            `json:"is_paused"`
+	IsPaused               *bool           `json:"is_paused,omitempty"`
 	Interval               int64           `json:"msp_interval,omitempty"`
 	Threshold              int64           `json:"msp_threshold,omitempty"`
 	Script                 string          `json:"msp_script,omitempty"`
@@ -20,7 +20,7 @@ type CheckTransaction struct {
 	UptimeSLA              decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string          `json:"msp_notes,omitempty"`
-	IncludeInGlobalMetrics bool            `json:"msp_include_in_global_metrics"`
+	IncludeInGlobalMetrics *bool           `json:"msp_include_in_global_metrics,omitempty"`
 }
 
 type checksEndpointTransactionImpl struct {

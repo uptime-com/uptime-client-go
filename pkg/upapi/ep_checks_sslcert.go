@@ -11,11 +11,11 @@ type CheckSSLCert struct {
 	ContactGroups *[]string          `json:"contact_groups,omitempty"`
 	Locations     []string           `json:"locations,omitempty"`
 	Tags          []string           `json:"tags,omitempty"`
-	IsPaused      bool               `json:"is_paused"`
+	IsPaused      *bool              `json:"is_paused,omitempty"`
 	Protocol      string             `json:"msp_protocol,omitempty"`
-	Address       string             `json:"msp_address"`
+	Address       string             `json:"msp_address,omitempty"`
 	Port          int64              `json:"msp_port,omitempty"`
-	Threshold     int64              `json:"msp_threshold"`
+	Threshold     int64              `json:"msp_threshold,omitempty"`
 	NumRetries    int64              `json:"msp_num_retries,omitempty"`
 	UptimeSLA     decimal.Decimal    `json:"msp_uptime_sla,omitempty"`
 	Notes         string             `json:"msp_notes,omitempty"`
