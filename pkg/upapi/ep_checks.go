@@ -91,9 +91,10 @@ type Check struct {
 
 	Maintenance *CheckMaintenance `json:"maintenance,omitempty"`
 
-	SSLConfig       *CheckSSLCertConfig   `json:"sslconfig,omitempty"`
-	PageSpeedConfig *CheckPageSpeedConfig `json:"pagespeedconfig,omitempty"`
-	GroupConfig     *CheckGroupConfig     `json:"groupcheckconfig,omitempty"`
+	SSLConfig         *CheckSSLCertConfig     `json:"sslconfig,omitempty"`
+	PageSpeedConfig   *CheckPageSpeedConfig   `json:"pagespeedconfig,omitempty"`
+	GroupConfig       *CheckGroupConfig       `json:"groupcheckconfig,omitempty"`
+	CloudStatusConfig *CheckCloudStatusConfig `json:"cloudstatusconfig,omitempty"`
 }
 
 func (c Check) PrimaryKey() PrimaryKey {
@@ -283,6 +284,9 @@ type ChecksEndpoint interface {
 	CreatePageSpeed(context.Context, CheckPageSpeed) (*Check, error)
 	UpdatePageSpeed(context.Context, PrimaryKeyable, CheckPageSpeed) (*Check, error)
 
+	CreateCloudStatus(context.Context, CheckCloudStatus) (*Check, error)
+	UpdateCloudStatus(context.Context, PrimaryKeyable, CheckCloudStatus) (*Check, error)
+
 	UpdateMaintenance(context.Context, PrimaryKeyable, CheckMaintenance) (*Check, error)
 
 	GetEscalations(context.Context, PrimaryKeyable) (*CheckEscalations, error)
@@ -387,6 +391,10 @@ func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 			EndpointCreator: NewEndpointCreator[CheckPageSpeed, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-pagespeed"),
 			EndpointUpdater: NewEndpointUpdater[CheckPageSpeed, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
+		checksEndpointCloudStatusImpl: checksEndpointCloudStatusImpl{
+			EndpointCreator: NewEndpointCreator[CheckCloudStatus, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-cloudstatus"),
+			EndpointUpdater: NewEndpointUpdater[CheckCloudStatus, CheckCreateUpdateResponse, Check](cbd, endpoint),
+		},
 		checksEndpointMaintenanceImpl: checksEndpointMaintenanceImpl{
 			EndpointUpdater: NewEndpointUpdater[CheckMaintenance, CheckCreateUpdateResponse, Check](
 				&checksNestedEndpointCBD{CBD: cbd, EndpointSuffix: "maintenance/"}, endpoint,
@@ -432,6 +440,7 @@ type checksEndpointImpl struct {
 	checksEndpointRDAPImpl
 	checksStatsEndpointImpl
 	checksEndpointPageSpeedImpl
+	checksEndpointCloudStatusImpl
 	checksEndpointMaintenanceImpl
 	checksEndpointLocationsImpl
 	checksEndpointEscalationsImpl
