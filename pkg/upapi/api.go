@@ -29,6 +29,7 @@ type API interface {
 	Users() UsersEndpoint
 	PushNotifications() PushNotificationsEndpoint
 	Subaccounts() SubaccountsEndpoint
+	AccountUsage() AccountUsageEndpoint
 }
 
 // New returns a new API client instance.
@@ -84,6 +85,7 @@ func New(opts ...Option) (api API, err error) {
 		users:             NewUsersEndpoint(cbd),
 		pushNotifications: NewPushNotificationsEndpoint(cbd),
 		subaccounts:       NewSubaccountsEndpoint(cbd),
+		accountUsage:      NewAccountUsageEndpoint(cbd),
 	}
 	return api, nil
 }
@@ -105,6 +107,7 @@ type apiImpl struct {
 	users             UsersEndpoint
 	pushNotifications PushNotificationsEndpoint
 	subaccounts       SubaccountsEndpoint
+	accountUsage      AccountUsageEndpoint
 }
 
 func (api *apiImpl) Alerts() AlertsEndpoint {
@@ -169,4 +172,8 @@ func (api *apiImpl) PushNotifications() PushNotificationsEndpoint {
 
 func (api *apiImpl) Subaccounts() SubaccountsEndpoint {
 	return api.subaccounts
+}
+
+func (api *apiImpl) AccountUsage() AccountUsageEndpoint {
+	return api.accountUsage
 }
