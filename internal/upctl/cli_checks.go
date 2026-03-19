@@ -101,6 +101,8 @@ var (
 	checksCreateWebhookFlags     upapi.CheckWebhook
 	checksCreateWHOISFlags       upapi.CheckWHOIS
 	checksCreateRDAPFlags        upapi.CheckRDAP
+	checksCreatePageSpeedFlags   upapi.CheckPageSpeed
+	checksCreateCloudStatusFlags upapi.CheckCloudStatus
 )
 
 func init() {
@@ -171,6 +173,12 @@ func init() {
 		checksCreateSubcommand("rdap", &checksCreateRDAPFlags, func(ctx context.Context) (*upapi.Check, error) {
 			return api.Checks().CreateRDAP(ctx, checksCreateRDAPFlags)
 		}),
+		checksCreateSubcommand("pagespeed", &checksCreatePageSpeedFlags, func(ctx context.Context) (*upapi.Check, error) {
+			return api.Checks().CreatePageSpeed(ctx, checksCreatePageSpeedFlags)
+		}),
+		checksCreateSubcommand("cloudstatus", &checksCreateCloudStatusFlags, func(ctx context.Context) (*upapi.Check, error) {
+			return api.Checks().CreateCloudStatus(ctx, checksCreateCloudStatusFlags)
+		}),
 	)
 	checksCmd.AddCommand(checksCreateCmd)
 }
@@ -224,6 +232,8 @@ var (
 	updateCreateWebhookFlags     upapi.CheckWebhook
 	updateCreateWHOISFlags       upapi.CheckWHOIS
 	updateCreateRDAPFlags        upapi.CheckRDAP
+	updateCreatePageSpeedFlags   upapi.CheckPageSpeed
+	updateCreateCloudStatusFlags upapi.CheckCloudStatus
 )
 
 func init() {
@@ -293,6 +303,12 @@ func init() {
 		}),
 		checksUpdateSubcommand("rdap", &updateCreateRDAPFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
 			return api.Checks().UpdateRDAP(ctx, upapi.PrimaryKey(pk), updateCreateRDAPFlags)
+		}),
+		checksUpdateSubcommand("pagespeed", &updateCreatePageSpeedFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			return api.Checks().UpdatePageSpeed(ctx, upapi.PrimaryKey(pk), updateCreatePageSpeedFlags)
+		}),
+		checksUpdateSubcommand("cloudstatus", &updateCreateCloudStatusFlags, func(ctx context.Context, pk int) (*upapi.Check, error) {
+			return api.Checks().UpdateCloudStatus(ctx, upapi.PrimaryKey(pk), updateCreateCloudStatusFlags)
 		}),
 	)
 	checksCmd.AddCommand(checksUpdateCmd)
