@@ -14,7 +14,7 @@ var accountUsageCmd = &cobra.Command{
 	Short:   "Show account usage and plan limits",
 	Args:    cobra.NoArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return output(accountUsageList(cmd.Context()))
+		return output(accountUsageGet(cmd.Context()))
 	},
 }
 
@@ -22,10 +22,6 @@ func init() {
 	cmd.AddCommand(accountUsageCmd)
 }
 
-func accountUsageList(ctx context.Context) ([]upapi.AccountUsageItem, error) {
-	result, err := api.AccountUsage().List(ctx)
-	if err != nil {
-		return nil, err
-	}
-	return result.Items, nil
+func accountUsageGet(ctx context.Context) (*upapi.AccountUsage, error) {
+	return api.AccountUsage().Get(ctx)
 }
