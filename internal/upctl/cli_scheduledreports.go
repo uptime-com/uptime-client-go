@@ -11,7 +11,7 @@ import (
 
 var scheduledReportsCmd = &cobra.Command{
 	Use:     "scheduledreports",
-	Aliases: []string{"scheduledreports"},
+	Aliases: []string{"scheduledreport", "sr"},
 	Short:   "Manage Scheduled reports",
 	Args:    cobra.NoArgs,
 }

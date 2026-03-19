@@ -11,7 +11,7 @@ import (
 
 var slaReportsCmd = &cobra.Command{
 	Use:     "slareports",
-	Aliases: []string{"slareports"},
+	Aliases: []string{"slareport", "sla"},
 	Short:   "Manage SLA reports",
 	Args:    cobra.NoArgs,
 }
