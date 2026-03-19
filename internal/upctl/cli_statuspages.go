@@ -46,10 +46,7 @@ func init() {
 }
 
 func statusPagesList(ctx context.Context) ([]upapi.StatusPage, error) {
-	result, err := api.StatusPages().List(ctx, upapi.StatusPageListOptions{
-		PageSize: 100,
-		Page:     statusPagesListFlags.Page,
-	})
+	result, err := api.StatusPages().List(ctx, statusPagesListFlags)
 	if err != nil {
 		return nil, err
 	}

@@ -46,10 +46,7 @@ func init() {
 }
 
 func slaReportsList(ctx context.Context) ([]upapi.SLAReport, error) {
-	result, err := api.SLAReports().List(ctx, upapi.SLAReportListOptions{
-		PageSize: 100,
-		Page:     slaReportsListFlags.Page,
-	})
+	result, err := api.SLAReports().List(ctx, slaReportsListFlags)
 	if err != nil {
 		return nil, err
 	}
