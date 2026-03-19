@@ -53,9 +53,9 @@ func dashboardsList(ctx context.Context) ([]upapi.Dashboard, error) {
 var (
 	dashboardsCreateFlags = upapi.Dashboard{}
 	dashboardsCreateCmd   = &cobra.Command{
-		Use:     "create <type>",
+		Use:     "create",
 		Aliases: []string{"add"},
-		Short:   "Create a new check",
+		Short:   "Create a new dashboard",
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return output(dashboardsCreate(cmd.Context()))
@@ -107,7 +107,7 @@ func dashboardsUpdate(ctx context.Context, arg string) (*upapi.Dashboard, error)
 var dashboardsDeleteCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"del", "rm"},
-	Short:   "Delete a tag",
+	Short:   "Delete a dashboard",
 	Args:    cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return output(dashboardsDelete(cmd.Context(), args[0]))

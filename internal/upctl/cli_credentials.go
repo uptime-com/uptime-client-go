@@ -53,9 +53,9 @@ func credentialsList(ctx context.Context) ([]upapi.Credential, error) {
 var (
 	credentialsCreateFlags = upapi.Credential{}
 	credentialsCreateCmd   = &cobra.Command{
-		Use:     "create <type>",
+		Use:     "create",
 		Aliases: []string{"add"},
-		Short:   "Create a new check",
+		Short:   "Create a new credential",
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return output(credentialsCreate(cmd.Context()))
@@ -107,7 +107,7 @@ func credentialsUpdate(ctx context.Context, arg string) (*upapi.Credential, erro
 var credentialsDeleteCmd = &cobra.Command{
 	Use:     "delete",
 	Aliases: []string{"del", "rm"},
-	Short:   "Delete a tag",
+	Short:   "Delete a credential",
 	Args:    cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return output(credentialsDelete(cmd.Context(), args[0]))

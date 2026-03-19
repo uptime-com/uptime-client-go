@@ -55,9 +55,9 @@ func contactsList(ctx context.Context) ([]upapi.Contact, error) {
 var (
 	contactsCreateFlags = upapi.Contact{}
 	contactsCreateCmd   = &cobra.Command{
-		Use:     "create <type>",
+		Use:     "create",
 		Aliases: []string{"add"},
-		Short:   "Create a new check",
+		Short:   "Create a new contact",
 		Args:    cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return output(contactsCreate(cmd.Context()))
