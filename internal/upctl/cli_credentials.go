@@ -50,6 +50,28 @@ func credentialsList(ctx context.Context) ([]upapi.Credential, error) {
 	return result.Items, nil
 }
 
+var credentialsGetCmd = &cobra.Command{
+	Use:     "get <pk>",
+	Aliases: []string{"show"},
+	Short:   "Get a credential",
+	Args:    cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return output(credentialsGet(cmd.Context(), args[0]))
+	},
+}
+
+func init() {
+	credentialsCmd.AddCommand(credentialsGetCmd)
+}
+
+func credentialsGet(ctx context.Context, pkstr string) (*upapi.Credential, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
+	}
+	return api.Credentials().Get(ctx, upapi.PrimaryKey(pk))
+}
+
 var (
 	credentialsCreateFlags = upapi.Credential{}
 	credentialsCreateCmd   = &cobra.Command{

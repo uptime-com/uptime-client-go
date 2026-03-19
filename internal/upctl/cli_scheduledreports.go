@@ -53,6 +53,28 @@ func scheduledReportsList(ctx context.Context) ([]upapi.ScheduledReport, error) 
 	return result.Items, nil
 }
 
+var scheduledReportsGetCmd = &cobra.Command{
+	Use:     "get <pk>",
+	Aliases: []string{"show"},
+	Short:   "Get a scheduled report",
+	Args:    cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return output(scheduledReportsGet(cmd.Context(), args[0]))
+	},
+}
+
+func init() {
+	scheduledReportsCmd.AddCommand(scheduledReportsGetCmd)
+}
+
+func scheduledReportsGet(ctx context.Context, pkstr string) (*upapi.ScheduledReport, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
+	}
+	return api.ScheduledReports().Get(ctx, upapi.PrimaryKey(pk))
+}
+
 var (
 	scheduledReportsCreateFlags = upapi.ScheduledReport{}
 	scheduledReportsCreateCmd   = &cobra.Command{

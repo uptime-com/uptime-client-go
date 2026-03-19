@@ -53,6 +53,28 @@ func statusPagesList(ctx context.Context) ([]upapi.StatusPage, error) {
 	return result.Items, nil
 }
 
+var statusPagesGetCmd = &cobra.Command{
+	Use:     "get <pk>",
+	Aliases: []string{"show"},
+	Short:   "Get a status page",
+	Args:    cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return output(statusPagesGet(cmd.Context(), args[0]))
+	},
+}
+
+func init() {
+	statusPagesCmd.AddCommand(statusPagesGetCmd)
+}
+
+func statusPagesGet(ctx context.Context, pkstr string) (*upapi.StatusPage, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
+	}
+	return api.StatusPages().Get(ctx, upapi.PrimaryKey(pk))
+}
+
 var (
 	statusPagesCreateFlags = upapi.StatusPage{
 		UptimeCalculationType: "BY_INCIDENTS",

@@ -50,6 +50,28 @@ func dashboardsList(ctx context.Context) ([]upapi.Dashboard, error) {
 	return result.Items, nil
 }
 
+var dashboardsGetCmd = &cobra.Command{
+	Use:     "get <pk>",
+	Aliases: []string{"show"},
+	Short:   "Get a dashboard",
+	Args:    cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return output(dashboardsGet(cmd.Context(), args[0]))
+	},
+}
+
+func init() {
+	dashboardsCmd.AddCommand(dashboardsGetCmd)
+}
+
+func dashboardsGet(ctx context.Context, pkstr string) (*upapi.Dashboard, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
+	}
+	return api.Dashboards().Get(ctx, upapi.PrimaryKey(pk))
+}
+
 var (
 	dashboardsCreateFlags = upapi.Dashboard{}
 	dashboardsCreateCmd   = &cobra.Command{

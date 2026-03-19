@@ -52,6 +52,28 @@ func contactsList(ctx context.Context) ([]upapi.Contact, error) {
 	return result.Items, nil
 }
 
+var contactsGetCmd = &cobra.Command{
+	Use:     "get <pk>",
+	Aliases: []string{"show"},
+	Short:   "Get a contact",
+	Args:    cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return output(contactsGet(cmd.Context(), args[0]))
+	},
+}
+
+func init() {
+	contactsCmd.AddCommand(contactsGetCmd)
+}
+
+func contactsGet(ctx context.Context, pkstr string) (*upapi.Contact, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
+	}
+	return api.Contacts().Get(ctx, upapi.PrimaryKey(pk))
+}
+
 var (
 	contactsCreateFlags = upapi.Contact{}
 	contactsCreateCmd   = &cobra.Command{

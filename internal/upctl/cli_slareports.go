@@ -53,6 +53,28 @@ func slaReportsList(ctx context.Context) ([]upapi.SLAReport, error) {
 	return result.Items, nil
 }
 
+var slaReportsGetCmd = &cobra.Command{
+	Use:     "get <pk>",
+	Aliases: []string{"show"},
+	Short:   "Get an SLA report",
+	Args:    cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return output(slaReportsGet(cmd.Context(), args[0]))
+	},
+}
+
+func init() {
+	slaReportsCmd.AddCommand(slaReportsGetCmd)
+}
+
+func slaReportsGet(ctx context.Context, pkstr string) (*upapi.SLAReport, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
+	}
+	return api.SLAReports().Get(ctx, upapi.PrimaryKey(pk))
+}
+
 var (
 	slaReportsCreateFlags = upapi.SLAReport{}
 	slaReportsCreateCmd   = &cobra.Command{

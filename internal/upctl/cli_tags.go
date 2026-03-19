@@ -53,6 +53,28 @@ func tagsList(ctx context.Context) ([]upapi.Tag, error) {
 	return result.Items, nil
 }
 
+var tagsGetCmd = &cobra.Command{
+	Use:     "get <pk>",
+	Aliases: []string{"show"},
+	Short:   "Get a tag",
+	Args:    cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return output(tagsGet(cmd.Context(), args[0]))
+	},
+}
+
+func init() {
+	tagsCmd.AddCommand(tagsGetCmd)
+}
+
+func tagsGet(ctx context.Context, pkstr string) (*upapi.Tag, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
+	}
+	return api.Tags().Get(ctx, upapi.PrimaryKey(pk))
+}
+
 var (
 	tagsCreateFlags = upapi.Tag{
 		ColorHex: "#000000",

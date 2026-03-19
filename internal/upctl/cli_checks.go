@@ -54,6 +54,28 @@ func checksList(ctx context.Context) ([]upapi.Check, error) {
 	return result.Items, nil
 }
 
+var checksGetCmd = &cobra.Command{
+	Use:     "get <pk>",
+	Aliases: []string{"show"},
+	Short:   "Get a check",
+	Args:    cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return output(checksGet(cmd.Context(), args[0]))
+	},
+}
+
+func init() {
+	checksCmd.AddCommand(checksGetCmd)
+}
+
+func checksGet(ctx context.Context, pkstr string) (*upapi.Check, error) {
+	pk, err := parsePK(pkstr)
+	if err != nil {
+		return nil, err
+	}
+	return api.Checks().Get(ctx, upapi.PrimaryKey(pk))
+}
+
 var (
 	checksCreateCmd = &cobra.Command{
 		Use:     "create",
