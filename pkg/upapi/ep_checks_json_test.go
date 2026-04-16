@@ -18,29 +18,55 @@ func TestCheckHTTP_OmitsZeroValues(t *testing.T) {
 	if _, ok := m["name"]; !ok {
 		t.Error("expected 'name' to be present")
 	}
-	for _, field := range []string{"msp_address", "msp_status_code", "is_paused", "msp_include_in_global_metrics"} {
+	for _, field := range []string{"msp_address", "msp_status_code", "msp_encryption", "is_paused", "msp_include_in_global_metrics"} {
 		if _, ok := m[field]; ok {
 			t.Errorf("expected %q to be omitted for zero value, but it was present", field)
 		}
 	}
 }
 
-// TestCheckHTTP_EncryptionEmptyStringSent ensures msp_encryption is sent on
-// the wire even when empty so callers can opt out of encryption (the only
-// way to express "Off" - "" - to the server).
-func TestCheckHTTP_EncryptionEmptyStringSent(t *testing.T) {
-	data, err := json.Marshal(CheckHTTP{Name: "test"})
-	if err != nil {
-		t.Fatal(err)
-	}
-	m := unmarshalToMap(t, data)
-	v, ok := m["msp_encryption"]
-	if !ok {
-		t.Fatal("expected 'msp_encryption' to be present even when empty")
-	}
-	if v != "" {
-		t.Errorf("expected msp_encryption to be empty string, got %v", v)
-	}
+// TestCheckHTTP_EncryptionTriState verifies the *string semantics for
+// msp_encryption: nil pointer omits the field (server applies its default),
+// pointer to "" sends an explicit Off, pointer to "SSL_TLS" sends explicit
+// TLS-on. This is the only way to distinguish "use server default" from
+// "explicitly disable encryption".
+func TestCheckHTTP_EncryptionTriState(t *testing.T) {
+	t.Run("nil pointer omits field", func(t *testing.T) {
+		data, err := json.Marshal(CheckHTTP{Name: "test", Encryption: nil})
+		if err != nil {
+			t.Fatal(err)
+		}
+		m := unmarshalToMap(t, data)
+		if _, ok := m["msp_encryption"]; ok {
+			t.Error("expected 'msp_encryption' to be omitted when pointer is nil")
+		}
+	})
+	t.Run("pointer to empty string sends Off", func(t *testing.T) {
+		empty := ""
+		data, err := json.Marshal(CheckHTTP{Name: "test", Encryption: &empty})
+		if err != nil {
+			t.Fatal(err)
+		}
+		m := unmarshalToMap(t, data)
+		v, ok := m["msp_encryption"]
+		if !ok {
+			t.Fatal("expected 'msp_encryption' to be present when pointer is non-nil")
+		}
+		if v != "" {
+			t.Errorf("expected msp_encryption to be empty string, got %v", v)
+		}
+	})
+	t.Run("pointer to SSL_TLS sends TLS-on", func(t *testing.T) {
+		tls := "SSL_TLS"
+		data, err := json.Marshal(CheckHTTP{Name: "test", Encryption: &tls})
+		if err != nil {
+			t.Fatal(err)
+		}
+		m := unmarshalToMap(t, data)
+		if v := m["msp_encryption"]; v != "SSL_TLS" {
+			t.Errorf("expected msp_encryption=\"SSL_TLS\", got %v", v)
+		}
+	})
 }
 
 func TestCheckHTTP_BoolPtrFalse(t *testing.T) {

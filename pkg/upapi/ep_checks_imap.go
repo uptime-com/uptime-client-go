@@ -16,7 +16,7 @@ type CheckIMAP struct {
 	Address                string          `json:"msp_address,omitempty"`
 	Port                   int64           `json:"msp_port,omitempty"`
 	ExpectString           string          `json:"msp_expect_string,omitempty"`
-	Encryption             string          `json:"msp_encryption"`
+	Encryption             *string         `json:"msp_encryption,omitempty"`
 	Sensitivity            int64           `json:"msp_sensitivity,omitempty"`
 	NumRetries             int64           `json:"msp_num_retries,omitempty"`
 	UseIPVersion           string          `json:"msp_use_ip_version,omitempty"`
