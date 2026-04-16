@@ -18,7 +18,7 @@ type CheckSMTP struct {
 	Username               string          `json:"msp_username,omitempty"`
 	Password               string          `json:"msp_password,omitempty"`
 	ExpectString           string          `json:"msp_expect_string,omitempty"`
-	Encryption             string          `json:"msp_encryption,omitempty"`
+	Encryption             string          `json:"msp_encryption"`
 	Sensitivity            int64           `json:"msp_sensitivity,omitempty"`
 	NumRetries             int64           `json:"msp_num_retries,omitempty"`
 	UseIpVersion           string          `json:"msp_use_ip_version,omitempty"`

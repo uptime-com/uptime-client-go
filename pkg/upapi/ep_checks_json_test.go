@@ -18,10 +18,28 @@ func TestCheckHTTP_OmitsZeroValues(t *testing.T) {
 	if _, ok := m["name"]; !ok {
 		t.Error("expected 'name' to be present")
 	}
-	for _, field := range []string{"msp_address", "msp_status_code", "msp_encryption", "is_paused", "msp_include_in_global_metrics"} {
+	for _, field := range []string{"msp_address", "msp_status_code", "is_paused", "msp_include_in_global_metrics"} {
 		if _, ok := m[field]; ok {
 			t.Errorf("expected %q to be omitted for zero value, but it was present", field)
 		}
+	}
+}
+
+// TestCheckHTTP_EncryptionEmptyStringSent ensures msp_encryption is sent on
+// the wire even when empty so callers can opt out of encryption (the only
+// way to express "Off" - "" - to the server).
+func TestCheckHTTP_EncryptionEmptyStringSent(t *testing.T) {
+	data, err := json.Marshal(CheckHTTP{Name: "test"})
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := unmarshalToMap(t, data)
+	v, ok := m["msp_encryption"]
+	if !ok {
+		t.Fatal("expected 'msp_encryption' to be present even when empty")
+	}
+	if v != "" {
+		t.Errorf("expected msp_encryption to be empty string, got %v", v)
 	}
 }
 
