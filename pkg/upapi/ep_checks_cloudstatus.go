@@ -21,6 +21,7 @@ func (g CloudStatusGroup) MarshalJSON() ([]byte, error) {
 }
 
 func (g *CloudStatusGroup) UnmarshalJSON(data []byte) error {
+	*g = CloudStatusGroup{}
 	trimmed := bytes.TrimSpace(data)
 	if len(trimmed) == 0 || string(trimmed) == "null" {
 		return nil

@@ -31,6 +31,19 @@ func TestCloudStatusGroup(t *testing.T) {
 		require.NoError(t, json.Unmarshal([]byte(`null`), &g))
 		require.Equal(t, int64(0), g.ID)
 	})
+	t.Run("resets receiver state across reuse", func(t *testing.T) {
+		g := CloudStatusGroup{ID: 999, Name: "stale"}
+		require.NoError(t, json.Unmarshal([]byte(`null`), &g))
+		require.Equal(t, CloudStatusGroup{}, g)
+
+		g = CloudStatusGroup{ID: 999, Name: "stale"}
+		require.NoError(t, json.Unmarshal([]byte(`42`), &g))
+		require.Equal(t, CloudStatusGroup{ID: 42}, g)
+
+		g = CloudStatusGroup{ID: 999, Name: "stale"}
+		require.NoError(t, json.Unmarshal([]byte(`{"id":7,"name":"fresh"}`), &g))
+		require.Equal(t, CloudStatusGroup{ID: 7, Name: "fresh"}, g)
+	})
 	t.Run("round-trips inside CheckCloudStatusConfig response", func(t *testing.T) {
 		body := []byte(`{
 			"monitoring_type": "ALL",
