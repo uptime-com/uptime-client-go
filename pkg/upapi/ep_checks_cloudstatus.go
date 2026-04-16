@@ -1,6 +1,46 @@
 package upapi
 
-import "context"
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+)
+
+// CloudStatusGroup references a cloud status group by ID. On write
+// (POST/PUT) it serializes as the group's integer ID, matching the legacy
+// request format. On read (GET) the server returns a nested
+// `{"id": ..., "name": ...}` object, so UnmarshalJSON accepts either
+// shape - bare integer or nested object.
+type CloudStatusGroup struct {
+	ID   int64  `json:"id"`
+	Name string `json:"name,omitempty"`
+}
+
+func (g CloudStatusGroup) MarshalJSON() ([]byte, error) {
+	return json.Marshal(g.ID)
+}
+
+func (g *CloudStatusGroup) UnmarshalJSON(data []byte) error {
+	trimmed := bytes.TrimSpace(data)
+	if len(trimmed) == 0 || string(trimmed) == "null" {
+		return nil
+	}
+	if trimmed[0] == '{' {
+		type raw CloudStatusGroup
+		var r raw
+		if err := json.Unmarshal(data, &r); err != nil {
+			return err
+		}
+		*g = CloudStatusGroup(r)
+		return nil
+	}
+	var id int64
+	if err := json.Unmarshal(data, &id); err != nil {
+		return err
+	}
+	g.ID = id
+	return nil
+}
 
 // CheckCloudStatusConfig describes the cloudstatusconfig payload accepted by
 // the /checks/add-cloudstatus and /checks/{pk} endpoints.
@@ -22,8 +62,9 @@ type CheckCloudStatusConfig struct {
 	// ServiceName is the legacy (deprecated) cloud status component name or ID.
 	ServiceName string `json:"service_name,omitempty"`
 
-	// Group is the cloud status group ID to monitor. Write-only on the server.
-	Group *int64 `json:"group,omitempty"`
+	// Group is the cloud status group to monitor. On write only the numeric
+	// ID is sent; on read the server also reports the group name.
+	Group *CloudStatusGroup `json:"group,omitempty"`
 
 	// MonitoringType selects how Group is monitored: "ALL" or "SPECIFIC".
 	MonitoringType string `json:"monitoring_type,omitempty"`

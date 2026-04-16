@@ -33,6 +33,10 @@ func (f *flagSetMock) StringSliceVarP(ptr *[]string, name, shorthand string, val
 	f.Called(ptr, name, shorthand, value, usage)
 }
 
+func (f *flagSetMock) Int64SliceVarP(ptr *[]int64, name, shorthand string, value []int64, usage string) {
+	f.Called(ptr, name, shorthand, value, usage)
+}
+
 func (f *flagSetMock) Float64VarP(ptr *float64, name, shorthand string, value float64, usage string) {
 	f.Called(ptr, name, shorthand, value, usage)
 }
