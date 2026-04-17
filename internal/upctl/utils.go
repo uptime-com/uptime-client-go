@@ -16,6 +16,7 @@ type FlagSet interface {
 	Float64VarP(ptr *float64, name, shorthand string, value float64, usage string)
 	BoolVarP(ptr *bool, name, shorthand string, value bool, usage string)
 	StringSliceVarP(ptr *[]string, name, shorthand string, value []string, usage string)
+	Int64SliceVarP(ptr *[]int64, name, shorthand string, value []int64, usage string)
 }
 
 func Bind(fs FlagSet, obj any) error {
@@ -77,6 +78,9 @@ func Bind(fs FlagSet, obj any) error {
 		case t.Field(i).Type.Kind() == reflect.Slice && t.Field(i).Type.Elem().Kind() == reflect.String:
 			ptr, val := ptrVal[[]string](vf)
 			fs.StringSliceVarP(ptr, flag, short, val, usage)
+		case t.Field(i).Type.Kind() == reflect.Slice && t.Field(i).Type.Elem().Kind() == reflect.Int64:
+			ptr, val := ptrVal[[]int64](vf)
+			fs.Int64SliceVarP(ptr, flag, short, val, usage)
 		// Handle *[]string - pointer to string slice (already initialized above)
 		case t.Field(i).Type.Kind() == reflect.Ptr && t.Field(i).Type.Elem().Kind() == reflect.Slice && t.Field(i).Type.Elem().Elem().Kind() == reflect.String:
 			innerSlice := vf.Elem()

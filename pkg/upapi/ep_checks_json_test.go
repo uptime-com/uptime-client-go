@@ -25,6 +25,62 @@ func TestCheckHTTP_OmitsZeroValues(t *testing.T) {
 	}
 }
 
+// TestChecks_EncryptionTriState verifies the *string semantics for
+// msp_encryption across every check struct that exposes the field:
+// nil pointer omits the field (server applies its default), pointer to ""
+// sends an explicit Off, and pointer to "SSL_TLS" sends explicit TLS-on.
+// Adding a new struct with msp_encryption? Add it to the table below.
+func TestChecks_EncryptionTriState(t *testing.T) {
+	type encCase struct {
+		name string
+		make func(enc *string) any
+	}
+	cases := []encCase{
+		{"http", func(e *string) any { return CheckHTTP{Name: "test", Encryption: e} }},
+		{"tcp", func(e *string) any { return CheckTCP{Name: "test", Encryption: e} }},
+		{"imap", func(e *string) any { return CheckIMAP{Name: "test", Encryption: e} }},
+		{"pop", func(e *string) any { return CheckPOP{Name: "test", Encryption: e} }},
+		{"smtp", func(e *string) any { return CheckSMTP{Name: "test", Encryption: e} }},
+		{"check", func(e *string) any { return Check{Name: "test", Encryption: e} }},
+	}
+
+	marshal := func(t *testing.T, v any) map[string]any {
+		t.Helper()
+		data, err := json.Marshal(v)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return unmarshalToMap(t, data)
+	}
+
+	for _, c := range cases {
+		t.Run(c.name+"/nil_pointer_omits_field", func(t *testing.T) {
+			m := marshal(t, c.make(nil))
+			if _, ok := m["msp_encryption"]; ok {
+				t.Errorf("expected 'msp_encryption' to be omitted when pointer is nil")
+			}
+		})
+		t.Run(c.name+"/empty_string_sends_off", func(t *testing.T) {
+			empty := ""
+			m := marshal(t, c.make(&empty))
+			v, ok := m["msp_encryption"]
+			if !ok {
+				t.Fatalf("expected 'msp_encryption' to be present when pointer is non-nil")
+			}
+			if v != "" {
+				t.Errorf("expected msp_encryption=\"\", got %v", v)
+			}
+		})
+		t.Run(c.name+"/SSL_TLS_sends_tls_on", func(t *testing.T) {
+			tls := "SSL_TLS"
+			m := marshal(t, c.make(&tls))
+			if v := m["msp_encryption"]; v != "SSL_TLS" {
+				t.Errorf("expected msp_encryption=\"SSL_TLS\", got %v", v)
+			}
+		})
+	}
+}
+
 func TestCheckHTTP_BoolPtrFalse(t *testing.T) {
 	check := CheckHTTP{
 		Name:     "test",

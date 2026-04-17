@@ -24,7 +24,7 @@ type CheckTCP struct {
 	ResponseTimeSLA        decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string          `json:"msp_notes,omitempty"`
 	IncludeInGlobalMetrics *bool           `json:"msp_include_in_global_metrics,omitempty"`
-	Encryption             string          `json:"msp_encryption,omitempty"`
+	Encryption             *string         `json:"msp_encryption,omitempty"`
 }
 
 type checksEndpointTCPImpl struct {

@@ -76,7 +76,7 @@ type Check struct {
 	SendString             string            `json:"msp_send_string,omitempty"`
 	ExpectString           string            `json:"msp_expect_string,omitempty"`
 	ExpectStringType       string            `json:"msp_expect_string_type,omitempty"`
-	Encryption             string            `json:"msp_encryption,omitempty"`
+	Encryption             *string           `json:"msp_encryption,omitempty"`
 	Threshold              int64             `json:"msp_threshold,omitempty"`
 	Headers                string            `json:"msp_headers,omitempty"`
 	Script                 string            `json:"msp_script,omitempty"`
