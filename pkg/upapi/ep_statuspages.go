@@ -14,7 +14,7 @@ type StatusPage struct {
 	PageType                  string `json:"page_type"`
 	Slug                      string `json:"slug"`
 	CNAME                     string `json:"cname"`
-	AllowSubscriptions        bool   `json:"allow_subscriptions"`
+	AllowSubscriptions        *bool  `json:"allow_subscriptions,omitempty"`
 	AllowSearchIndexing       bool   `json:"allow_search_indexing"`
 	AllowDrillDown            bool   `json:"allow_drill_down"`
 	AuthUsername              string `json:"auth_username"`
