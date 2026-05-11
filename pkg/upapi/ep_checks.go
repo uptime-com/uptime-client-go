@@ -287,6 +287,9 @@ type ChecksEndpoint interface {
 	CreateCloudStatus(context.Context, CheckCloudStatus) (*Check, error)
 	UpdateCloudStatus(context.Context, PrimaryKeyable, CheckCloudStatus) (*Check, error)
 
+	ListCloudStatusGroups(context.Context, CloudStatusGroupListOptions) (*ListResult[CloudStatusGroupListItem], error)
+	ListCloudStatusServices(context.Context, CloudStatusServiceListOptions) (*ListResult[CloudStatusService], error)
+
 	UpdateMaintenance(context.Context, PrimaryKeyable, CheckMaintenance) (*Check, error)
 
 	GetEscalations(context.Context, PrimaryKeyable) (*CheckEscalations, error)
@@ -395,6 +398,12 @@ func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 			EndpointCreator: NewEndpointCreator[CheckCloudStatus, CheckCreateUpdateResponse, Check](cbd, endpoint+"/add-cloudstatus"),
 			EndpointUpdater: NewEndpointUpdater[CheckCloudStatus, CheckCreateUpdateResponse, Check](cbd, endpoint),
 		},
+		checksEndpointCloudStatusGroupsImpl: checksEndpointCloudStatusGroupsImpl{
+			EndpointLister: NewEndpointLister[CloudStatusGroupListResponse, CloudStatusGroupListItem, CloudStatusGroupListOptions](cbd, endpoint+"/cloudstatus-groups"),
+		},
+		checksEndpointCloudStatusServicesImpl: checksEndpointCloudStatusServicesImpl{
+			EndpointLister: NewEndpointLister[CloudStatusServiceListResponse, CloudStatusService, CloudStatusServiceListOptions](cbd, endpoint+"/cloudstatus-services"),
+		},
 		checksEndpointMaintenanceImpl: checksEndpointMaintenanceImpl{
 			EndpointUpdater: NewEndpointUpdater[CheckMaintenance, CheckCreateUpdateResponse, Check](
 				&checksNestedEndpointCBD{CBD: cbd, EndpointSuffix: "maintenance/"}, endpoint,
@@ -441,6 +450,8 @@ type checksEndpointImpl struct {
 	checksStatsEndpointImpl
 	checksEndpointPageSpeedImpl
 	checksEndpointCloudStatusImpl
+	checksEndpointCloudStatusGroupsImpl
+	checksEndpointCloudStatusServicesImpl
 	checksEndpointMaintenanceImpl
 	checksEndpointLocationsImpl
 	checksEndpointEscalationsImpl

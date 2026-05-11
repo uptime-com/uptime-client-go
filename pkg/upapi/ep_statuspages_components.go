@@ -15,6 +15,7 @@ type StatusPageComponent struct {
 	Status         string `json:"status,omitempty"`
 	AutoStatusDown string `json:"auto_status_down,omitempty"`
 	AutoStatusUp   string `json:"auto_status_up,omitempty"`
+	SortingWeight  *int64 `json:"sorting_weight,omitempty"`
 }
 
 func (s StatusPageComponent) PrimaryKey() PrimaryKey {
