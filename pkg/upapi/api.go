@@ -16,6 +16,8 @@ type API interface {
 	Alerts() AlertsEndpoint
 	Checks() ChecksEndpoint
 	Contacts() ContactsEndpoint
+	MaintenanceSchedules() MaintenanceSchedulesEndpoint
+	MaintenanceNotifications() MaintenanceNotificationsEndpoint
 	Dashboards() DashboardsEndpoint
 	Integrations() IntegrationsEndpoint
 	Tags() TagsEndpoint
@@ -69,45 +71,49 @@ func New(opts ...Option) (api API, err error) {
 	}
 
 	api = &apiImpl{
-		CBD:               cbd,
-		alerts:            NewAlertsEndpoint(cbd),
-		checks:            NewChecksEndpoint(cbd),
-		contacts:          NewContactsEndpoint(cbd),
-		dashboards:        NewDashboardsEndpoint(cbd),
-		integrations:      NewIntegrationsEndpoint(cbd),
-		tags:              NewTagsEndpoint(cbd),
-		outages:           NewOutagesEndpoint(cbd),
-		probeServers:      NewProbeServersEndpoint(cbd),
-		statusPages:       NewStatusPagesEndpoint(cbd),
-		slaReports:        NewSLAReportsEndpoint(cbd),
-		scheduledReports:  NewScheduledReportsEndpoint(cbd),
-		serviceVariables:  NewServiceVariablesEndpoint(cbd),
-		users:             NewUsersEndpoint(cbd),
-		pushNotifications: NewPushNotificationsEndpoint(cbd),
-		subaccounts:       NewSubaccountsEndpoint(cbd),
-		accountUsage:      NewAccountUsageEndpoint(cbd),
+		CBD:                      cbd,
+		alerts:                   NewAlertsEndpoint(cbd),
+		checks:                   NewChecksEndpoint(cbd),
+		contacts:                 NewContactsEndpoint(cbd),
+		maintenanceSchedules:     NewMaintenanceSchedulesEndpoint(cbd),
+		maintenanceNotifications: NewMaintenanceNotificationsEndpoint(cbd),
+		dashboards:               NewDashboardsEndpoint(cbd),
+		integrations:             NewIntegrationsEndpoint(cbd),
+		tags:                     NewTagsEndpoint(cbd),
+		outages:                  NewOutagesEndpoint(cbd),
+		probeServers:             NewProbeServersEndpoint(cbd),
+		statusPages:              NewStatusPagesEndpoint(cbd),
+		slaReports:               NewSLAReportsEndpoint(cbd),
+		scheduledReports:         NewScheduledReportsEndpoint(cbd),
+		serviceVariables:         NewServiceVariablesEndpoint(cbd),
+		users:                    NewUsersEndpoint(cbd),
+		pushNotifications:        NewPushNotificationsEndpoint(cbd),
+		subaccounts:              NewSubaccountsEndpoint(cbd),
+		accountUsage:             NewAccountUsageEndpoint(cbd),
 	}
 	return api, nil
 }
 
 type apiImpl struct {
 	CBD
-	alerts            AlertsEndpoint
-	checks            ChecksEndpoint
-	contacts          ContactsEndpoint
-	dashboards        DashboardsEndpoint
-	integrations      IntegrationsEndpoint
-	tags              TagsEndpoint
-	outages           OutagesEndpoint
-	probeServers      ProbeServersEndpoint
-	statusPages       StatusPagesEndpoint
-	slaReports        SLAReportsEndpoint
-	scheduledReports  ScheduledReportsEndpoint
-	serviceVariables  ServiceVariablesEndpoint
-	users             UsersEndpoint
-	pushNotifications PushNotificationsEndpoint
-	subaccounts       SubaccountsEndpoint
-	accountUsage      AccountUsageEndpoint
+	alerts                   AlertsEndpoint
+	checks                   ChecksEndpoint
+	contacts                 ContactsEndpoint
+	maintenanceSchedules     MaintenanceSchedulesEndpoint
+	maintenanceNotifications MaintenanceNotificationsEndpoint
+	dashboards               DashboardsEndpoint
+	integrations             IntegrationsEndpoint
+	tags                     TagsEndpoint
+	outages                  OutagesEndpoint
+	probeServers             ProbeServersEndpoint
+	statusPages              StatusPagesEndpoint
+	slaReports               SLAReportsEndpoint
+	scheduledReports         ScheduledReportsEndpoint
+	serviceVariables         ServiceVariablesEndpoint
+	users                    UsersEndpoint
+	pushNotifications        PushNotificationsEndpoint
+	subaccounts              SubaccountsEndpoint
+	accountUsage             AccountUsageEndpoint
 }
 
 func (api *apiImpl) Alerts() AlertsEndpoint {
@@ -120,6 +126,14 @@ func (api *apiImpl) Checks() ChecksEndpoint {
 
 func (api *apiImpl) Contacts() ContactsEndpoint {
 	return api.contacts
+}
+
+func (api *apiImpl) MaintenanceSchedules() MaintenanceSchedulesEndpoint {
+	return api.maintenanceSchedules
+}
+
+func (api *apiImpl) MaintenanceNotifications() MaintenanceNotificationsEndpoint {
+	return api.maintenanceNotifications
 }
 
 func (api *apiImpl) Dashboards() DashboardsEndpoint {
