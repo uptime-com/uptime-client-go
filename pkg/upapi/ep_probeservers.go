@@ -9,6 +9,8 @@ type ProbeServer struct {
 	IPAddress     string   `json:"ip_address"`
 	IPv4Addresses []string `json:"ipv4_addresses"`
 	IPv6Addresses []string `json:"ipv6_addresses"`
+	IsPrivate     bool     `json:"is_private"`
+	Country       string   `json:"country"`
 }
 
 type ProbeServerListResponse []ProbeServer
