@@ -38,6 +38,9 @@ type StatusPage struct {
 	CustomHeaderHtml          string `json:"custom_header_html"`
 	CustomFooterHtml          string `json:"custom_footer_html"`
 	CustomCss                 string `json:"custom_css"`
+	CustomHeaderHtmlInspire   string `json:"custom_header_html_inspire"`
+	CustomFooterHtmlInspire   string `json:"custom_footer_html_inspire"`
+	CustomCssInspire          string `json:"custom_css_inspire"`
 	CompanyWebsiteUrl         string `json:"company_website_url"`
 	Timezone                  string `json:"timezone"`
 
