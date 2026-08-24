@@ -105,13 +105,24 @@ The parent endpoint returns a sub-endpoint scoped to a specific parent PK.
 2. Define parent command with `Use`, `Aliases`, `Short`
 3. Add subcommands: `list`, `get`, `create`, `update`, `delete` as appropriate
 4. Use `Bind()` to map flags struct fields to CLI flags (supports: string, int32, int64, float64, bool, []string, *[]
-   string, nested structs)
+   string, nested structs). Pointer scalars such as `*string` and `*bool` get NO flag,
+   see Conventions
 5. Register via `init()` functions
 
 ### Conventions
 
 - JSON tags: use `omitempty` for optional fields (enables PATCH partial updates)
-- Pointer fields: use `*bool`, `*int64` when zero-value vs absent distinction matters
+- Pointer fields: use `*bool`, `*int64`, `*string` when zero-value vs absent distinction matters.
+  `omitempty` drops a nil pointer but always serialises an allocated one, so a pointer is what
+  lets a caller send an explicit zero value on a PATCH (for example resetting
+  `msp_use_ip_version` to Any). A plain string cannot: `omitempty` silently drops `""`, the
+  backend treats PATCH as partial, and the stored value survives.
+- Making a field a pointer REMOVES its `upctl` flag: `Bind()` skips nil pointer scalars, so no
+  flag is registered and the capability disappears from the CLI with no error. Allocating the
+  pointee in `Bind()` is not a fix, it would make every pointer field serialise on every
+  request, so `upctl checks update` would start sending `is_paused=false` and
+  `msp_encryption=""` on unrelated updates. Restoring these flags needs `Bind()` to consult
+  `pflag`'s `Changed()` after parsing and allocate only what the user actually set.
 - URL query params: use `url` tags on options structs (parsed by `go-querystring`)
 - Endpoint paths: lowercase, URL-safe (e.g., `"contacts"`, `"auth/account-usage"`)
 - List defaults: `Page: 1, PageSize: 100, Ordering: "pk"`
