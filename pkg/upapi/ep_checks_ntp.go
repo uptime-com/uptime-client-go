@@ -18,7 +18,7 @@ type CheckNTP struct {
 	Threshold              int64           `json:"msp_threshold,omitempty"`
 	Sensitivity            int64           `json:"msp_sensitivity,omitempty"`
 	NumRetries             int64           `json:"msp_num_retries,omitempty"`
-	UseIPVersion           string          `json:"msp_use_ip_version,omitempty"`
+	UseIPVersion           *string         `json:"msp_use_ip_version,omitempty"`
 	UptimeSLA              decimal.Decimal `json:"msp_uptime_sla,omitempty"`
 	ResponseTimeSLA        decimal.Decimal `json:"msp_response_time_sla,omitempty"`
 	Notes                  string          `json:"msp_notes,omitempty"`

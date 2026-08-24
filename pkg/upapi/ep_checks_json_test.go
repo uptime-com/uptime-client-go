@@ -209,3 +209,58 @@ func unmarshalToMap(t *testing.T, data []byte) map[string]any {
 	}
 	return m
 }
+
+func TestChecks_UseIPVersionTriState(t *testing.T) {
+	type ipCase struct {
+		name string
+		make func(ver *string) any
+	}
+	cases := []ipCase{
+		{"api", func(v *string) any { return CheckAPI{Name: "test", UseIPVersion: v} }},
+		{"http", func(v *string) any { return CheckHTTP{Name: "test", UseIPVersion: v} }},
+		{"icmp", func(v *string) any { return CheckICMP{Name: "test", UseIPVersion: v} }},
+		{"imap", func(v *string) any { return CheckIMAP{Name: "test", UseIPVersion: v} }},
+		{"ntp", func(v *string) any { return CheckNTP{Name: "test", UseIPVersion: v} }},
+		{"pop", func(v *string) any { return CheckPOP{Name: "test", UseIPVersion: v} }},
+		{"smtp", func(v *string) any { return CheckSMTP{Name: "test", UseIPVersion: v} }},
+		{"ssh", func(v *string) any { return CheckSSH{Name: "test", UseIPVersion: v} }},
+		{"tcp", func(v *string) any { return CheckTCP{Name: "test", UseIPVersion: v} }},
+		{"udp", func(v *string) any { return CheckUDP{Name: "test", UseIPVersion: v} }},
+	}
+
+	marshal := func(t *testing.T, v any) map[string]any {
+		t.Helper()
+		data, err := json.Marshal(v)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return unmarshalToMap(t, data)
+	}
+
+	for _, c := range cases {
+		t.Run(c.name+"/nil_pointer_omits_field", func(t *testing.T) {
+			m := marshal(t, c.make(nil))
+			if _, ok := m["msp_use_ip_version"]; ok {
+				t.Errorf("expected 'msp_use_ip_version' to be omitted when pointer is nil")
+			}
+		})
+		t.Run(c.name+"/empty_string_resets_to_any", func(t *testing.T) {
+			empty := ""
+			m := marshal(t, c.make(&empty))
+			v, ok := m["msp_use_ip_version"]
+			if !ok {
+				t.Fatalf("expected 'msp_use_ip_version' to be present when pointer is non-nil")
+			}
+			if v != "" {
+				t.Errorf("expected msp_use_ip_version=\"\", got %v", v)
+			}
+		})
+		t.Run(c.name+"/IPV6_sends_explicit_version", func(t *testing.T) {
+			ver := "IPV6"
+			m := marshal(t, c.make(&ver))
+			if v := m["msp_use_ip_version"]; v != "IPV6" {
+				t.Errorf("expected msp_use_ip_version=\"IPV6\", got %v", v)
+			}
+		})
+	}
+}
