@@ -4,6 +4,50 @@ A Go client library for Uptime.com
 
 ## Breaking Changes
 
+### v2.16.0
+
+`Checks().UpdateMaintenance()` has been removed. It called the legacy per-check endpoint
+`PATCH /api/v1/checks/{id}/maintenance/`, which Uptime.com has deprecated and is shutting off.
+The read-only `Check.Maintenance` field returned by `Checks().Get()` is unchanged.
+
+Use the account-level maintenance schedules API instead. A schedule targets one or more checks
+by ID or by tag, and is a separate object with its own ID, so a window is created once and
+deleted when it is no longer needed rather than toggled on the check.
+
+**Migration:**
+```go
+// Before (v2.15.x and earlier): suppress alerts for a check indefinitely
+_, err := api.Checks().UpdateMaintenance(ctx, upapi.PrimaryKey(123), upapi.CheckMaintenance{
+    State: "SUPPRESSED",
+})
+
+// After (v2.16.0+): a bounded window covering the check
+duration := int64(120)
+schedule, err := api.MaintenanceSchedules().Create(ctx, upapi.MaintenanceScheduleInput{
+    Name:                         "Deploy window",
+    ScheduleType:                 "ONE_OFF",
+    StartsAt:                     "2026-10-01T02:00:00Z",
+    DurationMinutes:              &duration,
+    IsActive:                     true,
+    PauseChecksDuringMaintenance: true,
+    Services:                     []int64{123},
+})
+
+// Recurring windows use RRULE instead of the old WEEKLY / MONTHLY schedule entries
+schedule, err = api.MaintenanceSchedules().Create(ctx, upapi.MaintenanceScheduleInput{
+    Name:            "Weekly patching",
+    ScheduleType:    "RRULE",
+    StartsAt:        "2026-10-04T02:00:00Z",
+    RRule:           "FREQ=WEEKLY;BYDAY=SA",
+    DurationMinutes: &duration,
+    IsActive:        true,
+    Services:        []int64{123},
+})
+
+// Ending maintenance early is a delete, not a state change back to ACTIVE
+err = api.MaintenanceSchedules().Delete(ctx, upapi.PrimaryKey(schedule.PK))
+```
+
 ### v2.6.0
 
 The `List()` methods on all endpoints now return `*ListResult[Item]` instead of `[]Item` to expose pagination metadata (total count) from API responses.
