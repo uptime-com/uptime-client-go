@@ -290,8 +290,6 @@ type ChecksEndpoint interface {
 	ListCloudStatusGroups(context.Context, CloudStatusGroupListOptions) (*ListResult[CloudStatusGroupListItem], error)
 	ListCloudStatusServices(context.Context, CloudStatusServiceListOptions) (*ListResult[CloudStatusService], error)
 
-	UpdateMaintenance(context.Context, PrimaryKeyable, CheckMaintenance) (*Check, error)
-
 	GetEscalations(context.Context, PrimaryKeyable) (*CheckEscalations, error)
 	UpdateEscalations(context.Context, PrimaryKeyable, CheckEscalations) (*CheckEscalations, error)
 }
@@ -404,11 +402,6 @@ func NewChecksEndpoint(cbd CBD) ChecksEndpoint {
 		checksEndpointCloudStatusServicesImpl: checksEndpointCloudStatusServicesImpl{
 			EndpointLister: NewEndpointLister[CloudStatusServiceListResponse, CloudStatusService, CloudStatusServiceListOptions](cbd, endpoint+"/cloudstatus-services"),
 		},
-		checksEndpointMaintenanceImpl: checksEndpointMaintenanceImpl{
-			EndpointUpdater: NewEndpointUpdater[CheckMaintenance, CheckCreateUpdateResponse, Check](
-				&checksNestedEndpointCBD{CBD: cbd, EndpointSuffix: "maintenance/"}, endpoint,
-			),
-		},
 		checksEndpointLocationsImpl: checksEndpointLocationsImpl{
 			EndpointLister: NewEndpointLister[CheckLocationListResponse, string, CheckLocationListOptions](cbd, endpoint+"/locations"),
 		},
@@ -452,7 +445,6 @@ type checksEndpointImpl struct {
 	checksEndpointCloudStatusImpl
 	checksEndpointCloudStatusGroupsImpl
 	checksEndpointCloudStatusServicesImpl
-	checksEndpointMaintenanceImpl
 	checksEndpointLocationsImpl
 	checksEndpointEscalationsImpl
 	EndpointLister[CheckListResponse, Check, CheckListOptions]
@@ -486,14 +478,6 @@ func (c checksNestedEndpointCBD) BuildRequest(ctx context.Context, method string
 		endpoint = fmt.Sprintf(endpoint, pk.PrimaryKey())
 	}
 	return c.CBD.BuildRequest(ctx, method, endpoint, args, data)
-}
-
-type checksEndpointMaintenanceImpl struct {
-	EndpointUpdater[CheckMaintenance, CheckCreateUpdateResponse, Check]
-}
-
-func (c checksEndpointMaintenanceImpl) UpdateMaintenance(ctx context.Context, pk PrimaryKeyable, maintenance CheckMaintenance) (*Check, error) {
-	return c.Update(ctx, pk, maintenance)
 }
 
 type checksEndpointEscalationsImpl struct {
