@@ -127,7 +127,7 @@ type CheckListOptions struct {
 	Search                string   `url:"search,omitempty"`
 	Ordering              string   `url:"ordering,omitempty"`
 	MonitoringServiceType string   `url:"monitoring_service_type,omitempty"`
-	IsPaused              bool     `url:"is_paused"`
+	IsPaused              *bool    `url:"is_paused,omitempty"`
 	StateIsUp             bool     `url:"state_is_up,omitempty"`
 	Tag                   []string `url:"tag,omitempty"`
 }

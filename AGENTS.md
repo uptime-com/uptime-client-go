@@ -123,6 +123,8 @@ The parent endpoint returns a sub-endpoint scoped to a specific parent PK.
   request, so `upctl checks update` would start sending `is_paused=false` and
   `msp_encryption=""` on unrelated updates. Restoring these flags needs `Bind()` to consult
   `pflag`'s `Changed()` after parsing and allocate only what the user actually set.
+  Until then, register the flag by hand against a scratch value and set the pointer in `RunE`
+  only when `Changed()` reports it, as `cli_checks.go` does for `--is-paused`.
 - URL query params: use `url` tags on options structs (parsed by `go-querystring`)
 - Endpoint paths: lowercase, URL-safe (e.g., `"contacts"`, `"auth/account-usage"`)
 - List defaults: `Page: 1, PageSize: 100, Ordering: "pk"`
