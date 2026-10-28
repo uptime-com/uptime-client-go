@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestChecksList_IsPausedIsOnlySentWhenSet(t *testing.T) {
+func TestChecksList_BoolFiltersAreOnlySentWhenSet(t *testing.T) {
 	var queries []string
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		queries = append(queries, r.URL.RawQuery)
@@ -24,10 +24,15 @@ func TestChecksList_IsPausedIsOnlySentWhenSet(t *testing.T) {
 		{Page: 1},
 		{Page: 1, IsPaused: BoolPtr(false)},
 		{Page: 1, IsPaused: BoolPtr(true)},
+		{Page: 1, StateIsUp: BoolPtr(false)},
+		{Page: 1, StateIsUp: BoolPtr(true)},
 	} {
 		_, err := api.Checks().List(context.Background(), opts)
 		require.NoError(t, err)
 	}
 
-	require.Equal(t, []string{"page=1", "is_paused=false&page=1", "is_paused=true&page=1"}, queries)
+	require.Equal(t, []string{
+		"page=1", "is_paused=false&page=1", "is_paused=true&page=1",
+		"page=1&state_is_up=false", "page=1&state_is_up=true",
+	}, queries)
 }
