@@ -28,6 +28,7 @@ var (
 		Ordering: "pk",
 	}
 	checksListPaused bool
+	checksListIsUp   bool
 	checksListCmd    = &cobra.Command{
 		Use:     "list",
 		Aliases: []string{"ls"},
@@ -36,6 +37,9 @@ var (
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if cmd.Flags().Changed("is-paused") {
 				checksListFlags.IsPaused = &checksListPaused
+			}
+			if cmd.Flags().Changed("state-is-up") {
+				checksListFlags.StateIsUp = &checksListIsUp
 			}
 			return output(checksList(cmd.Context()))
 		},
@@ -48,6 +52,7 @@ func init() {
 		panic(err)
 	}
 	checksListCmd.Flags().BoolVar(&checksListPaused, "is-paused", false, "Filter by paused status")
+	checksListCmd.Flags().BoolVar(&checksListIsUp, "state-is-up", false, "Filter by up/down state")
 	checksCmd.AddCommand(checksListCmd)
 }
 
