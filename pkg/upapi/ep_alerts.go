@@ -8,25 +8,37 @@ import (
 	"time"
 )
 
-// AlertItem represents an alert/incident in the Uptime.com monitoring system.
-// Alerts are generated when a check detects an issue from a monitoring location.
+// AlertItem is an outage-level state change of a check; the per-location alerts are in AllAlerts.
 type AlertItem struct {
-	PK                         int64      `json:"pk,omitempty"`
-	URL                        string     `json:"url,omitempty"`
-	CreatedAt                  *time.Time `json:"created_at,omitempty"`
-	ResolvedAt                 *time.Time `json:"resolved_at,omitempty"`
-	MonitoringServerName       string     `json:"monitoring_server_name,omitempty"`
-	MonitoringServerIPv4       *net.IP    `json:"monitoring_server_ipv4,omitempty"`
-	MonitoringServerIPv6       *net.IP    `json:"monitoring_server_ipv6,omitempty"`
-	Location                   string     `json:"location,omitempty"`
-	Output                     string     `json:"output,omitempty"`
-	StateIsUp                  bool       `json:"state_is_up,omitempty"`
-	Ignored                    bool       `json:"ignored,omitempty"`
-	CheckPK                    int64      `json:"check_pk,omitempty"`
-	CheckURL                   string     `json:"check_url,omitempty"`
-	CheckAddress               string     `json:"check_address,omitempty"`
-	CheckName                  string     `json:"check_name,omitempty"`
-	CheckMonitoringServiceType string     `json:"check_monitoring_service_type,omitempty"`
+	PK        int64      `json:"pk,omitempty"`
+	URL       string     `json:"url,omitempty"`
+	CreatedAt *time.Time `json:"created_at,omitempty"`
+	// Deprecated: never sent by the API; see AllAlerts.
+	ResolvedAt *time.Time `json:"resolved_at,omitempty"`
+	// Deprecated: never sent by the API; see AllAlerts.
+	MonitoringServerName string `json:"monitoring_server_name,omitempty"`
+	// Deprecated: never sent by the API; see AllAlerts.
+	MonitoringServerIPv4 *net.IP `json:"monitoring_server_ipv4,omitempty"`
+	// Deprecated: never sent by the API; see AllAlerts.
+	MonitoringServerIPv6 *net.IP `json:"monitoring_server_ipv6,omitempty"`
+	// Deprecated: never sent by the API; see AllAlerts.
+	Location string `json:"location,omitempty"`
+	// Deprecated: never sent by the API; see AllAlerts.
+	Output string `json:"output,omitempty"`
+	// IgnoreAlertURL is the URL that toggles the ignore state of the alert.
+	IgnoreAlertURL             string `json:"ignore_alert_url,omitempty"`
+	StateIsUp                  bool   `json:"state_is_up,omitempty"`
+	Ignored                    bool   `json:"ignored,omitempty"`
+	CheckPK                    int64  `json:"check_pk,omitempty"`
+	CheckURL                   string `json:"check_url,omitempty"`
+	CheckAddress               string `json:"check_address,omitempty"`
+	CheckName                  string `json:"check_name,omitempty"`
+	CheckMonitoringServiceType string `json:"check_monitoring_service_type,omitempty"`
+	CheckIsPaused              bool   `json:"check_is_paused,omitempty"`
+	// NumLocationsDown is the number of locations reporting the check down.
+	NumLocationsDown int64 `json:"num_locations_down,omitempty"`
+	// AllAlerts holds one entry per location; it is empty when StateIsUp is true.
+	AllAlerts []Alert `json:"all_alerts,omitempty"`
 }
 
 func (a AlertItem) PrimaryKey() PrimaryKey {
