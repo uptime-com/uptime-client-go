@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -40,8 +41,8 @@ func requireDownAlert(t *testing.T, a AlertItem) {
 func newAlertsTestAPI(t *testing.T, path, body string) API {
 	t.Helper()
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		require.Equal(t, http.MethodGet, r.Method)
-		require.Equal(t, path, r.URL.Path)
+		assert.Equal(t, http.MethodGet, r.Method)
+		assert.Equal(t, path, r.URL.Path)
 		w.Header().Set("Content-Type", "application/json")
 		io.WriteString(w, body)
 	}))
